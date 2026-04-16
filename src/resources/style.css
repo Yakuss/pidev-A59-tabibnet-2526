@@ -1,0 +1,152 @@
+/* =======================================================
+   Thème TabibNet Desktop - Style Moderne & Médical
+   ======================================================= */
+
+.root {
+    -fx-font-family: "Segoe UI", "Inter", sans-serif;
+    -fx-background-color: #f0f4f8;
+    -fx-font-size: 14px;
+}
+
+/* --- TAB PANE (Navigation Principale) --- */
+.tab-pane .tab-header-area .tab-header-background {
+    -fx-background-color: #002D54;
+}
+
+.tab-pane .tab {
+    -fx-background-color: transparent;
+    -fx-padding: 10 20 10 20;
+    -fx-background-radius: 0;
+}
+
+.tab-pane .tab:selected {
+    -fx-background-color: #0056a3;
+}
+
+.tab-pane .tab .tab-label {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+}
+
+/* --- BOUTONS --- */
+.button {
+    -fx-background-color: #0056a3;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 8 16 8 16;
+    -fx-background-radius: 6;
+    -fx-cursor: hand;
+    -fx-border-color: transparent;
+}
+
+.button:hover {
+    -fx-background-color: #0073d6;
+}
+
+.button:pressed {
+    -fx-background-color: #003a6e;
+}
+
+/* Boutons d'Action Spécifiques */
+#annulerBtn, .button:cancel {
+    -fx-background-color: #e74c3c;
+}
+#annulerBtn:hover, .button:cancel:hover {
+    -fx-background-color: #f06a5b;
+}
+
+/* --- CHAMPS DE SAISIE & COMBOBOX --- */
+.text-field, .combo-box {
+    -fx-background-color: white;
+    -fx-border-color: #cbd5e1;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+    -fx-padding: 6 10 6 10;
+    -fx-prompt-text-fill: #94a3b8;
+}
+
+.text-field:focused, .combo-box:focused {
+    -fx-border-color: #0056a3;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 86, 163, 0.2), 5, 0, 0, 0);
+}
+
+.combo-box .list-cell {
+    -fx-text-fill: #334155;
+    -fx-padding: 5;
+}
+
+.combo-box-popup .list-view {
+    -fx-background-color: white;
+    -fx-border-color: #cbd5e1;
+    -fx-border-radius: 4;
+}
+
+.combo-box-popup .list-view .list-cell:hover {
+    -fx-background-color: #f1f5f9;
+}
+
+/* --- TABLEAUX (TableViews) --- */
+.table-view {
+    -fx-background-color: white;
+    -fx-border-color: #e2e8f0;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+}
+
+.table-view .column-header-background {
+    -fx-background-color: #f8fafc;
+    -fx-border-color: transparent transparent #e2e8f0 transparent;
+}
+
+.table-view .column-header, .table-view .filler {
+    -fx-background-color: transparent;
+    -fx-size: 40;
+}
+
+.table-view .column-header .label {
+    -fx-text-fill: #475569;
+    -fx-font-weight: bold;
+    -fx-alignment: center-left;
+}
+
+.table-row-cell {
+    -fx-background-color: white;
+    -fx-border-color: transparent transparent #f1f5f9 transparent;
+    -fx-cell-size: 35;
+}
+
+.table-row-cell:odd {
+    -fx-background-color: #fbfbfc;
+}
+
+.table-row-cell:hover {
+    -fx-background-color: #e0f2fe;
+}
+
+.table-row-cell:selected {
+    -fx-background-color: #bae6fd;
+    -fx-text-background-color: #002D54;
+}
+
+/* --- CONTENEURS ET PANNEAUX --- */
+.vbox-container {
+    -fx-background-color: white;
+    -fx-padding: 25;
+    -fx-border-radius: 12;
+    -fx-background-radius: 12;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 10, 0, 0, 4);
+    -fx-border-color: #e2e8f0;
+}
+
+.label-title {
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #002D54;
+}
+
+.label-subtitle {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #475569;
+}

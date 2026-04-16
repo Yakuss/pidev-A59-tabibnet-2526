@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TabibNet - Portails Patient</title>
+    <link rel="stylesheet" href="style.css?v=2">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+</head>
+<body>
+
+    <header class="navbar">
+        <div class="logo">Tabib<span>Net</span></div>
+        <nav>
+            <a href="medecin.html" class="nav-pro-btn">Vous êtes soignant ?</a>
+            <a href="#" class="nav-link"><i class="far fa-circle-question"></i> Centre d'aide</a>
+            <a href="#" class="nav-login-btn" onclick="openModal()"><i class="far fa-user"></i> Suivre mes RDV & Feedbacks</a>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero-section">
+            <div class="hero-content">
+                <h1>Réservez votre consultation</h1>
+                <p>Trouvez votre créneau et prenez rendez-vous instantanément.</p>
+                
+                <div class="booking-form glass-effect">
+                    <div class="form-row">
+                        <div class="input-element">
+                            <label>Votre Nom (Complet)</label>
+                            <input type="text" id="nomPatient" placeholder="Ex: Ahmed Ben Ali">
+                        </div>
+                        <div class="input-element">
+                            <label>Spécialiste / Médecin</label>
+                            <select id="medecinRdv">
+                                <option value="" disabled selected>-- Choisissez --</option>
+                                <option value="Dr. Ali Ben Salah (Généraliste)">Dr. Ali Ben Salah (Généraliste)</option>
+                                <option value="Dr. Sarah Mansour (Cardiologue)">Dr. Sarah Mansour (Cardiologue)</option>
+                                <option value="Dr. Youssef Khelil (Dermatologue)">Dr. Youssef Khelil (Dermatologue)</option>
+                                <option value="Dr. Amira Trabelsi (Pédiatre)">Dr. Amira Trabelsi (Pédiatre)</option>
+                                <option value="Dr. Mehdi Jendoubi (Ophtalmologue)">Dr. Mehdi Jendoubi (Ophtalmologue)</option>
+                                <option value="Dr. Leila Bouzid (Gynécologue)">Dr. Leila Bouzid (Gynécologue)</option>
+                                <option value="Dr. Sami Gharbi (Neurologue)">Dr. Sami Gharbi (Neurologue)</option>
+                                <option value="Dr. Rania Ayed (Dentiste)">Dr. Rania Ayed (Dentiste)</option>
+                            </select>
+                        </div>
+                        <div class="input-element">
+                            <label>Date souhaitée</label>
+                            <input type="date" id="dateRdv">
+                        </div>
+                        <div class="input-element">
+                            <label>Heure</label>
+                            <input type="time" id="heureRdv">
+                        </div>
+                    </div>
+                    <button class="search-btn" onclick="reserver()">Confirmer le Rendez-vous <i class="fas fa-check"></i></button>
+                    <div id="bookingMsg" class="msg"></div>
+                </div>
+            </div>
+            <div class="hero-image-container"></div>
+        </section>
+
+        <!-- Modal pour la gestion / feedback -->
+        <div id="rdvModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal()">&times;</span>
+                <h2>Suivre mes Rendez-vous</h2>
+                <p style="margin-bottom: 20px; color:#555;">Entrez votre nom pour retrouver l'historique et donner un avis.</p>
+                
+                <div style="display:flex; gap:10px; margin-bottom: 20px;">
+                    <input type="text" id="searchNom" placeholder="Votre nom (ex: Ahmed)" class="modal-input">
+                    <button class="search-btn" onclick="chercherRdv()" style="padding: 0.5rem 1rem;">Chercher</button>
+                </div>
+                
+                <div id="rdvList"></div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const API_BASE = "http://localhost:8085/api";
+
+        // Formater YYYY-MM-DD en dd/MM/yyyy
+        function formatDateToFr(dateStr) {
+            if(!dateStr) return "";
+            const parts = dateStr.split('-');
+            if(parts.length !== 3) return dateStr;
+            return `${parts[2]}/${parts[1]}/${parts[0]}`;
+        }
+
+        async function reserver() {
+            const nom = document.getElementById('nomPatient').value;
+            const medecin = document.getElementById('medecinRdv').value;
+            const dateStr = document.getElementById('dateRdv').value; // YYYY-MM-DD
+            const heure = document.getElementById('heureRdv').value; // HH:mm
+
+            const msgDiv = document.getElementById('bookingMsg');
+            
+            if(!nom || !dateStr || !heure || !medecin) {
+                msgDiv.innerHTML = "<span style='color: #ff4d4d'>Veuillez remplir tous les champs.</span>";
+                return;
+            }
+
+            // Contrôle strict anti-dates ultérieures (dates passées)
+            const selectedDate = new Date(dateStr);
+            const today = new Date();
+            today.setHours(0,0,0,0);
+            if(selectedDate < today) {
+                msgDiv.innerHTML = "<span style='color: #ff4d4d'><i class='fas fa-exclamation-triangle'></i> Vous ne pouvez pas prendre un RDV dans le passé.</span>";
+                return;
+            }
+
+            const dateFR = formatDateToFr(dateStr);
+            const params = new URLSearchParams();
+            params.append('nomPatient', nom);
+            params.append('medecin', medecin);
+            params.append('date', dateFR);
+            params.append('heure', heure);
+
+            try {
+                const response = await fetch(`${API_BASE}/rendezvous`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: params.toString()
+                });
+                
+                const result = await response.json();
+                if(result.success) {
+                    msgDiv.innerHTML = "<span style='color: #4CAF50'><i class='fas fa-check-circle'></i> Rendez-vous enregistré avec succès !</span>";
+                    document.getElementById('nomPatient').value = '';
+                    document.getElementById('dateRdv').value = '';
+                    document.getElementById('heureRdv').value = '';
+                } else {
+                    msgDiv.innerHTML = `<span style='color: #ff4d4d'><i class='fas fa-times-circle'></i> Erreur : ${result.error}</span>`;
+                }
+            } catch(e) {
+                msgDiv.innerHTML = "<span style='color: #ff4d4d'>Serveur Java indisponible. L'API est-elle lancée ?</span>";
+            }
+        }
+
+        // Modal functions
+        const modal = document.getElementById("rdvModal");
+        function openModal() { modal.style.display = "block"; }
+        function closeModal() { modal.style.display = "none"; }
+        window.onclick = function(event) {
+            if (event.target == modal) closeModal();
+        }
+
+        async function chercherRdv() {
+            const nom = document.getElementById('searchNom').value.trim();
+            const rdvList = document.getElementById('rdvList');
+            rdvList.innerHTML = "<p>Recherche en cours...</p>";
+
+            if(nom.length === 0) {
+                rdvList.innerHTML = "<p style='color:red;'>Veuillez entrer un nom</p>";
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/rendezvous?nomPatient=${encodeURIComponent(nom)}`);
+                const rdvs = await response.json();
+                
+                if(rdvs.length === 0) {
+                    rdvList.innerHTML = "<p>Aucun rendez-vous trouvé.</p>";
+                    return;
+                }
+
+                let html = "";
+                // Fetch feedbacks in parallel for all "Terminé" appointments
+                const rdvFetchPromises = rdvs.map(async r => {
+                    let badgeColor = r.statut === 'Terminé' ? '#4CAF50' : (r.statut === 'Annulé' ? '#f44336' : '#FF9800');
+                    let blockHtml = `
+                        <div class="rdv-card glass-effect" id="rdvc-${r.id}">
+                            <h4>RDV le ${r.date} à ${r.heure} avec <span style="color:var(--primary-dark)">${r.medecin}</span></h4>
+                            <span class="badge" style="background:${badgeColor}">${r.statut}</span>`;
+
+                    if(r.statut === 'En attente') {
+                        blockHtml += `
+                            <div style="margin-top:10px;">
+                                <button class="search-btn" onclick="annulerRdv(${r.id})" style="padding: 0.4rem 0.8rem; font-size:14px; background:#f44336;">Annuler le RDV</button>
+                            </div>
+                        `;
+                    }
+
+                    if(r.statut === 'Terminé') {
+                        // Check if feedback exists
+                        try {
+                            const fbResp = await fetch(`${API_BASE}/feedback?rdvId=${r.id}`);
+                            const feedbacks = await fbResp.json();
+                            const existing = feedbacks.length > 0 ? feedbacks[0] : null;
+                            const fid = existing ? existing.id : 0;
+                            const fnote = existing ? existing.note : 5;
+                            const fcomm = existing ? existing.commentaire : '';
+                            const btnText = existing ? "Modifier mon avis" : "Envoyer mon avis";
+
+                            blockHtml += `
+                                <div class="feedback-box" id="feedback-box-${r.id}">
+                                    <p><strong>Votre consultation est terminée.</strong></p>
+                                    <select id="note-${r.id}" class="modal-input" style="width:auto; margin-bottom:10px;">
+                                        <option value="5" ${fnote===5?'selected':''}>⭐⭐⭐⭐⭐ Très satisfait</option>
+                                        <option value="4" ${fnote===4?'selected':''}>⭐⭐⭐⭐ Satisfait</option>
+                                        <option value="3" ${fnote===3?'selected':''}>⭐⭐⭐ Moyen</option>
+                                        <option value="2" ${fnote===2?'selected':''}>⭐⭐ Déçu</option>
+                                        <option value="1" ${fnote===1?'selected':''}>⭐ Mauvais</option>
+                                    </select>
+                                    <textarea id="comm-${r.id}" class="modal-input" placeholder="Laissez un commentaire..." rows="2">${fcomm}</textarea>
+                                    <button class="search-btn" onclick="soumettreFeedback(${r.id}, ${fid})" style="padding: 0.4rem 0.8rem; font-size:14px; margin-top:5px; background:${existing?'#FF9800':'var(--btn-dark)'};">${btnText}</button>
+                                    <div id="fmsg-${r.id}" style="margin-top:5px; font-size:14px;"></div>
+                                </div>
+                            `;
+                        } catch(er) {
+                            console.log("Feedback not available");
+                        }
+                    }
+                    blockHtml += `</div>`;
+                    return blockHtml;
+                });
+                
+                const blocks = await Promise.all(rdvFetchPromises);
+                rdvList.innerHTML = blocks.join('');
+            } catch(e) {
+                rdvList.innerHTML = "<p style='color:red;'>Serveur Java injoignable.</p>";
+            }
+        }
+
+        async function annulerRdv(id) {
+            if(!confirm("Voulez-vous vraiment annuler ce rendez-vous ?")) return;
+            const params = new URLSearchParams();
+            params.append('id', id);
+
+            try {
+                await fetch(`${API_BASE}/rendezvous/cancel`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: params.toString()
+                });
+                chercherRdv(); // refresh
+            } catch(e) {
+                alert("Erreur réseau");
+            }
+        }
+
+        async function soumettreFeedback(rdvId, feedbackId) {
+            const note = document.getElementById(`note-${rdvId}`).value;
+            const commentaire = document.getElementById(`comm-${rdvId}`).value;
+            const msgDiv = document.getElementById(`fmsg-${rdvId}`);
+
+            if(!commentaire) {
+                msgDiv.innerHTML = "<span style='color:red'>Le commentaire est requis.</span>";
+                return;
+            }
+
+            const params = new URLSearchParams();
+            params.append('note', note);
+            params.append('commentaire', commentaire);
+            params.append('rendezVousId', rdvId);
+            if(feedbackId > 0) {
+                params.append('id', feedbackId);
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/feedback`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: params.toString()
+                });
+                const result = await response.json();
+                if(result.success) {
+                    msgDiv.innerHTML = `<span style='color:green'>${feedbackId > 0 ? "Avis modifié" : "Avis envoyé"}, merci !</span>`;
+                    setTimeout(() => chercherRdv(), 1500); // Reload pour MAJ l'id
+                } else {
+                    msgDiv.innerHTML = "<span style='color:red'>Erreur serveur</span>";
+                }
+            } catch(e) {
+                msgDiv.innerHTML = "<span style='color:red'>Erreur de connexion</span>";
+            }
+        }
+    </script>
+</body>
+</html>

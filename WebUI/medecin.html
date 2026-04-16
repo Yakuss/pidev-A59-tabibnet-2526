@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TabibNet Pro - Espace Médecin</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <style>
+        .dashboard-container { max-width: 900px; margin: 2rem auto; padding: 2rem; background: var(--bg-white); border-radius: 12px; box-shadow: var(--shadow-soft); }
+        .rdv-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        .rdv-table th { background: var(--primary-light); color: var(--primary-dark); padding: 12px; text-align: left; }
+        .rdv-table td { padding: 15px 12px; border-bottom: 1px solid #eee; }
+        .status-select { padding: 6px; border-radius: 6px; border: 1px solid #ccc; font-family: inherit; }
+        .header-pro { display:flex; justify-content: space-between; align-items:center; }
+    </style>
+</head>
+<body>
+
+    <header class="navbar" style="background-color: var(--primary-dark)">
+        <div class="logo">Tabib<span>Net</span> <span style="font-size:1rem;color:#f39c12">Pro</span></div>
+        <nav>
+            <a href="index.html" class="nav-link"><i class="fas fa-arrow-left"></i> Retour Patient</a>
+        </nav>
+    </header>
+
+    <main>
+        <div class="dashboard-container">
+            <div class="header-pro">
+                <h2>Votre Agenda Consultations</h2>
+                <div>
+                    <label style="font-weight:600; margin-right:10px;">🩺 Je me connecte en tant que :</label>
+                    <select id="proMedecinSelect" class="status-select" style="min-width: 250px;" onchange="loadAgenda()">
+                        <option value="" disabled selected>-- Choisissez votre profil --</option>
+                        <option value="Ali Ben Salah">Dr. Ali Ben Salah (Généraliste)</option>
+                        <option value="Sarah Mansour">Dr. Sarah Mansour (Cardiologue)</option>
+                        <option value="Youssef Khelil">Dr. Youssef Khelil (Dermatologue)</option>
+                        <option value="Amira Trabelsi">Dr. Amira Trabelsi (Pédiatre)</option>
+                        <option value="Mehdi Jendoubi">Dr. Mehdi Jendoubi (Ophtalmologue)</option>
+                        <option value="Leila Bouzid">Dr. Leila Bouzid (Gynécologue)</option>
+                        <option value="Sami Gharbi">Dr. Sami Gharbi (Neurologue)</option>
+                        <option value="Rania Ayed">Dr. Rania Ayed (Dentiste)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div id="controls" style="display:none; margin-top:20px; display:flex; gap:10px; flex-wrap:wrap; background:#f9f9f9; padding:15px; border-radius:8px;">
+                <input type="text" id="searchPatient" class="status-select" placeholder="🔍 Chercher un patient..." oninput="applyFilters()" style="flex:1; min-width:200px;">
+                <select id="filterStatut" class="status-select" onchange="applyFilters()">
+                    <option value="">Tous les statuts</option>
+                    <option value="En attente">⏳ En attente</option>
+                    <option value="Terminé">✅ Terminé</option>
+                    <option value="Annulé">❌ Annulé</option>
+                </select>
+                <select id="sortDate" class="status-select" onchange="applyFilters()">
+                    <option value="desc">Trier par Date (Plus récents d'abord)</option>
+                    <option value="asc">Trier par Date (Plus anciens d'abord)</option>
+                </select>
+            </div>
+
+            <div id="agendaContent" style="margin-top: 2rem;">
+                <p style="color:#777; text-align:center; font-style:italic;">Veuillez sélectionner votre profil médecin pour afficher vos rendez-vous.</p>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const API_BASE = "http://localhost:8085/api";
+        let allRdvs = [];
+
+        async function loadAgenda() {
+            const medecin = document.getElementById('proMedecinSelect').value;
+            if(!medecin) return;
+            
+            const cont = document.getElementById('agendaContent');
+            cont.innerHTML = "<p>Chargement en cours...</p>";
+
+            try {
+                const response = await fetch(`${API_BASE}/rendezvous?medecin=${encodeURIComponent(medecin)}`);
+                allRdvs = await response.json();
+                
+                if(allRdvs.length === 0) {
+                    cont.innerHTML = "<p style='text-align:center;color:#666'>Aucun rendez-vous trouvé pour le moment.</p>";
+                    document.getElementById('controls').style.display = 'none';
+                    return;
+                }
+
+                document.getElementById('controls').style.display = 'flex';
+                applyFilters();
+
+            } catch(e) {
+                cont.innerHTML = `<p style="color:red">Erreur BDD: Impossible de contacter l'API sur le port 8085.</p>`;
+            }
+        }
+
+        function applyFilters() {
+            let filtered = [...allRdvs];
+            const search = document.getElementById('searchPatient').value.toLowerCase();
+            const stat = document.getElementById('filterStatut').value;
+            const sortDir = document.getElementById('sortDate').value;
+
+            // Filtre par nom
+            if(search) {
+                filtered = filtered.filter(r => r.nomPatient.toLowerCase().includes(search));
+            }
+            
+            // Filtre par statut
+            if(stat) {
+                filtered = filtered.filter(r => r.statut === stat);
+            }
+
+            // Tri par date
+            filtered.sort((a,b) => {
+                let pa = a.date.split('/');
+                let pb = b.date.split('/');
+                // Format: DD/MM/YYYY -> YYYY, MM, DD
+                let da = new Date(pa[2], pa[1]-1, pa[0]);
+                let db = new Date(pb[2], pb[1]-1, pb[0]);
+                
+                if (sortDir === 'asc') return da - db;
+                else return db - da; // desc
+            });
+
+            renderTable(filtered);
+        }
+
+        function renderTable(rdvs) {
+            const cont = document.getElementById('agendaContent');
+            if(rdvs.length === 0) {
+                cont.innerHTML = "<p style='text-align:center;color:#666'>Aucun résultat pour cette recherche.</p>";
+                return;
+            }
+
+            let html = `
+                <table class="rdv-table">
+                    <thead>
+                        <tr>
+                            <th># ID</th>
+                            <th>Patient</th>
+                            <th>Date & Heure</th>
+                            <th>Statut</th>
+                            <th>Action Rapide</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+
+            rdvs.forEach(r => {
+                let badgeColor = r.statut === 'Terminé' ? '#4CAF50' : (r.statut === 'Annulé' ? '#f44336' : '#FF9800');
+                html += `
+                    <tr>
+                        <td><strong>${r.id}</strong></td>
+                        <td>${r.nomPatient}</td>
+                        <td>Le ${r.date} à ${r.heure}</td>
+                        <td><span class="badge" style="background:${badgeColor}; margin:0;">${r.statut}</span></td>
+                        <td>
+                            <select class="status-select" onchange="changerStatut(${r.id}, this.value)">
+                                <option value="" disabled selected>Modifier le statut...</option>
+                                <option value="En attente">En attente (Remettre)</option>
+                                <option value="Terminé">✅ Valider 'Terminé'</option>
+                                <option value="Annulé">❌ Annuler le RDV</option>
+                            </select>
+                            <span id="info-${r.id}" style="font-size:12px; margin-left:5px;"></span>
+                        </td>
+                    </tr>
+                `;
+            });
+            
+            html += `</tbody></table>`;
+            cont.innerHTML = html;
+        }
+
+        async function changerStatut(id, nvStatut) {
+            if(!nvStatut) return;
+            const msg = document.getElementById(`info-${id}`);
+            msg.innerHTML = "<em>...</em>";
+            
+            const params = new URLSearchParams();
+            params.append("id", id);
+            params.append("statut", nvStatut);
+
+            try {
+                const response = await fetch(`${API_BASE}/rendezvous/status`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: params.toString()
+                });
+                const result = await response.json();
+                if(result.success) {
+                    msg.innerHTML = "<span style='color:green'>Ok !</span>";
+                    setTimeout(() => loadAgenda(), 800); // Reload the list
+                }
+            } catch(e) {
+                msg.innerHTML = "<span style='color:red'>Erreur</span>";
+            }
+        }
+    </script>
+</body>
+</html>
