@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.*?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.pidev.controllers.EditPatientDialogController"
+      spacing="20" style="-fx-padding: 25; -fx-background-color: white; -fx-min-width: 550;"
+      stylesheets="@../../styles/dashboard.css">
+
+    <!-- Header -->
+    <HBox spacing="15" alignment="CENTER_LEFT">
+        <StackPane style="-fx-background-color: #10b981; -fx-background-radius: 50; -fx-padding: 12;">
+            <Label text="👤" style="-fx-font-size: 28px; -fx-text-fill: white;"/>
+        </StackPane>
+        <VBox spacing="3">
+            <Label text="Edit Patient Profile" style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #1e293b;"/>
+            <Label fx:id="patientNameHeader" text="Update information below" style="-fx-font-size: 13px; -fx-text-fill: #64748b;"/>
+        </VBox>
+    </HBox>
+
+    <Separator style="-fx-background-color: #e2e8f0;"/>
+
+    <!-- Form Grid -->
+    <GridPane hgap="20" vgap="12">
+        <columnConstraints>
+            <ColumnConstraints percentWidth="30"/>
+            <ColumnConstraints percentWidth="70"/>
+        </columnConstraints>
+
+        <Label text="First Name" styleClass="dialog-label" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+        <TextField fx:id="firstNameField" styleClass="dialog-field" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+        <Label text="Last Name" styleClass="dialog-label" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+        <TextField fx:id="lastNameField" styleClass="dialog-field" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+        <Label text="Email" styleClass="dialog-label" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+        <TextField fx:id="emailField" styleClass="dialog-field" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+        <Label text="Phone" styleClass="dialog-label" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+        <TextField fx:id="phoneField" styleClass="dialog-field" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+
+        <Label text="Address" styleClass="dialog-label" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+        <TextField fx:id="addressField" styleClass="dialog-field" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+
+        <Label text="Age" styleClass="dialog-label" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
+        <TextField fx:id="ageField" styleClass="dialog-field" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+
+        <Label text="Gender" styleClass="dialog-label" GridPane.rowIndex="6" GridPane.columnIndex="0"/>
+        <ComboBox fx:id="genderCombo" styleClass="dialog-combo" GridPane.rowIndex="6" GridPane.columnIndex="1"/>
+
+        <Label text="Insurance" styleClass="dialog-label" GridPane.rowIndex="7" GridPane.columnIndex="0"/>
+        <CheckBox fx:id="insuranceCheck" text="Has Insurance" GridPane.rowIndex="7" GridPane.columnIndex="1"/>
+
+        <Label text="Insurance Number" styleClass="dialog-label" GridPane.rowIndex="8" GridPane.columnIndex="0"/>
+        <TextField fx:id="insuranceNumberField" styleClass="dialog-field" GridPane.rowIndex="8" GridPane.columnIndex="1"/>
+    </GridPane>
+
+    <Label fx:id="errorLabel" style="-fx-text-fill: #e53e3e; -fx-font-size: 12px;" visible="false" wrapText="true"/>
+
+    <HBox spacing="15" alignment="CENTER_RIGHT">
+        <Button text="Cancel" onAction="#cancel" styleClass="dialog-cancel-btn"/>
+        <Button text="Save Changes" onAction="#save" styleClass="dialog-save-btn"/>
+    </HBox>
+
+</VBox>

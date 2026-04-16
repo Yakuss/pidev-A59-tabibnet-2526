@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.*?>
+
+<ScrollPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.pidev.controllers.RegisterController"
+            stylesheets="@../styles/style.css"
+            fitToWidth="true"
+            style="-fx-background-color: linear-gradient(to bottom right, #f0f4f8, #d9e2ec);"
+            hbarPolicy="NEVER">
+
+    <fx:define>
+        <ToggleGroup fx:id="roleGroup"/>
+    </fx:define>
+
+    <StackPane alignment="TOP_CENTER">
+        <VBox alignment="TOP_CENTER" maxWidth="550" spacing="15" styleClass="card"
+              style="-fx-background-color: white; -fx-padding: 25; -fx-background-radius: 15; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 5);">
+
+            <!-- Header -->
+            <VBox alignment="CENTER" spacing="5">
+                <Label text="⚕" style="-fx-font-size: 40px; -fx-text-fill: #3182ce;"/>
+                <Label text="Create Account" style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+                <Label text="Join PiDev Medical" style="-fx-font-size: 13px; -fx-text-fill: #7f8c8d;"/>
+            </VBox>
+
+            <!-- Role Toggle -->
+            <HBox alignment="CENTER" spacing="0" styleClass="role-toggle-container">
+                <ToggleButton fx:id="patientToggle" text="Patient" styleClass="role-toggle-left"
+                              selected="true" toggleGroup="$roleGroup" prefWidth="140"/>
+                <ToggleButton fx:id="doctorToggle" text="Doctor" styleClass="role-toggle-right"
+                              toggleGroup="$roleGroup" prefWidth="140"/>
+            </HBox>
+
+            <!-- Common Fields -->
+            <GridPane hgap="10" vgap="10">
+                <columnConstraints>
+                    <ColumnConstraints percentWidth="50"/>
+                    <ColumnConstraints percentWidth="50"/>
+                </columnConstraints>
+
+                <VBox spacing="2" GridPane.rowIndex="0" GridPane.columnIndex="0">
+                    <Label text="First Name *" styleClass="field-label"/>
+                    <TextField fx:id="firstNameField" promptText="First name" styleClass="text-field"/>
+                </VBox>
+                <VBox spacing="2" GridPane.rowIndex="0" GridPane.columnIndex="1">
+                    <Label text="Last Name *" styleClass="field-label"/>
+                    <TextField fx:id="lastNameField" promptText="Last name" styleClass="text-field"/>
+                </VBox>
+
+                <VBox spacing="2" GridPane.rowIndex="1" GridPane.columnIndex="0" GridPane.columnSpan="2">
+                    <Label text="Email *" styleClass="field-label"/>
+                    <TextField fx:id="emailField" promptText="your@email.com" styleClass="text-field"/>
+                </VBox>
+
+                <VBox spacing="2" GridPane.rowIndex="2" GridPane.columnIndex="0">
+                    <Label text="Password *" styleClass="field-label"/>
+                    <PasswordField fx:id="passwordField" promptText="Min. 6 chars" styleClass="password-field"/>
+                </VBox>
+                <VBox spacing="2" GridPane.rowIndex="2" GridPane.columnIndex="1">
+                    <Label text="Confirm *" styleClass="field-label"/>
+                    <PasswordField fx:id="confirmPasswordField" promptText="Re-enter" styleClass="password-field"/>
+                </VBox>
+
+                <VBox fx:id="ageContainer" spacing="2" GridPane.rowIndex="3" GridPane.columnIndex="0">
+                    <Label text="Age *" styleClass="field-label"/>
+                    <TextField fx:id="ageField" promptText="Years" styleClass="text-field"/>
+                </VBox>
+
+                <VBox spacing="2" GridPane.rowIndex="3" GridPane.columnIndex="1">
+                    <Label text="Gender *" styleClass="field-label"/>
+                    <ComboBox fx:id="genderCombo" promptText="Select" styleClass="combo-box"/>
+                </VBox>
+            </GridPane>
+
+            <!-- Doctor-specific fields -->
+            <VBox fx:id="doctorFields" spacing="10" visible="false" managed="false">
+                <Label text="Doctor Information" styleClass="section-title"/>
+                <TextField fx:id="phoneField" promptText="Phone Number" styleClass="text-field"/>
+                <ComboBox fx:id="specialtyCombo" promptText="Select Specialty" styleClass="combo-box"/>
+                <TextField fx:id="cinField" promptText="CIN (National ID)" styleClass="text-field"/>
+                <TextField fx:id="addressField" promptText="Clinic Address" styleClass="text-field"/>
+                <ComboBox fx:id="governorateCombo" promptText="Governorate" styleClass="combo-box"/>
+                <TextArea fx:id="educationArea" promptText="Education..." prefRowCount="2" styleClass="text-area"/>
+                <TextArea fx:id="experienceArea" promptText="Experience..." prefRowCount="2" styleClass="text-area"/>
+            </VBox>
+
+            <!-- Patient-specific fields -->
+            <VBox fx:id="patientFields" spacing="10" visible="true" managed="true">
+                <Label text="Patient Information" styleClass="section-title"/>
+                <DatePicker fx:id="dobPicker" promptText="Date of Birth" styleClass="date-picker"/>
+                <CheckBox fx:id="insuranceCheck" text="I have insurance" styleClass="check-box"/>
+                <TextField fx:id="insuranceNumberField" promptText="Insurance Number" styleClass="text-field"/>
+            </VBox>
+
+            <!-- Actions -->
+            <VBox spacing="10">
+                <Button fx:id="registerButton" text="Sign Up" onAction="#handleRegister"
+                        maxWidth="Infinity" styleClass="primary-button" prefHeight="40"/>
+
+                <Label fx:id="errorLabel" style="-fx-text-fill: #e53e3e; -fx-font-size: 12px;" visible="false" wrapText="true"/>
+
+                <HBox alignment="CENTER" spacing="5">
+                    <Label text="Already have an account?" style="-fx-text-fill: #7f8c8d; -fx-font-size: 12px;"/>
+                    <Hyperlink text="Sign in" onAction="#goToLogin"
+                               style="-fx-text-fill: #3182ce; -fx-font-weight: bold; -fx-font-size: 12px;"/>
+                </HBox>
+            </VBox>
+
+            <padding>
+                <Insets top="15" bottom="15"/>
+            </padding>
+        </VBox>
+    </StackPane>
+</ScrollPane>

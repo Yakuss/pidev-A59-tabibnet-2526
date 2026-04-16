@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.pidev.controllers.MedecinDashboardController"
+            stylesheets="@../styles/dashboard.css"
+            style="-fx-background-color: #f5f7fa;">
+
+    <!-- Left Sidebar -->
+    <left>
+        <VBox styleClass="sidebar" spacing="20">
+            <!-- Logo / Brand -->
+            <HBox alignment="CENTER_LEFT" spacing="10" styleClass="sidebar-header">
+                <Label text="⚕" style="-fx-font-size: 28px; -fx-text-fill: white;"/>
+                <Label text="PiDev Medical" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: white;"/>
+            </HBox>
+
+            <!-- Navigation Buttons -->
+            <VBox fx:id="navContainer" spacing="5" VBox.vgrow="ALWAYS">
+                <Button fx:id="homeNavBtn" text="🏠  Dashboard" styleClass="nav-button" onAction="#showHomePage"/>
+                <Button fx:id="profileNavBtn" text="👤  Profile" styleClass="nav-button" onAction="#showProfilePage"/>
+                <Button fx:id="appointmentsNavBtn" text="📅  Appointments" styleClass="nav-button" disable="true"/>
+                <Button fx:id="patientsNavBtn" text="👥  My Patients" styleClass="nav-button" disable="true"/>
+                <Button fx:id="scheduleNavBtn" text="⏰  Schedule" styleClass="nav-button" disable="true"/>
+            </VBox>
+
+            <!-- Logout Button at Bottom -->
+            <VBox spacing="10">
+                <Separator style="-fx-background-color: #475569;"/>
+                <Button text="🚪  Logout" styleClass="logout-button" onAction="#handleLogout" maxWidth="Infinity"/>
+            </VBox>
+            <padding>
+                <Insets topRightBottomLeft="20"/>
+            </padding>
+        </VBox>
+    </left>
+
+    <!-- Main Content Area -->
+    <center>
+        <StackPane fx:id="contentArea" style="-fx-background-color: #f5f7fa;">
+            <Label text="Loading..." style="-fx-font-size: 18px; -fx-text-fill: #64748b;"/>
+        </StackPane>
+    </center>
+
+</BorderPane>

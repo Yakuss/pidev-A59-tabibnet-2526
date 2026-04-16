@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.*?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.pidev.controllers.DoctorProfilePageController"
+      spacing="25" style="-fx-padding: 30; -fx-background-color: white;">
+
+    <!-- Header with Avatar and Name -->
+    <HBox spacing="20" alignment="CENTER_LEFT">
+        <StackPane style="-fx-background-color: #3b82f6; -fx-background-radius: 60; -fx-padding: 15;">
+            <Label text="👨‍⚕️" style="-fx-font-size: 42px; -fx-text-fill: white;"/>
+        </StackPane>
+        <VBox spacing="8">
+            <Label fx:id="fullNameLabel" style="-fx-font-size: 26px; -fx-font-weight: bold; -fx-text-fill: #1e293b;"/>
+            <Label fx:id="specialtyLabel" style="-fx-font-size: 16px; -fx-text-fill: #64748b;"/>
+        </VBox>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button fx:id="editButton" text="✏️  Edit Profile" style="-fx-background-color: #3b82f6; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 12 24; -fx-background-radius: 10; -fx-cursor: hand;"
+                onAction="#toggleEditMode"/>
+    </HBox>
+
+    <Separator style="-fx-background-color: #e2e8f0;"/>
+
+    <!-- View Mode -->
+    <VBox fx:id="viewModeContainer" spacing="20">
+        <!-- Contact & Location Cards -->
+        <HBox spacing="15">
+            <VBox spacing="10" HBox.hgrow="ALWAYS" style="-fx-background-color: #f8fafc; -fx-padding: 20; -fx-background-radius: 16;">
+                <Label text="📧 Email" style="-fx-font-size: 12px; -fx-text-fill: #64748b; -fx-font-weight: bold;"/>
+                <Label fx:id="emailLabel" style="-fx-font-size: 14px; -fx-text-fill: #1e293b;" wrapText="true"/>
+            </VBox>
+            <VBox spacing="10" HBox.hgrow="ALWAYS" style="-fx-background-color: #f8fafc; -fx-padding: 20; -fx-background-radius: 16;">
+                <Label text="📞 Phone" style="-fx-font-size: 12px; -fx-text-fill: #64748b; -fx-font-weight: bold;"/>
+                <Label fx:id="phoneLabel" style="-fx-font-size: 14px; -fx-text-fill: #1e293b;"/>
+            </VBox>
+        </HBox>
+
+        <HBox spacing="15">
+            <VBox spacing="10" HBox.hgrow="ALWAYS" style="-fx-background-color: #f8fafc; -fx-padding: 20; -fx-background-radius: 16;">
+                <Label text="🆔 CIN" style="-fx-font-size: 12px; -fx-text-fill: #64748b; -fx-font-weight: bold;"/>
+                <Label fx:id="cinLabel" style="-fx-font-size: 14px; -fx-text-fill: #1e293b;"/>
+            </VBox>
+            <VBox spacing="10" HBox.hgrow="ALWAYS" style="-fx-background-color: #f8fafc; -fx-padding: 20; -fx-background-radius: 16;">
+                <Label text="📍 Address" style="-fx-font-size: 12px; -fx-text-fill: #64748b; -fx-font-weight: bold;"/>
+                <Label fx:id="addressLabel" style="-fx-font-size: 14px; -fx-text-fill: #1e293b;" wrapText="true"/>
+            </VBox>
+        </HBox>
+
+        <HBox spacing="15">
+            <VBox spacing="10" HBox.hgrow="ALWAYS" style="-fx-background-color: #f8fafc; -fx-padding: 20; -fx-background-radius: 16;">
+                <Label text="🏛️ Governorate" style="-fx-font-size: 12px; -fx-text-fill: #64748b; -fx-font-weight: bold;"/>
+                <Label fx:id="governorateLabel" style="-fx-font-size: 14px; -fx-text-fill: #1e293b;"/>
+            </VBox>
+            <VBox spacing="10" HBox.hgrow="ALWAYS" style="-fx-background-color: #f8fafc; -fx-padding: 20; -fx-background-radius: 16;">
+                <Label text="💰 Consultation Fee" style="-fx-font-size: 12px; -fx-text-fill: #64748b; -fx-font-weight: bold;"/>
+                <Label fx:id="feeLabel" style="-fx-font-size: 14px; -fx-text-fill: #1e293b;"/>
+            </VBox>
+        </HBox>
+
+        <!-- Professional Details -->
+        <VBox spacing="15" style="-fx-background-color: #f8fafc; -fx-padding: 20; -fx-background-radius: 16;">
+            <Label text="📋 Professional Information" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #1e293b;"/>
+            <GridPane hgap="20" vgap="10">
+                <Label text="Education:" styleClass="profile-field" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                <Label fx:id="educationLabel" styleClass="profile-value" wrapText="true" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+                <Label text="Experience:" styleClass="profile-field" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                <Label fx:id="experienceLabel" styleClass="profile-value" wrapText="true" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+                <Label text="Verified:" styleClass="profile-field" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+                <Label fx:id="verifiedLabel" styleClass="profile-value" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+            </GridPane>
+        </VBox>
+    </VBox>
+
+    <!-- Edit Mode -->
+    <VBox fx:id="editModeContainer" spacing="20" visible="false" managed="false">
+        <Label text="Edit Your Information" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #1e293b;"/>
+
+        <GridPane hgap="20" vgap="15">
+            <Label text="First Name *" styleClass="profile-field" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+            <TextField fx:id="firstNameField" styleClass="text-field" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+            <Label text="Last Name *" styleClass="profile-field" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+            <TextField fx:id="lastNameField" styleClass="text-field" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+            <Label text="Phone *" styleClass="profile-field" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+            <TextField fx:id="phoneField" styleClass="text-field" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+            <Label text="Address *" styleClass="profile-field" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+            <TextField fx:id="addressField" styleClass="text-field" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+
+            <Label text="Governorate *" styleClass="profile-field" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+            <ComboBox fx:id="governorateCombo" styleClass="combo-box" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+
+            <Label text="Specialty *" styleClass="profile-field" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
+            <ComboBox fx:id="specialtyCombo" styleClass="combo-box" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+
+            <Label text="Consultation Fee" styleClass="profile-field" GridPane.rowIndex="6" GridPane.columnIndex="0"/>
+            <TextField fx:id="feeField" promptText="e.g., 50.00" styleClass="text-field" GridPane.rowIndex="6" GridPane.columnIndex="1"/>
+
+            <Label text="Education" styleClass="profile-field" GridPane.rowIndex="7" GridPane.columnIndex="0"/>
+            <TextArea fx:id="educationArea" prefRowCount="3" styleClass="text-area" GridPane.rowIndex="7" GridPane.columnIndex="1"/>
+
+            <Label text="Experience" styleClass="profile-field" GridPane.rowIndex="8" GridPane.columnIndex="0"/>
+            <TextArea fx:id="experienceArea" prefRowCount="3" styleClass="text-area" GridPane.rowIndex="8" GridPane.columnIndex="1"/>
+        </GridPane>
+
+        <Label fx:id="editErrorLabel" style="-fx-text-fill: #e53e3e; -fx-font-size: 12px;" visible="false" wrapText="true"/>
+
+        <HBox spacing="15">
+            <Button text="💾  Save Changes" style="-fx-background-color: #10b981; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 12 24; -fx-background-radius: 10; -fx-cursor: hand;"
+                    onAction="#saveProfile"/>
+            <Button text="❌  Cancel" style="-fx-background-color: #f1f5f9; -fx-text-fill: #475569; -fx-font-weight: 600; -fx-padding: 12 24; -fx-background-radius: 10; -fx-cursor: hand;"
+                    onAction="#toggleEditMode"/>
+        </HBox>
+    </VBox>
+
+    <padding>
+        <Insets top="20" bottom="20"/>
+    </padding>
+</VBox>

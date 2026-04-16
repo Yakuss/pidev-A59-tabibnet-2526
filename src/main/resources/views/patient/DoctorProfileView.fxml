@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.text.*?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.pidev.controllers.DoctorProfileViewController"
+      spacing="25" style="-fx-padding: 30; -fx-background-color: white; -fx-min-width: 550;">
+
+    <!-- Header with Avatar, Name, and Badge -->
+    <HBox spacing="20" alignment="CENTER_LEFT">
+        <StackPane style="-fx-background-color: #3b82f6; -fx-background-radius: 60; -fx-padding: 15;">
+            <Label text="👨‍⚕️" style="-fx-font-size: 42px; -fx-text-fill: white;"/>
+        </StackPane>
+        <VBox spacing="8">
+            <HBox spacing="12" alignment="CENTER_LEFT">
+                <Label fx:id="fullNameLabel" style="-fx-font-size: 26px; -fx-font-weight: bold; -fx-text-fill: #1e293b;"/>
+                <Label fx:id="verifiedBadge" style="-fx-background-color: #10b981; -fx-text-fill: white; -fx-font-size: 12px;
+                       -fx-font-weight: bold; -fx-padding: 4 12; -fx-background-radius: 20;" visible="false"/>
+            </HBox>
+            <Label fx:id="specialtyLabel" style="-fx-font-size: 16px; -fx-text-fill: #64748b;"/>
+            <HBox spacing="15">
+                <HBox spacing="5" alignment="CENTER_LEFT">
+                    <Label text="⭐" style="-fx-font-size: 14px;"/>
+                    <Label fx:id="ratingLabel" text="4.8" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #f59e0b;"/>
+                    <Label text="(42 reviews)" style="-fx-font-size: 13px; -fx-text-fill: #94a3b8;"/>
+                </HBox>
+            </HBox>
+        </VBox>
+    </HBox>
+
+    <Separator style="-fx-background-color: #e2e8f0;"/>
+
+    <!-- Contact & Location Info Cards -->
+    <HBox spacing="15">
+        <VBox spacing="10" HBox.hgrow="ALWAYS" style="-fx-background-color: #f8fafc; -fx-padding: 20; -fx-background-radius: 16;">
+            <Label text="📧 Email" style="-fx-font-size: 12px; -fx-text-fill: #64748b; -fx-font-weight: bold;"/>
+            <Label fx:id="emailLabel" style="-fx-font-size: 14px; -fx-text-fill: #1e293b;" wrapText="true"/>
+        </VBox>
+        <VBox spacing="10" HBox.hgrow="ALWAYS" style="-fx-background-color: #f8fafc; -fx-padding: 20; -fx-background-radius: 16;">
+            <Label text="📞 Phone" style="-fx-font-size: 12px; -fx-text-fill: #64748b; -fx-font-weight: bold;"/>
+            <Label fx:id="phoneLabel" style="-fx-font-size: 14px; -fx-text-fill: #1e293b;"/>
+        </VBox>
+    </HBox>
+
+    <HBox spacing="15">
+        <VBox spacing="10" HBox.hgrow="ALWAYS" style="-fx-background-color: #f8fafc; -fx-padding: 20; -fx-background-radius: 16;">
+            <Label text="📍 Address" style="-fx-font-size: 12px; -fx-text-fill: #64748b; -fx-font-weight: bold;"/>
+            <Label fx:id="addressLabel" style="-fx-font-size: 14px; -fx-text-fill: #1e293b;" wrapText="true"/>
+        </VBox>
+        <VBox spacing="10" HBox.hgrow="ALWAYS" style="-fx-background-color: #f8fafc; -fx-padding: 20; -fx-background-radius: 16;">
+            <Label text="🏛️ Governorate" style="-fx-font-size: 12px; -fx-text-fill: #64748b; -fx-font-weight: bold;"/>
+            <Label fx:id="governorateLabel" style="-fx-font-size: 14px; -fx-text-fill: #1e293b;"/>
+        </VBox>
+    </HBox>
+
+    <!-- Professional Details -->
+    <VBox spacing="15" style="-fx-background-color: #f8fafc; -fx-padding: 20; -fx-background-radius: 16;">
+        <Label text="📋 Professional Information" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #1e293b;"/>
+        <GridPane hgap="20" vgap="10">
+            <Label text="CIN:" styleClass="profile-field" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+            <Label fx:id="cinLabel" styleClass="profile-value" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+            <Label text="Education:" styleClass="profile-field" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+            <Label fx:id="educationLabel" styleClass="profile-value" wrapText="true" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+            <Label text="Experience:" styleClass="profile-field" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+            <Label fx:id="experienceLabel" styleClass="profile-value" wrapText="true" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+            <Label text="Consultation Fee:" styleClass="profile-field" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+            <Label fx:id="feeLabel" styleClass="profile-value" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+        </GridPane>
+    </VBox>
+
+    <!-- Action Buttons -->
+    <HBox spacing="15" alignment="CENTER_RIGHT">
+        <Button text="📅 Book Appointment" styleClass="primary-button"
+                style="-fx-background-color: #10b981; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 14 28; -fx-background-radius: 10; -fx-cursor: hand;"/>
+        <Button text="✕ Close" onAction="#closeWindow" styleClass="secondary-button"
+                style="-fx-background-color: #f1f5f9; -fx-text-fill: #475569; -fx-font-weight: 600; -fx-padding: 14 24; -fx-background-radius: 10; -fx-cursor: hand;"/>
+    </HBox>
+
+    <padding>
+        <Insets top="20" bottom="20"/>
+    </padding>
+</VBox>

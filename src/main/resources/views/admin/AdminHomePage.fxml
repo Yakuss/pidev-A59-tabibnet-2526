@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.*?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.pidev.controllers.AdminHomePageController"
+      spacing="25" style="-fx-padding: 30;">
+
+    <VBox spacing="5">
+        <Label fx:id="welcomeLabel" styleClass="page-title"/>
+        <Label text="System overview and quick actions" style="-fx-font-size: 14px; -fx-text-fill: #64748b;"/>
+    </VBox>
+
+    <!-- Stats Cards -->
+    <HBox spacing="20">
+        <VBox styleClass="content-card" HBox.hgrow="ALWAYS" alignment="CENTER" spacing="10">
+            <Label text="👨‍⚕️" style="-fx-font-size: 32px;"/>
+            <Label text="Total Doctors" style="-fx-font-size: 14px; -fx-text-fill: #64748b;"/>
+            <Label fx:id="totalDoctorsLabel" text="0" style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #3b82f6;"/>
+        </VBox>
+        <VBox styleClass="content-card" HBox.hgrow="ALWAYS" alignment="CENTER" spacing="10">
+            <Label text="👥" style="-fx-font-size: 32px;"/>
+            <Label text="Total Patients" style="-fx-font-size: 14px; -fx-text-fill: #64748b;"/>
+            <Label fx:id="totalPatientsLabel" text="0" style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #10b981;"/>
+        </VBox>
+        <VBox styleClass="content-card" HBox.hgrow="ALWAYS" alignment="CENTER" spacing="10">
+            <Label text="⏳" style="-fx-font-size: 32px;"/>
+            <Label text="Pending Verifications" style="-fx-font-size: 14px; -fx-text-fill: #64748b;"/>
+            <Label fx:id="pendingDoctorsLabel" text="0" style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #f59e0b;"/>
+        </VBox>
+    </HBox>
+
+    <!-- Quick Actions -->
+    <VBox spacing="15">
+        <Label text="Quick Actions" styleClass="section-title"/>
+        <HBox spacing="15">
+            <Button text="👨‍⚕️  Manage Doctors" style="-fx-background-color: #3b82f6; -fx-text-fill: white; -fx-padding: 12 20; -fx-background-radius: 10; -fx-cursor: hand;"
+                    onAction="#goToManageDoctors"/>
+            <Button text="👥  Manage Patients" style="-fx-background-color: #10b981; -fx-text-fill: white; -fx-padding: 12 20; -fx-background-radius: 10; -fx-cursor: hand;"
+                    onAction="#goToManagePatients"/>
+        </HBox>
+    </VBox>
+
+</VBox>

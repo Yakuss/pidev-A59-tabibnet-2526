@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.*?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.pidev.controllers.DoctorHomePageController"
+      spacing="25" style="-fx-padding: 30;">
+
+    <!-- Welcome Header -->
+    <VBox spacing="5">
+        <Label fx:id="welcomeLabel" styleClass="page-title"/>
+        <Label text="Here's your practice overview for today" style="-fx-font-size: 14px; -fx-text-fill: #64748b;"/>
+    </VBox>
+
+    <!-- Stats Cards -->
+    <HBox spacing="20">
+        <VBox styleClass="content-card" HBox.hgrow="ALWAYS" alignment="CENTER" spacing="10">
+            <Label text="📅" style="-fx-font-size: 32px;"/>
+            <Label text="Today's Appointments" style="-fx-font-size: 14px; -fx-text-fill: #64748b;"/>
+            <Label fx:id="appointmentCountLabel" text="0" style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #3b82f6;"/>
+        </VBox>
+        <VBox styleClass="content-card" HBox.hgrow="ALWAYS" alignment="CENTER" spacing="10">
+            <Label text="👥" style="-fx-font-size: 32px;"/>
+            <Label text="Total Patients" style="-fx-font-size: 14px; -fx-text-fill: #64748b;"/>
+            <Label fx:id="patientCountLabel" text="0" style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #10b981;"/>
+        </VBox>
+        <VBox styleClass="content-card" HBox.hgrow="ALWAYS" alignment="CENTER" spacing="10">
+            <Label text="⭐" style="-fx-font-size: 32px;"/>
+            <Label text="AI Score" style="-fx-font-size: 14px; -fx-text-fill: #64748b;"/>
+            <Label fx:id="aiScoreLabel" text="N/A" style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #f59e0b;"/>
+        </VBox>
+    </HBox>
+
+    <!-- Quick Actions -->
+    <VBox spacing="15">
+        <Label text="Quick Actions" styleClass="section-title"/>
+        <HBox spacing="15">
+            <Button text="📅  Manage Appointments" styleClass="nav-button" style="-fx-background-color: #3b82f6; -fx-text-fill: white; -fx-padding: 12 20;"/>
+            <Button text="📋  View Schedule" styleClass="nav-button" style="-fx-background-color: #10b981; -fx-text-fill: white; -fx-padding: 12 20;"/>
+            <Button text="💬  Messages" styleClass="nav-button" style="-fx-background-color: #8b5cf6; -fx-text-fill: white; -fx-padding: 12 20;"/>
+        </HBox>
+    </VBox>
+
+    <!-- Upcoming Appointments -->
+    <VBox spacing="15">
+        <Label text="Upcoming Appointments" styleClass="section-title"/>
+        <VBox styleClass="content-card" spacing="10">
+            <HBox spacing="15" alignment="CENTER_LEFT">
+                <Label text="🕒" style="-fx-font-size: 24px;"/>
+                <VBox>
+                    <Label text="John Doe - General Checkup" style="-fx-font-weight: bold; -fx-font-size: 14px;"/>
+                    <Label text="Today at 10:30 AM • Room 4" style="-fx-text-fill: #64748b; -fx-font-size: 12px;"/>
+                </VBox>
+            </HBox>
+            <Separator/>
+            <HBox spacing="15" alignment="CENTER_LEFT">
+                <Label text="🕒" style="-fx-font-size: 24px;"/>
+                <VBox>
+                    <Label text="Jane Smith - Follow-up" style="-fx-font-weight: bold; -fx-font-size: 14px;"/>
+                    <Label text="Today at 2:00 PM • Room 2" style="-fx-text-fill: #64748b; -fx-font-size: 12px;"/>
+                </VBox>
+            </HBox>
+        </VBox>
+    </VBox>
+
+</VBox>

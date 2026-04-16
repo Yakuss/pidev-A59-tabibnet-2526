@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.text.*?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.pidev.controllers.EditDoctorDialogController"
+      spacing="20" style="-fx-padding: 25; -fx-background-color: white; -fx-min-width: 600;"
+      stylesheets="@../../styles/dashboard.css">
+
+    <!-- Header -->
+    <HBox spacing="15" alignment="CENTER_LEFT">
+        <StackPane style="-fx-background-color: #3b82f6; -fx-background-radius: 50; -fx-padding: 12;">
+            <Label text="👨‍⚕️" style="-fx-font-size: 28px; -fx-text-fill: white;"/>
+        </StackPane>
+        <VBox spacing="3">
+            <Label text="Edit Doctor Profile" style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #1e293b;"/>
+            <Label fx:id="doctorNameHeader" text="Update information below" style="-fx-font-size: 13px; -fx-text-fill: #64748b;"/>
+        </VBox>
+    </HBox>
+
+    <Separator style="-fx-background-color: #e2e8f0;"/>
+
+    <!-- Form Grid -->
+    <GridPane hgap="20" vgap="12">
+        <columnConstraints>
+            <ColumnConstraints percentWidth="30"/>
+            <ColumnConstraints percentWidth="70"/>
+        </columnConstraints>
+
+        <!-- Row 0 -->
+        <Label text="First Name" styleClass="dialog-label" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+        <TextField fx:id="firstNameField" styleClass="dialog-field" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+        <!-- Row 1 -->
+        <Label text="Last Name" styleClass="dialog-label" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+        <TextField fx:id="lastNameField" styleClass="dialog-field" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+        <!-- Row 2 -->
+        <Label text="Email" styleClass="dialog-label" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+        <TextField fx:id="emailField" styleClass="dialog-field" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+        <!-- Row 3 -->
+        <Label text="Phone" styleClass="dialog-label" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+        <TextField fx:id="phoneField" styleClass="dialog-field" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+
+        <!-- Row 4 -->
+        <Label text="CIN" styleClass="dialog-label" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+        <TextField fx:id="cinField" styleClass="dialog-field" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+
+        <!-- Row 5 -->
+        <Label text="Address" styleClass="dialog-label" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
+        <TextField fx:id="addressField" styleClass="dialog-field" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+
+        <!-- Row 6 -->
+        <Label text="Governorate" styleClass="dialog-label" GridPane.rowIndex="6" GridPane.columnIndex="0"/>
+        <ComboBox fx:id="governorateCombo" styleClass="dialog-combo" GridPane.rowIndex="6" GridPane.columnIndex="1"/>
+
+        <!-- Row 7 -->
+        <Label text="Specialty" styleClass="dialog-label" GridPane.rowIndex="7" GridPane.columnIndex="0"/>
+        <ComboBox fx:id="specialtyCombo" styleClass="dialog-combo" GridPane.rowIndex="7" GridPane.columnIndex="1"/>
+
+        <!-- Row 8 -->
+        <Label text="Consultation Fee" styleClass="dialog-label" GridPane.rowIndex="8" GridPane.columnIndex="0"/>
+        <TextField fx:id="feeField" promptText="e.g., 50.00" styleClass="dialog-field" GridPane.rowIndex="8" GridPane.columnIndex="1"/>
+
+        <!-- Row 9 -->
+        <Label text="Education" styleClass="dialog-label" GridPane.rowIndex="9" GridPane.columnIndex="0"/>
+        <TextArea fx:id="educationArea" prefRowCount="2" styleClass="dialog-area" GridPane.rowIndex="9" GridPane.columnIndex="1"/>
+
+        <!-- Row 10 -->
+        <Label text="Experience" styleClass="dialog-label" GridPane.rowIndex="10" GridPane.columnIndex="0"/>
+        <TextArea fx:id="experienceArea" prefRowCount="2" styleClass="dialog-area" GridPane.rowIndex="10" GridPane.columnIndex="1"/>
+    </GridPane>
+
+    <!-- Error Label -->
+    <Label fx:id="errorLabel" style="-fx-text-fill: #e53e3e; -fx-font-size: 12px;" visible="false" wrapText="true"/>
+
+    <!-- Action Buttons -->
+    <HBox spacing="15" alignment="CENTER_RIGHT">
+        <Button text="Cancel" onAction="#cancel" styleClass="dialog-cancel-btn"/>
+        <Button text="Save Changes" onAction="#save" styleClass="dialog-save-btn"/>
+    </HBox>
+
+</VBox>

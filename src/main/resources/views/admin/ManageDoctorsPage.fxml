@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.*?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.pidev.controllers.ManageDoctorsController"
+      spacing="20" style="-fx-padding: 30; -fx-background-color: #f5f7fa;">
+
+    <HBox alignment="CENTER_LEFT" spacing="10">
+        <Label text="👨‍⚕️ Manage Doctors" style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #1e293b;"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button text="📄 Export CSV" styleClass="export-button" onAction="#exportToCSV"/>
+        <Button text="📑 Export PDF" styleClass="export-button" onAction="#exportToPDF"/>
+    </HBox>
+
+    <!-- Filter Bar -->
+    <HBox spacing="15" alignment="CENTER_LEFT" styleClass="filter-card">
+        <TextField fx:id="searchField" promptText="🔍 Search by name or email" prefWidth="250" styleClass="search-field"/>
+        <ComboBox fx:id="specialtyFilterCombo" promptText="All Specialties" prefWidth="180" styleClass="filter-combo"/>
+        <ComboBox fx:id="verifiedFilterCombo" promptText="All Status" prefWidth="150" styleClass="filter-combo"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button text="🔄 Refresh" onAction="#refreshList" styleClass="reset-button"/>
+    </HBox>
+
+    <!-- Card List View -->
+    <ListView fx:id="doctorsListView" VBox.vgrow="ALWAYS" style="-fx-background-color: transparent; -fx-padding: 0;"/>
+
+</VBox>

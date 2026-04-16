@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.text.*?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.pidev.controllers.HomePageController"
+      spacing="25" style="-fx-padding: 30;">
+
+    <!-- Welcome Header -->
+    <VBox spacing="5">
+        <Label fx:id="welcomeLabel" styleClass="page-title"/>
+        <Label text="Here's your health overview for today" style="-fx-font-size: 14px; -fx-text-fill: #64748b;"/>
+    </VBox>
+
+    <!-- Stats Cards -->
+    <HBox spacing="20">
+        <VBox styleClass="content-card" HBox.hgrow="ALWAYS" alignment="CENTER" spacing="10">
+            <Label text="📅" style="-fx-font-size: 32px;"/>
+            <Label text="Upcoming Appointments" style="-fx-font-size: 14px; -fx-text-fill: #64748b;"/>
+            <Label fx:id="appointmentCountLabel" text="0" style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #3b82f6;"/>
+        </VBox>
+        <VBox styleClass="content-card" HBox.hgrow="ALWAYS" alignment="CENTER" spacing="10">
+            <Label text="📋" style="-fx-font-size: 32px;"/>
+            <Label text="Prescriptions" style="-fx-font-size: 14px; -fx-text-fill: #64748b;"/>
+            <Label text="2" style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #10b981;"/>
+        </VBox>
+        <VBox styleClass="content-card" HBox.hgrow="ALWAYS" alignment="CENTER" spacing="10">
+            <Label text="❤️" style="-fx-font-size: 32px;"/>
+            <Label text="Health Score" style="-fx-font-size: 14px; -fx-text-fill: #64748b;"/>
+            <Label text="85%" style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #f59e0b;"/>
+        </VBox>
+    </HBox>
+
+    <!-- Quick Actions -->
+    <VBox spacing="15">
+        <Label text="Quick Actions" styleClass="section-title"/>
+        <HBox spacing="15">
+            <Button text="📅  Book Appointment" styleClass="nav-button" style="-fx-background-color: #3b82f6; -fx-text-fill: white; -fx-padding: 12 20;"/>
+            <Button text="💬  Contact Doctor" styleClass="nav-button" style="-fx-background-color: #10b981; -fx-text-fill: white; -fx-padding: 12 20;"/>
+            <Button text="📄  View Reports" styleClass="nav-button" style="-fx-background-color: #8b5cf6; -fx-text-fill: white; -fx-padding: 12 20;"/>
+        </HBox>
+    </VBox>
+
+    <!-- Recent Activity -->
+    <VBox spacing="15">
+        <Label text="Recent Activity" styleClass="section-title"/>
+        <VBox styleClass="content-card" spacing="10">
+            <HBox spacing="15" alignment="CENTER_LEFT">
+                <Label text="🩺" style="-fx-font-size: 24px;"/>
+                <VBox>
+                    <Label text="Dr. Sarah Chen - Cardiology" style="-fx-font-weight: bold; -fx-font-size: 14px;"/>
+                    <Label text="Appointment completed • Yesterday" style="-fx-text-fill: #64748b; -fx-font-size: 12px;"/>
+                </VBox>
+            </HBox>
+            <Separator/>
+            <HBox spacing="15" alignment="CENTER_LEFT">
+                <Label text="💊" style="-fx-font-size: 24px;"/>
+                <VBox>
+                    <Label text="Prescription Renewed" style="-fx-font-weight: bold; -fx-font-size: 14px;"/>
+                    <Label text="Lisinopril 10mg • 3 days ago" style="-fx-text-fill: #64748b; -fx-font-size: 12px;"/>
+                </VBox>
+            </HBox>
+        </VBox>
+    </VBox>
+
+</VBox>

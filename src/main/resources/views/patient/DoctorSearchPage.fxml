@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.text.*?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.pidev.controllers.DoctorSearchController"
+      spacing="25" style="-fx-padding: 30; -fx-background-color: #f5f7fa;">
+
+    <!-- Header -->
+    <VBox spacing="8">
+        <Label text="Find Your Doctor" style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #1e293b;"/>
+        <Label text="Search by name, specialty, or location" style="-fx-font-size: 14px; -fx-text-fill: #64748b;"/>
+    </VBox>
+
+    <!-- Search Filters Card -->
+    <HBox spacing="15" alignment="CENTER_LEFT" styleClass="filter-card"
+          style="-fx-background-color: white; -fx-padding: 20; -fx-background-radius: 16; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.04), 8, 0, 2, 0);">
+        <TextField fx:id="nameFilterField" promptText="🔍 Doctor name" prefWidth="220" styleClass="search-field"/>
+        <ComboBox fx:id="specialtyFilterCombo" promptText="📋 Specialty" prefWidth="200" styleClass="filter-combo"/>
+        <ComboBox fx:id="governorateFilterCombo" promptText="📍 Governorate" prefWidth="180" styleClass="filter-combo"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button text="Search" onAction="#handleSearch" styleClass="search-button"/>
+        <Button text="Reset" onAction="#handleReset" styleClass="reset-button"/>
+    </HBox>
+
+    <!-- Results Header -->
+    <HBox alignment="CENTER_LEFT">
+        <Label fx:id="resultsCountLabel" text="0 doctors found" style="-fx-font-size: 16px; -fx-font-weight: 600; -fx-text-fill: #1e293b;"/>
+    </HBox>
+
+    <!-- Results Container (Scrollable Cards) -->
+    <ScrollPane fitToWidth="true" style="-fx-background-color: transparent; -fx-padding: 0;" vbarPolicy="AS_NEEDED">
+        <VBox fx:id="resultsContainer" spacing="15" style="-fx-background-color: transparent;"/>
+    </ScrollPane>
+
+</VBox>
