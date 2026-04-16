@@ -11,7 +11,11 @@ public class MainClass {
         Personne p = new Personne("Tounsi","Abdelhamid");
         PersonneService ps = new PersonneService();
        // ps.addEntity2(p);
-        System.out.println(ps.getData());
+        try {
+            System.out.println(ps.findAll());
+        } catch (java.sql.SQLException e) {
+            System.out.println(e.getMessage());
+        }
 
         MyConnection m1 = MyConnection.getInstance();
         MyConnection m2 = MyConnection.getInstance();

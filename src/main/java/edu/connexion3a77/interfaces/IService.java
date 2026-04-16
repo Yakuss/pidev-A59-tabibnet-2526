@@ -1,11 +1,12 @@
 package edu.connexion3a77.interfaces;
 
+import java.sql.SQLException;
 import java.util.List;
 
 public interface IService<T> {
-
-    void addEntity(T t);
-    void deleteEntity(T t);
-    void updateEntity(int id, T t);
-    List<T> getData();
+    void add(T t) throws SQLException;
+    void update(T t) throws SQLException;
+    void delete(int id) throws SQLException;
+    T findById(int id) throws SQLException;
+    List<T> findAll() throws SQLException;
 }

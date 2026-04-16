@@ -1,0 +1,396 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.text.Font?>
+
+<ScrollPane fitToWidth="true" hbarPolicy="NEVER" maxHeight="-Infinity" prefHeight="540.0" style="-fx-background-color: #f0fdf4;" vbarPolicy="AS_NEEDED" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.connexion3a77.controller.OrdonnanceController">
+    <content>
+        <AnchorPane prefHeight="900.0" prefWidth="800.0" style="-fx-background-color: #f0fdf4;">
+
+            <children>
+
+                <!-- Container centré -->
+                <AnchorPane layoutX="50.0" layoutY="50.0" prefWidth="700.0" style="-fx-background-color: white; -fx-background-radius: 24; -fx-border-radius: 24;">
+                    <effect>
+                        <DropShadow color="#00000020" height="30.0" offsetY="10.0" radius="15.0" width="30.0" />
+                    </effect>
+
+                    <children>
+
+                        <!-- HEADER avec gradient organique -->
+                        <AnchorPane prefHeight="180.0" prefWidth="700.0" style="-fx-background-color: linear-gradient(to bottom right, #059669, #047857, #064e3b); -fx-background-radius: 24 24 0 0;">
+
+                            <!-- Effet de cercle décoratif -->
+                            <Circle fill="rgba(255,255,255,0.08)" layoutX="600.0" layoutY="-20.0" radius="150.0" />
+                            <Circle fill="rgba(255,255,255,0.05)" layoutX="550.0" layoutY="50.0" radius="100.0" />
+
+                            <children>
+                                <!-- Badge -->
+                                <HBox alignment="CENTER_LEFT" layoutX="40.0" layoutY="25.0" spacing="6.0" style="-fx-background-color: rgba(255,255,255,0.15); -fx-background-radius: 100; -fx-padding: 6 14; -fx-border-color: rgba(255,255,255,0.2); -fx-border-radius: 100; -fx-border-width: 1;">
+                                    <children>
+                                        <Label style="-fx-font-size: 12;" text="➕" />
+                                        <Label text="NOUVELLE ORDONNANCE" textFill="rgba(255,255,255,0.9)">
+                                            <font>
+                                                <Font name="System Bold" size="11.0" />
+                                            </font>
+                                        </Label>
+                                    </children>
+                                </HBox>
+
+                                <!-- Titre principal -->
+                                <Label layoutX="40.0" layoutY="60.0" text="Créer une ordonnance" textFill="white">
+                                    <font>
+                                        <Font name="System Bold" size="32.0" />
+                                    </font>
+                                </Label>
+
+                                <!-- Sous-titre avec date -->
+                                <Label layoutX="40.0" layoutY="100.0" text="Nouvelle prescription médicale • 13/04/2026" textFill="rgba(255,255,255,0.8)">
+                                    <font>
+                                        <Font size="14.0" />
+                                    </font>
+                                </Label>
+
+                                <!-- Progress bar -->
+                                <HBox layoutX="40.0" layoutY="145.0" prefWidth="620.0" spacing="8.0">
+
+                                </HBox>
+                            </children>
+                        </AnchorPane>
+
+                        <!-- BODY -->
+                        <AnchorPane layoutY="180.0" prefHeight="650.0" prefWidth="700.0" style="-fx-background-color: white; -fx-background-radius: 0 0 24 24;">
+                            <padding>
+                                <Insets bottom="30.0" left="40.0" right="40.0" top="30.0" />
+                            </padding>
+
+                            <children>
+
+                                <!-- SECTION RENDEZ-VOUS (mise en avant) -->
+                                <AnchorPane layoutX="40.0" layoutY="30.0" prefWidth="620.0" style="-fx-background-color: linear-gradient(to bottom right, #f0fdf4, #ffffff); -fx-background-radius: 16; -fx-border-color: #a7f3d0; -fx-border-radius: 16; -fx-border-width: 2;">
+                                    <children>
+                                        <!-- Header de section -->
+                                        <HBox alignment="CENTER_LEFT" layoutX="20.0" layoutY="15.0" spacing="12.0">
+                                            <children>
+                                                <!-- Icône -->
+                                                <AnchorPane prefHeight="40.0" prefWidth="40.0" style="-fx-background-color: linear-gradient(to bottom right, #10b981, #059669); -fx-background-radius: 12;">
+                                                    <children>
+                                                        <Label layoutX="8.0" layoutY="8.0" style="-fx-font-size: 20;" text="📅" />
+                                                    </children>
+                                                </AnchorPane>
+
+                                                <VBox spacing="2.0">
+                                                    <children>
+                                                        <Label text="Rendez-vous associé" textFill="#1c1917">
+                                                            <font>
+                                                                <Font name="System Bold" size="16.0" />
+                                                            </font>
+                                                        </Label>
+                                                        <Label text="Sélectionnez la consultation concernée" textFill="#78716c">
+                                                            <font>
+                                                                <Font size="12.0" />
+                                                            </font>
+                                                        </Label>
+                                                    </children>
+                                                </VBox>
+                                            </children>
+                                        </HBox>
+
+                                        <!-- Champ Rendez-vous -->
+                                        <HBox alignment="CENTER_LEFT" layoutX="20.0" layoutY="70.0" spacing="15.0">
+                                            <children>
+                                                <Label prefWidth="150.0" text="Choix du rendez-vous" textFill="#1c1917">
+                                                    <font>
+                                                        <Font name="System Bold" size="13.0" />
+                                                    </font>
+                                                </Label>
+                                                <ComboBox fx:id="rendezVousCB" prefHeight="48.0" prefWidth="420.0" promptText="-- Sélectionner un rendez-vous --" style="-fx-background-color: white; -fx-background-radius: 12; -fx-border-radius: 12; -fx-border-color: #e7e5e4; -fx-border-width: 2; -fx-font-size: 14;" />
+                                            </children>
+                                        </HBox>
+
+                                        <!-- Hint -->
+                                        <HBox alignment="CENTER_LEFT" layoutX="185.0" layoutY="125.0" spacing="6.0">
+                                            <children>
+                                                <Label style="-fx-font-size: 12;" text="🔗" />
+                                                <Label text="Cette ordonnance sera liée au rendez-vous sélectionné" textFill="#78716c">
+                                                    <font>
+                                                        <Font size="12.0" />
+                                                    </font>
+                                                </Label>
+                                            </children>
+                                        </HBox>
+                                    </children>
+                                </AnchorPane>
+
+                                <!-- SECTION INFORMATIONS PRINCIPALES -->
+                                <AnchorPane layoutX="40.0" layoutY="200.0" prefWidth="620.0">
+                                    <children>
+                                        <!-- Header -->
+                                        <HBox alignment="CENTER_LEFT" layoutY="0.0" spacing="12.0" style="-fx-padding: 0 0 15 0; -fx-border-color: transparent transparent #e7e5e4 transparent; -fx-border-width: 0 0 2 0;">
+                                            <children>
+                                                <AnchorPane prefHeight="40.0" prefWidth="40.0" style="-fx-background-color: linear-gradient(to bottom right, #10b981, #059669); -fx-background-radius: 12;">
+                                                    <children>
+                                                        <Label layoutX="8.0" layoutY="8.0" style="-fx-font-size: 20;" text="📋" />
+                                                    </children>
+                                                </AnchorPane>
+
+                                                <VBox spacing="2.0">
+                                                    <children>
+                                                        <Label text="Informations principales" textFill="#1c1917">
+                                                            <font>
+                                                                <Font name="System Bold" size="16.0" />
+                                                            </font>
+                                                        </Label>
+                                                        <Label text="Date, diagnostic et médicaments" textFill="#78716c">
+                                                            <font>
+                                                                <Font size="12.0" />
+                                                            </font>
+                                                        </Label>
+                                                    </children>
+                                                </VBox>
+                                            </children>
+                                        </HBox>
+
+                                        <!-- Grid 2 colonnes -->
+                                        <VBox layoutY="70.0" spacing="20.0">
+
+                                            <!-- Ligne 1: Date + Diagnostic -->
+                                            <HBox spacing="20.0">
+                                                <children>
+                                                    <!-- Date -->
+                                                    <VBox prefWidth="290.0" spacing="6.0">
+                                                        <children>
+                                                            <HBox spacing="4.0">
+                                                                <children>
+                                                                    <Label text="Date de prescription" textFill="#1c1917">
+                                                                        <font>
+                                                                            <Font name="System Bold" size="13.0" />
+                                                                        </font>
+                                                                    </Label>
+                                                                    <Label text="*" textFill="#ef4444">
+                                                                        <font>
+                                                                            <Font name="System Bold" size="13.0" />
+                                                                        </font>
+                                                                    </Label>
+                                                                </children>
+                                                            </HBox>
+                                                            <DatePicker fx:id="dateOrdonnanceDP" prefHeight="48.0" prefWidth="290.0" style="-fx-background-color: white; -fx-background-radius: 12; -fx-border-radius: 12; -fx-border-color: #e7e5e4; -fx-border-width: 2; -fx-font-size: 14;" />
+                                                        </children>
+                                                    </VBox>
+
+                                                    <!-- Diagnostic -->
+                                                    <VBox prefWidth="290.0" spacing="6.0">
+                                                        <children>
+                                                            <HBox spacing="4.0">
+                                                                <children>
+                                                                    <Label text="Diagnostic" textFill="#1c1917">
+                                                                        <font>
+                                                                            <Font name="System Bold" size="13.0" />
+                                                                        </font>
+                                                                    </Label>
+                                                                    <Label text="*" textFill="#ef4444">
+                                                                        <font>
+                                                                            <Font name="System Bold" size="13.0" />
+                                                                        </font>
+                                                                    </Label>
+                                                                </children>
+                                                            </HBox>
+                                                            <TextField fx:id="diagnosisTF" prefHeight="48.0" prefWidth="290.0" promptText="Diagnostic principal" style="-fx-background-color: white; -fx-background-radius: 12; -fx-border-radius: 12; -fx-border-color: #e7e5e4; -fx-border-width: 2; -fx-padding: 0 15; -fx-font-size: 14;" />
+                                                        </children>
+                                                    </VBox>
+                                                </children>
+                                            </HBox>
+
+                                            <!-- Médicaments (full width) -->
+                                            <VBox spacing="6.0">
+                                                <children>
+                                                    <HBox spacing="4.0">
+                                                        <children>
+                                                            <Label text="Médicaments prescrits" textFill="#1c1917">
+                                                                <font>
+                                                                    <Font name="System Bold" size="13.0" />
+                                                                </font>
+                                                            </Label>
+                                                            <Label text="*" textFill="#ef4444">
+                                                                <font>
+                                                                    <Font name="System Bold" size="13.0" />
+                                                                </font>
+                                                            </Label>
+                                                        </children>
+                                                    </HBox>
+                                                    <TextArea fx:id="medicamentTF" prefHeight="100.0" prefWidth="600.0" promptText="Liste détaillée des médicaments..." style="-fx-background-color: white; -fx-background-radius: 12; -fx-border-radius: 12; -fx-border-color: #e7e5e4; -fx-border-width: 2; -fx-padding: 12; -fx-font-size: 14; -fx-wrap-text: true;" />
+                                                    <HBox alignment="CENTER_LEFT" spacing="6.0">
+                                                        <children>
+                                                            <Label style="-fx-font-size: 12;" text="💡" />
+                                                            <Label text="Indiquez le nom commercial et le principe actif" textFill="#78716c">
+                                                                <font>
+                                                                    <Font size="12.0" />
+                                                                </font>
+                                                            </Label>
+                                                        </children>
+                                                    </HBox>
+                                                </children>
+                                            </VBox>
+
+                                            <!-- Posologie (full width) -->
+                                            <VBox spacing="6.0">
+                                                <children>
+                                                    <HBox spacing="4.0">
+                                                        <children>
+                                                            <Label text="Posologie et administration" textFill="#1c1917">
+                                                                <font>
+                                                                    <Font name="System Bold" size="13.0" />
+                                                                </font>
+                                                            </Label>
+                                                            <Label text="*" textFill="#ef4444">
+                                                                <font>
+                                                                    <Font name="System Bold" size="13.0" />
+                                                                </font>
+                                                            </Label>
+                                                        </children>
+                                                    </HBox>
+                                                    <TextArea fx:id="posologieTF" prefHeight="80.0" prefWidth="600.0" promptText="Dosage, fréquence et durée du traitement..." style="-fx-background-color: white; -fx-background-radius: 12; -fx-border-radius: 12; -fx-border-color: #e7e5e4; -fx-border-width: 2; -fx-padding: 12; -fx-font-size: 14; -fx-wrap-text: true;" />
+                                                    <HBox alignment="CENTER_LEFT" spacing="6.0">
+                                                        <children>
+                                                            <Label style="-fx-font-size: 12;" text="⏰" />
+                                                            <Label text="Précisez les horaires et la durée totale" textFill="#78716c">
+                                                                <font>
+                                                                    <Font size="12.0" />
+                                                                </font>
+                                                            </Label>
+                                                        </children>
+                                                    </HBox>
+                                                </children>
+                                            </VBox>
+
+                                        </VBox>
+                                    </children>
+                                </AnchorPane>
+
+                                <!-- SECTION INFORMATIONS COMPLÉMENTAIRES -->
+                                <AnchorPane layoutX="40.0" layoutY="702.0" prefWidth="620.0">
+                                    <children>
+                                        <!-- Header -->
+                                        <HBox alignment="CENTER_LEFT" layoutY="0.0" spacing="12.0" style="-fx-padding: 0 0 15 0; -fx-border-color: transparent transparent #e7e5e4 transparent; -fx-border-width: 0 0 2 0;">
+                                            <children>
+                                                <AnchorPane prefHeight="40.0" prefWidth="40.0" style="-fx-background-color: linear-gradient(to bottom right, #10b981, #059669); -fx-background-radius: 12;">
+                                                    <children>
+                                                        <Label layoutX="8.0" layoutY="8.0" style="-fx-font-size: 20;" text="📝" />
+                                                    </children>
+                                                </AnchorPane>
+
+                                                <VBox spacing="2.0">
+                                                    <children>
+                                                        <Label text="Informations complémentaires" textFill="#1c1917">
+                                                            <font>
+                                                                <Font name="System Bold" size="16.0" />
+                                                            </font>
+                                                        </Label>
+                                                        <Label text="Instructions et notes internes" textFill="#78716c">
+                                                            <font>
+                                                                <Font size="12.0" />
+                                                            </font>
+                                                        </Label>
+                                                    </children>
+                                                </VBox>
+                                            </children>
+                                        </HBox>
+
+                                        <VBox layoutY="70.0" spacing="20.0">
+
+                                            <!-- Instructions -->
+                                            <VBox spacing="6.0">
+                                                <children>
+                                                    <Label text="Instructions spéciales" textFill="#1c1917">
+                                                        <font>
+                                                            <Font name="System Bold" size="13.0" />
+                                                        </font>
+                                                    </Label>
+                                                    <TextArea fx:id="instructionsTA" prefHeight="100.0" prefWidth="600.0" promptText="Conseils d'administration, précautions particulières..." style="-fx-background-color: white; -fx-background-radius: 12; -fx-border-radius: 12; -fx-border-color: #e7e5e4; -fx-border-width: 2; -fx-padding: 12; -fx-font-size: 14; -fx-wrap-text: true;" />
+                                                    <HBox alignment="CENTER_LEFT" spacing="6.0">
+                                                        <children>
+                                                            <Label style="-fx-font-size: 12;" text="⚠️" />
+                                                            <Label text="Précautions d'emploi et conseils au patient" textFill="#78716c">
+                                                                <font>
+                                                                    <Font size="12.0" />
+                                                                </font>
+                                                            </Label>
+                                                        </children>
+                                                    </HBox>
+                                                </children>
+                                            </VBox>
+
+                                            <!-- Notes -->
+                                            <VBox spacing="6.0">
+                                                <children>
+                                                    <Label text="Notes complémentaires" textFill="#1c1917">
+                                                        <font>
+                                                            <Font name="System Bold" size="13.0" />
+                                                        </font>
+                                                    </Label>
+                                                    <TextArea fx:id="notesTA" prefHeight="80.0" prefWidth="600.0" promptText="Observations, allergies connues, contre-indications..." style="-fx-background-color: white; -fx-background-radius: 12; -fx-border-radius: 12; -fx-border-color: #e7e5e4; -fx-border-width: 2; -fx-padding: 12; -fx-font-size: 14; -fx-wrap-text: true;" />
+                                                    <HBox alignment="CENTER_LEFT" spacing="6.0">
+                                                        <children>
+                                                            <Label style="-fx-font-size: 12;" text="📝" />
+                                                            <Label text="Informations importantes pour le pharmacien" textFill="#78716c">
+                                                                <font>
+                                                                    <Font size="12.0" />
+                                                                </font>
+                                                            </Label>
+                                                        </children>
+                                                    </HBox>
+                                                </children>
+                                            </VBox>
+
+                                        </VBox>
+                                    </children>
+                                </AnchorPane>
+
+                                <!-- ACTIONS -->
+                                <HBox alignment="CENTER_LEFT" layoutX="41.0" layoutY="1101.0" prefHeight="84.0" prefWidth="605.0" spacing="16.0" style="-fx-padding: 30 0 0 0; -fx-border-color: #e7e5e4 transparent transparent transparent; -fx-border-width: 2 0 0 0;">
+                                    <children>
+
+                                        <!-- Status indicator -->
+                                        <HBox alignment="CENTER_LEFT" spacing="8.0" HBox.hgrow="ALWAYS">
+                                            <children>
+                                                <Circle fill="#10b981" radius="4.0" />
+                                                <Label text="Création en cours..." textFill="#78716c">
+                                                    <font>
+                                                        <Font size="13.0" />
+                                                    </font>
+                                                </Label>
+                                            </children>
+                                        </HBox>
+
+                                        <!-- Bouton Créer -->
+                                        <Button mnemonicParsing="false" onAction="#ajouterOrdonnance" prefHeight="52.0" prefWidth="200.0" style="-fx-background-color: linear-gradient(to bottom right, #059669, #047857); -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 12; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(5,150,105,0.4), 10, 0, 0, 4);" text="💾  Créer l'ordonnance">
+                                            <font>
+                                                <Font size="14.0" />
+                                            </font>
+                                        </Button>
+
+                                    </children>
+                                </HBox>
+
+                            </children>
+                        </AnchorPane>
+
+                    </children>
+                </AnchorPane>
+
+            </children>
+        </AnchorPane>
+    </content>
+</ScrollPane>
