@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.shape.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.pidev.controllers.MainUserController"
+            stylesheets="@../styles/style.css"
+            prefWidth="1280" prefHeight="800"
+            style="-fx-background-color: #080b14;">
+
+    <!-- TOP NAVIGATION BAR -->
+    <top>
+        <HBox alignment="CENTER_LEFT" spacing="0"
+              style="-fx-background-color: #0e1220;
+                     -fx-border-color: transparent transparent #252d42 transparent;
+                     -fx-border-width: 0 0 1 0;
+                     -fx-pref-height: 60;
+                     -fx-padding: 0 28;">
+
+            <!-- Logo -->
+            <HBox alignment="CENTER" spacing="10">
+                <StackPane>
+                    <Circle radius="16"
+                            style="-fx-fill: rgba(91,110,245,0.15);
+                                   -fx-stroke: rgba(91,110,245,0.35);
+                                   -fx-stroke-width: 1;"/>
+                    <Label text="⚕" style="-fx-font-size: 16px; -fx-text-fill: #818cf8;"/>
+                </StackPane>
+                <Label text="PiDev Medical"
+                       style="-fx-font-size: 16px; -fx-font-weight: 700; -fx-text-fill: #f1f5f9;"/>
+            </HBox>
+
+            <Region HBox.hgrow="ALWAYS"/>
+
+            <!-- Nav links -->
+            <HBox alignment="CENTER" spacing="4">
+                <Button fx:id="btnForum" text="Forum" onAction="#showForum" styleClass="nav-button-user"/>
+                <Button fx:id="btnProfile" text="Mon Profil" onAction="#showProfile" styleClass="nav-button-user"/>
+            </HBox>
+
+            <Separator orientation="VERTICAL" prefHeight="24"
+                       style="-fx-padding: 0 16; -fx-background-color: #252d42;"/>
+
+            <Button fx:id="btnLogout"
+                    text="Déconnexion"
+                    onAction="#handleLogout"
+                    style="-fx-background-color: transparent;
+                           -fx-text-fill: #f43f5e;
+                           -fx-font-weight: 600;
+                           -fx-font-size: 13px;
+                           -fx-padding: 8 16;
+                           -fx-background-radius: 8;
+                           -fx-cursor: hand;
+                           -fx-border-width: 0;"/>
+        </HBox>
+    </top>
+
+    <!-- CONTENT AREA -->
+    <center>
+        <StackPane fx:id="contentArea" styleClass="content-area">
+            <VBox alignment="CENTER" spacing="16">
+                <ProgressIndicator style="-fx-progress-color: #5b6ef5;"/>
+                <Label text="Chargement…" style="-fx-text-fill: #94a3b8; -fx-font-size: 13px;"/>
+            </VBox>
+        </StackPane>
+    </center>
+
+</BorderPane>

@@ -1,0 +1,546 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.shape.*?>
+
+<HBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.pidev.controllers.ProfileController"
+      stylesheets="@../styles/style.css"
+      spacing="0"
+      style="-fx-background-color: #080b14;">
+
+    <!-- ═══════════════════════════════════════
+         LEFT PANEL — Avatar + Nav
+    ════════════════════════════════════════ -->
+    <VBox prefWidth="260" minWidth="240" spacing="0"
+          style="-fx-background-color: #0e1220;
+                 -fx-border-color: transparent #252d42 transparent transparent;
+                 -fx-border-width: 0 1 0 0;">
+
+        <!-- Avatar section -->
+        <VBox alignment="CENTER" spacing="12"
+              style="-fx-padding: 40 24 32 24;
+                     -fx-border-color: transparent transparent #252d42 transparent;
+                     -fx-border-width: 0 0 1 0;">
+
+            <!-- Avatar circle -->
+            <StackPane alignment="CENTER">
+                <Circle radius="48"
+                        style="-fx-fill: #1c2133;
+                               -fx-stroke: #5b6ef5;
+                               -fx-stroke-width: 2;"/>
+                <Label fx:id="lblAvatarInitials" text="?"
+                       style="-fx-font-size: 32px; -fx-font-weight: 700;
+                              -fx-text-fill: #818cf8;"/>
+            </StackPane>
+
+            <!-- Name -->
+            <Label fx:id="lblFullName" text="Chargement..."
+                   style="-fx-font-size: 16px; -fx-font-weight: 700;
+                          -fx-text-fill: #f1f5f9; -fx-wrap-text: true;
+                          -fx-alignment: CENTER; -fx-text-alignment: CENTER;"/>
+
+            <!-- Role badge -->
+            <Label fx:id="lblRoleBadge" text="Patient"
+                   style="-fx-background-color: rgba(91,110,245,0.15);
+                          -fx-text-fill: #818cf8;
+                          -fx-font-size: 11px; -fx-font-weight: 600;
+                          -fx-padding: 4 14; -fx-background-radius: 20;
+                          -fx-border-color: rgba(91,110,245,0.35);
+                          -fx-border-width: 1; -fx-border-radius: 20;"/>
+        </VBox>
+
+        <!-- Navigation menu -->
+        <VBox spacing="2" style="-fx-padding: 20 12;">
+
+            <Button fx:id="btnNavProfile"
+                    text="Profil"
+                    onAction="#showProfileSection"
+                    maxWidth="Infinity"
+                    style="-fx-background-color: rgba(91,110,245,0.15);
+                           -fx-text-fill: #818cf8; -fx-font-weight: 600;
+                           -fx-font-size: 13px; -fx-padding: 11 16;
+                           -fx-alignment: CENTER_LEFT; -fx-cursor: hand;
+                           -fx-background-radius: 8;
+                           -fx-border-color: -pd-primary transparent transparent transparent;
+                           -fx-border-width: 0 0 0 3;
+                           -fx-border-radius: 0 8 8 0;"/>
+
+            <Button fx:id="btnNavSecurity"
+                    text="Sécurité"
+                    onAction="#showSecuritySection"
+                    maxWidth="Infinity"
+                    style="-fx-background-color: transparent;
+                           -fx-text-fill: #94a3b8; -fx-font-size: 13px;
+                           -fx-padding: 11 16; -fx-alignment: CENTER_LEFT;
+                           -fx-cursor: hand; -fx-background-radius: 8;
+                           -fx-border-width: 0;"/>
+
+            <Button fx:id="btnNavActivity"
+                    text="Activité"
+                    onAction="#showActivitySection"
+                    maxWidth="Infinity"
+                    style="-fx-background-color: transparent;
+                           -fx-text-fill: #94a3b8; -fx-font-size: 13px;
+                           -fx-padding: 11 16; -fx-alignment: CENTER_LEFT;
+                           -fx-cursor: hand; -fx-background-radius: 8;
+                           -fx-border-width: 0;"/>
+        </VBox>
+
+        <Region VBox.vgrow="ALWAYS"/>
+
+        <!-- Logout button at bottom -->
+        <VBox style="-fx-padding: 16 12 24 12;
+                     -fx-border-color: #252d42 transparent transparent transparent;
+                     -fx-border-width: 1 0 0 0;">
+            <Button text="Déconnexion"
+                    onAction="#handleLogout"
+                    maxWidth="Infinity"
+                    style="-fx-background-color: rgba(244,63,94,0.1);
+                           -fx-text-fill: #f43f5e; -fx-font-weight: 600;
+                           -fx-font-size: 13px; -fx-padding: 10 16;
+                           -fx-background-radius: 8; -fx-cursor: hand;
+                           -fx-border-color: rgba(244,63,94,0.25);
+                           -fx-border-width: 1; -fx-border-radius: 8;"/>
+        </VBox>
+    </VBox>
+
+    <!-- ═══════════════════════════════════════
+         RIGHT PANEL — Content sections
+    ════════════════════════════════════════ -->
+    <ScrollPane fitToWidth="true" HBox.hgrow="ALWAYS"
+                style="-fx-background-color: transparent;
+                       -fx-border-color: transparent;
+                       -fx-background: #080b14;">
+
+        <VBox spacing="0" style="-fx-background-color: #080b14;">
+            <padding>
+                <Insets top="40" right="48" bottom="40" left="48"/>
+            </padding>
+
+            <!-- Page title -->
+            <Label text="Paramètres du profil"
+                   style="-fx-font-size: 22px; -fx-font-weight: 700;
+                          -fx-text-fill: #f1f5f9; -fx-padding: 0 0 28 0;"/>
+
+            <!-- ── PROFILE SECTION ── -->
+            <VBox fx:id="sectionProfile" spacing="28">
+
+                <!-- Profile details card -->
+                <VBox spacing="0"
+                      style="-fx-background-color: #0e1220;
+                             -fx-background-radius: 12;
+                             -fx-border-color: #252d42;
+                             -fx-border-width: 1;
+                             -fx-border-radius: 12;">
+
+                    <!-- Card header -->
+                    <HBox alignment="CENTER_LEFT"
+                          style="-fx-padding: 18 24;
+                                 -fx-border-color: transparent transparent #252d42 transparent;
+                                 -fx-border-width: 0 0 1 0;">
+                        <Label text="Informations personnelles"
+                               style="-fx-font-size: 14px; -fx-font-weight: 700;
+                                      -fx-text-fill: #f1f5f9;" HBox.hgrow="ALWAYS"/>
+                        <Button fx:id="btnEditProfile"
+                                text="Modifier"
+                                onAction="#toggleEdit"
+                                style="-fx-background-color: rgba(91,110,245,0.15);
+                                       -fx-text-fill: #818cf8; -fx-font-size: 12px;
+                                       -fx-font-weight: 600; -fx-padding: 6 16;
+                                       -fx-background-radius: 6; -fx-cursor: hand;
+                                       -fx-border-color: rgba(91,110,245,0.3);
+                                       -fx-border-width: 1; -fx-border-radius: 6;"/>
+                    </HBox>
+
+                    <!-- Fields -->
+                    <VBox spacing="0">
+
+                        <!-- Row: Prénom -->
+                        <HBox alignment="CENTER_LEFT" spacing="0"
+                              style="-fx-padding: 16 24;
+                                     -fx-border-color: transparent transparent #1c2133 transparent;
+                                     -fx-border-width: 0 0 1 0;">
+                            <Label text="Prénom"
+                                   style="-fx-text-fill: #94a3b8; -fx-font-size: 13px;
+                                          -fx-min-width: 160;"/>
+                            <TextField fx:id="tfFirstName"
+                                       promptText="Votre prénom"
+                                       HBox.hgrow="ALWAYS"
+                                       style="-fx-background-color: transparent;
+                                              -fx-text-fill: #f1f5f9; -fx-font-size: 13px;
+                                              -fx-border-width: 0; -fx-padding: 0;
+                                              -fx-background-radius: 0;"/>
+                        </HBox>
+
+                        <!-- Row: Nom -->
+                        <HBox alignment="CENTER_LEFT" spacing="0"
+                              style="-fx-padding: 16 24;
+                                     -fx-border-color: transparent transparent #1c2133 transparent;
+                                     -fx-border-width: 0 0 1 0;">
+                            <Label text="Nom"
+                                   style="-fx-text-fill: #94a3b8; -fx-font-size: 13px;
+                                          -fx-min-width: 160;"/>
+                            <TextField fx:id="tfLastName"
+                                       promptText="Votre nom"
+                                       HBox.hgrow="ALWAYS"
+                                       style="-fx-background-color: transparent;
+                                              -fx-text-fill: #f1f5f9; -fx-font-size: 13px;
+                                              -fx-border-width: 0; -fx-padding: 0;
+                                              -fx-background-radius: 0;"/>
+                        </HBox>
+
+                        <!-- Row: Âge -->
+                        <HBox alignment="CENTER_LEFT" spacing="0"
+                              style="-fx-padding: 16 24;
+                                     -fx-border-color: transparent transparent #1c2133 transparent;
+                                     -fx-border-width: 0 0 1 0;">
+                            <Label text="Âge"
+                                   style="-fx-text-fill: #94a3b8; -fx-font-size: 13px;
+                                          -fx-min-width: 160;"/>
+                            <TextField fx:id="tfAge"
+                                       promptText="Votre âge"
+                                       HBox.hgrow="ALWAYS"
+                                       style="-fx-background-color: transparent;
+                                              -fx-text-fill: #f1f5f9; -fx-font-size: 13px;
+                                              -fx-border-width: 0; -fx-padding: 0;
+                                              -fx-background-radius: 0;"/>
+                        </HBox>
+
+                        <!-- Row: Genre -->
+                        <HBox alignment="CENTER_LEFT" spacing="0"
+                              style="-fx-padding: 16 24;">
+                            <Label text="Genre"
+                                   style="-fx-text-fill: #94a3b8; -fx-font-size: 13px;
+                                          -fx-min-width: 160;"/>
+                            <TextField fx:id="tfGender"
+                                       promptText="Genre"
+                                       HBox.hgrow="ALWAYS"
+                                       style="-fx-background-color: transparent;
+                                              -fx-text-fill: #f1f5f9; -fx-font-size: 13px;
+                                              -fx-border-width: 0; -fx-padding: 0;
+                                              -fx-background-radius: 0;"/>
+                        </HBox>
+                    </VBox>
+                </VBox>
+
+                <!-- Contact info card -->
+                <VBox spacing="0"
+                      style="-fx-background-color: #0e1220;
+                             -fx-background-radius: 12;
+                             -fx-border-color: #252d42;
+                             -fx-border-width: 1;
+                             -fx-border-radius: 12;">
+
+                    <HBox alignment="CENTER_LEFT"
+                          style="-fx-padding: 18 24;
+                                 -fx-border-color: transparent transparent #252d42 transparent;
+                                 -fx-border-width: 0 0 1 0;">
+                        <Label text="Informations de contact"
+                               style="-fx-font-size: 14px; -fx-font-weight: 700;
+                                      -fx-text-fill: #f1f5f9;"/>
+                    </HBox>
+
+                    <VBox spacing="0">
+
+                        <!-- Row: Email -->
+                        <HBox alignment="CENTER_LEFT" spacing="0"
+                              style="-fx-padding: 16 24;
+                                     -fx-border-color: transparent transparent #1c2133 transparent;
+                                     -fx-border-width: 0 0 1 0;">
+                            <Label text="Email"
+                                   style="-fx-text-fill: #94a3b8; -fx-font-size: 13px;
+                                          -fx-min-width: 160;"/>
+                            <TextField fx:id="tfEmail"
+                                       promptText="votre@email.com"
+                                       HBox.hgrow="ALWAYS"
+                                       style="-fx-background-color: transparent;
+                                              -fx-text-fill: #f1f5f9; -fx-font-size: 13px;
+                                              -fx-border-width: 0; -fx-padding: 0;
+                                              -fx-background-radius: 0;"/>
+                        </HBox>
+
+                        <!-- Row: Téléphone -->
+                        <HBox alignment="CENTER_LEFT" spacing="0"
+                              style="-fx-padding: 16 24;">
+                            <Label text="Téléphone"
+                                   style="-fx-text-fill: #94a3b8; -fx-font-size: 13px;
+                                          -fx-min-width: 160;"/>
+                            <TextField fx:id="tfPhone"
+                                       promptText="+216 XX XXX XXX"
+                                       HBox.hgrow="ALWAYS"
+                                       style="-fx-background-color: transparent;
+                                              -fx-text-fill: #f1f5f9; -fx-font-size: 13px;
+                                              -fx-border-width: 0; -fx-padding: 0;
+                                              -fx-background-radius: 0;"/>
+                        </HBox>
+                    </VBox>
+                </VBox>
+
+                <!-- Extra fields for Patient -->
+                <VBox fx:id="sectionPatientExtra" spacing="0"
+                      style="-fx-background-color: #0e1220;
+                             -fx-background-radius: 12;
+                             -fx-border-color: #252d42;
+                             -fx-border-width: 1;
+                             -fx-border-radius: 12;">
+
+                    <HBox alignment="CENTER_LEFT"
+                          style="-fx-padding: 18 24;
+                                 -fx-border-color: transparent transparent #252d42 transparent;
+                                 -fx-border-width: 0 0 1 0;">
+                        <Label text="Informations médicales"
+                               style="-fx-font-size: 14px; -fx-font-weight: 700;
+                                      -fx-text-fill: #f1f5f9;"/>
+                    </HBox>
+
+                    <VBox spacing="0">
+                        <HBox alignment="CENTER_LEFT" spacing="0"
+                              style="-fx-padding: 16 24;
+                                     -fx-border-color: transparent transparent #1c2133 transparent;
+                                     -fx-border-width: 0 0 1 0;">
+                            <Label text="Adresse"
+                                   style="-fx-text-fill: #94a3b8; -fx-font-size: 13px;
+                                          -fx-min-width: 160;"/>
+                            <TextField fx:id="tfAddress"
+                                       promptText="Votre adresse"
+                                       HBox.hgrow="ALWAYS"
+                                       style="-fx-background-color: transparent;
+                                              -fx-text-fill: #f1f5f9; -fx-font-size: 13px;
+                                              -fx-border-width: 0; -fx-padding: 0;
+                                              -fx-background-radius: 0;"/>
+                        </HBox>
+                        <HBox alignment="CENTER_LEFT" spacing="0"
+                              style="-fx-padding: 16 24;">
+                            <Label text="Assurance"
+                                   style="-fx-text-fill: #94a3b8; -fx-font-size: 13px;
+                                          -fx-min-width: 160;"/>
+                            <Label fx:id="lblInsurance" text="—"
+                                   style="-fx-text-fill: #f1f5f9; -fx-font-size: 13px;"/>
+                        </HBox>
+                    </VBox>
+                </VBox>
+
+                <!-- Extra fields for Medecin -->
+                <VBox fx:id="sectionMedecinExtra" spacing="0" managed="false" visible="false"
+                      style="-fx-background-color: #0e1220;
+                             -fx-background-radius: 12;
+                             -fx-border-color: #252d42;
+                             -fx-border-width: 1;
+                             -fx-border-radius: 12;">
+
+                    <HBox alignment="CENTER_LEFT"
+                          style="-fx-padding: 18 24;
+                                 -fx-border-color: transparent transparent #252d42 transparent;
+                                 -fx-border-width: 0 0 1 0;">
+                        <Label text="Informations professionnelles"
+                               style="-fx-font-size: 14px; -fx-font-weight: 700;
+                                      -fx-text-fill: #f1f5f9;"/>
+                    </HBox>
+
+                    <VBox spacing="0">
+                        <HBox alignment="CENTER_LEFT" spacing="0"
+                              style="-fx-padding: 16 24;
+                                     -fx-border-color: transparent transparent #1c2133 transparent;
+                                     -fx-border-width: 0 0 1 0;">
+                            <Label text="Spécialité"
+                                   style="-fx-text-fill: #94a3b8; -fx-font-size: 13px;
+                                          -fx-min-width: 160;"/>
+                            <TextField fx:id="tfSpecialty"
+                                       promptText="Votre spécialité"
+                                       HBox.hgrow="ALWAYS"
+                                       style="-fx-background-color: transparent;
+                                              -fx-text-fill: #f1f5f9; -fx-font-size: 13px;
+                                              -fx-border-width: 0; -fx-padding: 0;
+                                              -fx-background-radius: 0;"/>
+                        </HBox>
+                        <HBox alignment="CENTER_LEFT" spacing="0"
+                              style="-fx-padding: 16 24;
+                                     -fx-border-color: transparent transparent #1c2133 transparent;
+                                     -fx-border-width: 0 0 1 0;">
+                            <Label text="Gouvernorat"
+                                   style="-fx-text-fill: #94a3b8; -fx-font-size: 13px;
+                                          -fx-min-width: 160;"/>
+                            <TextField fx:id="tfGovernorate"
+                                       promptText="Gouvernorat"
+                                       HBox.hgrow="ALWAYS"
+                                       style="-fx-background-color: transparent;
+                                              -fx-text-fill: #f1f5f9; -fx-font-size: 13px;
+                                              -fx-border-width: 0; -fx-padding: 0;
+                                              -fx-background-radius: 0;"/>
+                        </HBox>
+                        <HBox alignment="CENTER_LEFT" spacing="0"
+                              style="-fx-padding: 16 24;">
+                            <Label text="Expérience"
+                                   style="-fx-text-fill: #94a3b8; -fx-font-size: 13px;
+                                          -fx-min-width: 160;"/>
+                            <TextField fx:id="tfExperience"
+                                       promptText="Années d'expérience"
+                                       HBox.hgrow="ALWAYS"
+                                       style="-fx-background-color: transparent;
+                                              -fx-text-fill: #f1f5f9; -fx-font-size: 13px;
+                                              -fx-border-width: 0; -fx-padding: 0;
+                                              -fx-background-radius: 0;"/>
+                        </HBox>
+                    </VBox>
+                </VBox>
+
+                <!-- Save button -->
+                <HBox alignment="CENTER_RIGHT">
+                    <Button fx:id="btnSave"
+                            text="Enregistrer les modifications"
+                            onAction="#saveProfile"
+                            style="-fx-background-color: #5b6ef5;
+                                   -fx-text-fill: white; -fx-font-weight: 600;
+                                   -fx-font-size: 13px; -fx-padding: 11 28;
+                                   -fx-background-radius: 8; -fx-cursor: hand;
+                                   -fx-border-width: 0;"
+                            visible="false" managed="false"/>
+                </HBox>
+
+                <!-- Status message -->
+                <Label fx:id="lblStatus" text=""
+                       style="-fx-font-size: 13px; -fx-font-weight: 500;"
+                       visible="false" managed="false"/>
+            </VBox>
+
+            <!-- ── SECURITY SECTION ── -->
+            <VBox fx:id="sectionSecurity" spacing="24" managed="false" visible="false">
+
+                <VBox spacing="0"
+                      style="-fx-background-color: #0e1220;
+                             -fx-background-radius: 12;
+                             -fx-border-color: #252d42;
+                             -fx-border-width: 1;
+                             -fx-border-radius: 12;">
+
+                    <HBox alignment="CENTER_LEFT"
+                          style="-fx-padding: 18 24;
+                                 -fx-border-color: transparent transparent #252d42 transparent;
+                                 -fx-border-width: 0 0 1 0;">
+                        <Label text="Changer le mot de passe"
+                               style="-fx-font-size: 14px; -fx-font-weight: 700;
+                                      -fx-text-fill: #f1f5f9;"/>
+                    </HBox>
+
+                    <VBox spacing="0">
+                        <HBox alignment="CENTER_LEFT" spacing="0"
+                              style="-fx-padding: 16 24;
+                                     -fx-border-color: transparent transparent #1c2133 transparent;
+                                     -fx-border-width: 0 0 1 0;">
+                            <Label text="Mot de passe actuel"
+                                   style="-fx-text-fill: #94a3b8; -fx-font-size: 13px;
+                                          -fx-min-width: 200;"/>
+                            <PasswordField fx:id="tfCurrentPassword"
+                                           promptText="••••••••"
+                                           HBox.hgrow="ALWAYS"
+                                           style="-fx-background-color: transparent;
+                                                  -fx-text-fill: #f1f5f9; -fx-font-size: 13px;
+                                                  -fx-border-width: 0; -fx-padding: 0;
+                                                  -fx-background-radius: 0;"/>
+                        </HBox>
+                        <HBox alignment="CENTER_LEFT" spacing="0"
+                              style="-fx-padding: 16 24;
+                                     -fx-border-color: transparent transparent #1c2133 transparent;
+                                     -fx-border-width: 0 0 1 0;">
+                            <Label text="Nouveau mot de passe"
+                                   style="-fx-text-fill: #94a3b8; -fx-font-size: 13px;
+                                          -fx-min-width: 200;"/>
+                            <PasswordField fx:id="tfNewPassword"
+                                           promptText="••••••••"
+                                           HBox.hgrow="ALWAYS"
+                                           style="-fx-background-color: transparent;
+                                                  -fx-text-fill: #f1f5f9; -fx-font-size: 13px;
+                                                  -fx-border-width: 0; -fx-padding: 0;
+                                                  -fx-background-radius: 0;"/>
+                        </HBox>
+                        <HBox alignment="CENTER_LEFT" spacing="0"
+                              style="-fx-padding: 16 24;">
+                            <Label text="Confirmer"
+                                   style="-fx-text-fill: #94a3b8; -fx-font-size: 13px;
+                                          -fx-min-width: 200;"/>
+                            <PasswordField fx:id="tfConfirmPassword"
+                                           promptText="••••••••"
+                                           HBox.hgrow="ALWAYS"
+                                           style="-fx-background-color: transparent;
+                                                  -fx-text-fill: #f1f5f9; -fx-font-size: 13px;
+                                                  -fx-border-width: 0; -fx-padding: 0;
+                                                  -fx-background-radius: 0;"/>
+                        </HBox>
+                    </VBox>
+                </VBox>
+
+                <HBox alignment="CENTER_RIGHT">
+                    <Button text="Mettre à jour le mot de passe"
+                            onAction="#changePassword"
+                            style="-fx-background-color: #5b6ef5;
+                                   -fx-text-fill: white; -fx-font-weight: 600;
+                                   -fx-font-size: 13px; -fx-padding: 11 28;
+                                   -fx-background-radius: 8; -fx-cursor: hand;
+                                   -fx-border-width: 0;"/>
+                </HBox>
+
+                <Label fx:id="lblSecurityStatus" text=""
+                       style="-fx-font-size: 13px; -fx-font-weight: 500;"
+                       visible="false" managed="false"/>
+            </VBox>
+
+            <!-- ── ACTIVITY SECTION ── -->
+            <VBox fx:id="sectionActivity" spacing="20" managed="false" visible="false">
+
+                <VBox spacing="0"
+                      style="-fx-background-color: #0e1220;
+                             -fx-background-radius: 12;
+                             -fx-border-color: #252d42;
+                             -fx-border-width: 1;
+                             -fx-border-radius: 12;">
+
+                    <HBox alignment="CENTER_LEFT"
+                          style="-fx-padding: 18 24;
+                                 -fx-border-color: transparent transparent #252d42 transparent;
+                                 -fx-border-width: 0 0 1 0;">
+                        <Label text="Résumé du compte"
+                               style="-fx-font-size: 14px; -fx-font-weight: 700;
+                                      -fx-text-fill: #f1f5f9;"/>
+                    </HBox>
+
+                    <VBox spacing="0">
+                        <HBox alignment="CENTER_LEFT" spacing="0"
+                              style="-fx-padding: 16 24;
+                                     -fx-border-color: transparent transparent #1c2133 transparent;
+                                     -fx-border-width: 0 0 1 0;">
+                            <Label text="Statut du compte"
+                                   style="-fx-text-fill: #94a3b8; -fx-font-size: 13px;
+                                          -fx-min-width: 200;"/>
+                            <Label fx:id="lblAccountStatus" text="Actif"
+                                   style="-fx-text-fill: #22c55e; -fx-font-size: 13px;
+                                          -fx-font-weight: 600;"/>
+                        </HBox>
+                        <HBox alignment="CENTER_LEFT" spacing="0"
+                              style="-fx-padding: 16 24;
+                                     -fx-border-color: transparent transparent #1c2133 transparent;
+                                     -fx-border-width: 0 0 1 0;">
+                            <Label text="Rôle"
+                                   style="-fx-text-fill: #94a3b8; -fx-font-size: 13px;
+                                          -fx-min-width: 200;"/>
+                            <Label fx:id="lblAccountRole" text="—"
+                                   style="-fx-text-fill: #f1f5f9; -fx-font-size: 13px;"/>
+                        </HBox>
+                        <HBox alignment="CENTER_LEFT" spacing="0"
+                              style="-fx-padding: 16 24;">
+                            <Label text="Identifiant"
+                                   style="-fx-text-fill: #94a3b8; -fx-font-size: 13px;
+                                          -fx-min-width: 200;"/>
+                            <Label fx:id="lblAccountId" text="—"
+                                   style="-fx-text-fill: #f1f5f9; -fx-font-size: 13px;"/>
+                        </HBox>
+                    </VBox>
+                </VBox>
+            </VBox>
+
+        </VBox>
+    </ScrollPane>
+
+</HBox>

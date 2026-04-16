@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import java.lang.String?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.pidev.controllers.PatientController"
+      spacing="20" styleClass="content-area"
+      stylesheets="@../styles/style.css">
+
+    <!-- Header -->
+    <HBox alignment="CENTER_LEFT" spacing="16">
+        <VBox HBox.hgrow="ALWAYS">
+            <Label text="👤 Gestion des Patients" styleClass="page-title"/>
+            <Label text="Ajouter, modifier ou supprimer des patients" styleClass="page-subtitle"/>
+        </VBox>
+        <TextField fx:id="searchField"
+                   promptText="🔍 Rechercher un patient..."
+                   styleClass="search-field"
+                   prefWidth="250"
+                   onKeyReleased="#onSearch"/>
+    </HBox>
+
+    <HBox spacing="20" VBox.vgrow="ALWAYS">
+
+        <!-- TABLE -->
+        <VBox HBox.hgrow="ALWAYS" styleClass="card" spacing="16">
+            <TableView fx:id="tablePatients" VBox.vgrow="ALWAYS">
+                <columns>
+                    <TableColumn fx:id="colId"        text="ID"        prefWidth="50"/>
+                    <TableColumn fx:id="colFirstName" text="Prénom"    prefWidth="110"/>
+                    <TableColumn fx:id="colLastName"  text="Nom"       prefWidth="110"/>
+                    <TableColumn fx:id="colEmail"     text="Email"     prefWidth="180"/>
+                    <TableColumn fx:id="colPhone"     text="Téléphone" prefWidth="110"/>
+                    <TableColumn fx:id="colAge"       text="Âge"       prefWidth="50"/>
+                    <TableColumn fx:id="colInsurance" text="Assurance" prefWidth="80"/>
+                </columns>
+                <placeholder>
+                    <Label text="Aucun patient trouvé."
+                           style="-fx-text-fill: #6b7280;"/>
+                </placeholder>
+            </TableView>
+        </VBox>
+
+        <!-- FORM -->
+        <VBox styleClass="card" prefWidth="320" spacing="14">
+            <Label text="📝 Formulaire Patient"
+                   style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #a78bfa;"/>
+            <Separator/>
+
+            <Label text="Prénom" styleClass="form-label"/>
+            <TextField fx:id="tfFirstName" promptText="Entrer le prénom"/>
+
+            <Label text="Nom" styleClass="form-label"/>
+            <TextField fx:id="tfLastName" promptText="Entrer le nom"/>
+
+            <Label text="Email" styleClass="form-label"/>
+            <TextField fx:id="tfEmail" promptText="email@exemple.com"/>
+
+            <Label text="Mot de passe" styleClass="form-label"/>
+            <PasswordField fx:id="tfPassword" promptText="Mot de passe"/>
+
+            <Label text="Téléphone" styleClass="form-label"/>
+            <TextField fx:id="tfPhone" promptText="+216 XX XXX XXX"/>
+
+            <Label text="Adresse" styleClass="form-label"/>
+            <TextField fx:id="tfAddress" promptText="Adresse complète"/>
+
+            <HBox spacing="10">
+                <VBox spacing="4" HBox.hgrow="ALWAYS">
+                    <Label text="Âge" styleClass="form-label"/>
+                    <TextField fx:id="tfAge" promptText="Âge"/>
+                </VBox>
+                <VBox spacing="4" HBox.hgrow="ALWAYS">
+                    <Label text="Genre" styleClass="form-label"/>
+                    <ComboBox fx:id="cbGender" promptText="Genre" maxWidth="Infinity">
+                        <items>
+                            <javafx.collections.FXCollections fx:factory="observableArrayList">
+                                <String fx:value="Homme"/>
+                                <String fx:value="Femme"/>
+                            </javafx.collections.FXCollections>
+                        </items>
+                    </ComboBox>
+                </VBox>
+            </HBox>
+
+            <CheckBox fx:id="cbInsurance" text="A une assurance"/>
+
+            <TextField fx:id="tfInsuranceNumber"
+                       promptText="N° d'assurance (optionnel)"/>
+
+            <Separator/>
+
+            <HBox spacing="10" alignment="CENTER">
+                <Button text="➕ Ajouter"    styleClass="btn-primary" onAction="#addPatient"/>
+                <Button text="✏️ Modifier"   styleClass="btn-warning" onAction="#updatePatient"/>
+                <Button text="🗑️ Supprimer" styleClass="btn-danger"  onAction="#deletePatient"/>
+            </HBox>
+            <Button text="🔄 Réinitialiser" styleClass="btn-secondary"
+                    onAction="#clearForm" maxWidth="Infinity"/>
+        </VBox>
+
+    </HBox>
+</VBox>

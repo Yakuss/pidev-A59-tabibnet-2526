@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.shape.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.pidev.controllers.DashboardController"
+            stylesheets="@../styles/style.css"
+            prefWidth="1400" prefHeight="900"
+            style="-fx-background-color: #080b14;">
+
+    <!-- ═══════════════════════════════════════
+         SIDEBAR
+    ════════════════════════════════════════ -->
+    <left>
+        <VBox styleClass="sidebar" prefWidth="260" spacing="0">
+
+            <!-- Logo / Header -->
+            <VBox styleClass="sidebar-header" spacing="14">
+                <HBox spacing="12" alignment="CENTER_LEFT">
+                    <StackPane>
+                        <Circle radius="18"
+                                style="-fx-fill: rgba(91,110,245,0.15);
+                                       -fx-stroke: rgba(91,110,245,0.35);
+                                       -fx-stroke-width: 1;"/>
+                        <Label text="⚕" styleClass="logo-icon"/>
+                    </StackPane>
+                    <VBox spacing="2">
+                        <Label text="PiDev Medical" styleClass="sidebar-title"/>
+                        <Label text="Administration" styleClass="sidebar-version"/>
+                    </VBox>
+                </HBox>
+
+                <!-- User row -->
+                <HBox spacing="10" alignment="CENTER_LEFT"
+                      style="-fx-background-color: #1c2133;
+                             -fx-background-radius: 8;
+                             -fx-padding: 10 12;">
+                    <StackPane>
+                        <Circle radius="16" style="-fx-fill: #252d42;"/>
+                        <Label text="👤" style="-fx-font-size: 14px;"/>
+                    </StackPane>
+                    <VBox spacing="1">
+                        <Label fx:id="userNameLabel" text="Administrateur"
+                               styleClass="sidebar-subtitle"/>
+                        <Label text="Admin" styleClass="sidebar-version"/>
+                    </VBox>
+                </HBox>
+            </VBox>
+
+            <!-- Navigation -->
+            <VBox spacing="2" VBox.vgrow="ALWAYS"
+                  style="-fx-padding: 16 12;">
+
+                <Label text="MENU PRINCIPAL" styleClass="nav-section-label"/>
+
+                <Button fx:id="btnDashboard"
+                        text="Tableau de bord"
+                        styleClass="nav-button,nav-button-active"
+                        onAction="#showDashboard"
+                        maxWidth="Infinity">
+                    <graphic><Label text="▸" styleClass="nav-icon"/></graphic>
+                </Button>
+
+                <Button fx:id="btnPatients"
+                        text="Patients"
+                        styleClass="nav-button"
+                        onAction="#showPatients"
+                        maxWidth="Infinity">
+                    <graphic><Label text="▸" styleClass="nav-icon"/></graphic>
+                </Button>
+
+                <Button fx:id="btnMedecins"
+                        text="Médecins"
+                        styleClass="nav-button"
+                        onAction="#showMedecins"
+                        maxWidth="Infinity">
+                    <graphic><Label text="▸" styleClass="nav-icon"/></graphic>
+                </Button>
+
+                <Button fx:id="btnAppointments"
+                        text="Rendez-vous"
+                        styleClass="nav-button"
+                        onAction="#showAppointments"
+                        maxWidth="Infinity">
+                    <graphic><Label text="▸" styleClass="nav-icon"/></graphic>
+                </Button>
+
+                <Button fx:id="btnSpecialites"
+                        text="Spécialités"
+                        styleClass="nav-button"
+                        onAction="#showSpecialites"
+                        maxWidth="Infinity">
+                    <graphic><Label text="▸" styleClass="nav-icon"/></graphic>
+                </Button>
+
+                <Separator styleClass="nav-separator" style="-fx-padding: 6 0;"/>
+
+                <Label text="RÉTROACTION" styleClass="nav-section-label"/>
+
+                <Button fx:id="btnFeedback"
+                        text="Feedback &amp; Avis"
+                        styleClass="nav-button"
+                        onAction="#showFeedback"
+                        maxWidth="Infinity">
+                    <graphic><Label text="▸" styleClass="nav-icon"/></graphic>
+                </Button>
+
+                <Separator styleClass="nav-separator" style="-fx-padding: 6 0;"/>
+
+                <Label text="SYSTÈME" styleClass="nav-section-label"/>
+
+                <Button fx:id="btnSettings"
+                        text="Paramètres"
+                        styleClass="nav-button"
+                        onAction="#showSettings"
+                        maxWidth="Infinity">
+                    <graphic><Label text="▸" styleClass="nav-icon"/></graphic>
+                </Button>
+            </VBox>
+
+            <!-- Footer -->
+            <VBox styleClass="sidebar-footer" spacing="6">
+                <HBox spacing="8" alignment="CENTER">
+                    <Circle radius="4" style="-fx-fill: #22c55e;"/>
+                    <Label text="Système opérationnel" styleClass="status-label"/>
+                </HBox>
+                <Label text="PiDev Medical v3.0" styleClass="version-label"/>
+                <Label text="Base de données connectée" styleClass="db-status-label"/>
+            </VBox>
+        </VBox>
+    </left>
+
+    <!-- ═══════════════════════════════════════
+         MAIN CONTENT
+    ════════════════════════════════════════ -->
+    <center>
+        <StackPane fx:id="contentArea" styleClass="content-area">
+
+            <!-- DASHBOARD HOME -->
+            <VBox fx:id="dashboardHome"
+                  styleClass="dashboard-container"
+                  spacing="24"
+                  StackPane.alignment="TOP_LEFT">
+                <padding>
+                    <Insets top="32" right="40" bottom="32" left="40"/>
+                </padding>
+
+                <!-- Page header -->
+                <HBox spacing="16" alignment="CENTER_LEFT">
+                    <VBox spacing="4" HBox.hgrow="ALWAYS">
+                        <Label text="Tableau de bord" styleClass="page-title"/>
+                        <Label text="Vue d'ensemble de votre clinique" styleClass="page-subtitle"/>
+                    </VBox>
+                    <HBox spacing="10">
+                        <Button text="Aujourd'hui" styleClass="btn-date-filter"/>
+                        <Button text="Exporter" styleClass="btn-secondary"/>
+                        <Button text="+ Nouveau" styleClass="btn-primary"/>
+                    </HBox>
+                </HBox>
+
+                <!-- Stat cards -->
+                <HBox spacing="16">
+                    <VBox styleClass="stat-card,stat-card-blue" spacing="14" HBox.hgrow="ALWAYS">
+                        <HBox spacing="14" alignment="CENTER_LEFT">
+                            <StackPane styleClass="stat-icon-container,blue">
+                                <Label text="👤" styleClass="stat-icon"/>
+                            </StackPane>
+                            <VBox spacing="2">
+                                <Label fx:id="lblTotalPatients" text="0" styleClass="stat-number"/>
+                                <Label text="Patients" styleClass="stat-label"/>
+                            </VBox>
+                        </HBox>
+                        <HBox spacing="6" alignment="CENTER_LEFT" styleClass="stat-trend">
+                            <Label text="↑ 12%" styleClass="trend-positive"/>
+                            <Label text="ce mois" styleClass="trend-label"/>
+                        </HBox>
+                    </VBox>
+
+                    <VBox styleClass="stat-card,stat-card-purple" spacing="14" HBox.hgrow="ALWAYS">
+                        <HBox spacing="14" alignment="CENTER_LEFT">
+                            <StackPane styleClass="stat-icon-container,purple">
+                                <Label text="🩺" styleClass="stat-icon"/>
+                            </StackPane>
+                            <VBox spacing="2">
+                                <Label fx:id="lblTotalMedecins" text="0" styleClass="stat-number"/>
+                                <Label text="Médecins" styleClass="stat-label"/>
+                            </VBox>
+                        </HBox>
+                        <HBox spacing="6" alignment="CENTER_LEFT" styleClass="stat-trend">
+                            <Label text="↑ 5%" styleClass="trend-positive"/>
+                            <Label text="ce mois" styleClass="trend-label"/>
+                        </HBox>
+                    </VBox>
+
+                    <VBox styleClass="stat-card,stat-card-green" spacing="14" HBox.hgrow="ALWAYS">
+                        <HBox spacing="14" alignment="CENTER_LEFT">
+                            <StackPane styleClass="stat-icon-container,green">
+                                <Label text="📅" styleClass="stat-icon"/>
+                            </StackPane>
+                            <VBox spacing="2">
+                                <Label fx:id="lblTotalAppointments" text="0" styleClass="stat-number"/>
+                                <Label text="Rendez-vous" styleClass="stat-label"/>
+                            </VBox>
+                        </HBox>
+                        <HBox spacing="6" alignment="CENTER_LEFT" styleClass="stat-trend">
+                            <Label text="↓ 3%" styleClass="trend-negative"/>
+                            <Label text="vs hier" styleClass="trend-label"/>
+                        </HBox>
+                    </VBox>
+
+                    <VBox styleClass="stat-card,stat-card-orange" spacing="14" HBox.hgrow="ALWAYS">
+                        <HBox spacing="14" alignment="CENTER_LEFT">
+                            <StackPane styleClass="stat-icon-container,orange">
+                                <Label text="⭐" styleClass="stat-icon"/>
+                            </StackPane>
+                            <VBox spacing="2">
+                                <Label fx:id="lblTotalFeedbacks" text="0" styleClass="stat-number"/>
+                                <Label text="Avis patients" styleClass="stat-label"/>
+                            </VBox>
+                        </HBox>
+                        <HBox spacing="6" alignment="CENTER_LEFT" styleClass="stat-trend">
+                            <Label text="4.8/5" styleClass="rating-badge"/>
+                            <Label text="moyenne" styleClass="trend-label"/>
+                        </HBox>
+                    </VBox>
+                </HBox>
+
+                <!-- Activity section -->
+                <HBox spacing="20" VBox.vgrow="ALWAYS">
+
+                    <!-- Recent appointments table -->
+                    <VBox styleClass="content-card" spacing="16" HBox.hgrow="ALWAYS">
+                        <HBox alignment="CENTER_LEFT" spacing="12">
+                            <Label text="Rendez-vous récents" styleClass="card-title" HBox.hgrow="ALWAYS"/>
+                            <TextField promptText="Rechercher…" prefWidth="200" styleClass="search-field"/>
+                        </HBox>
+                        <TableView fx:id="recentAppointmentsTable" styleClass="data-table" VBox.vgrow="ALWAYS">
+                            <columns>
+                                <TableColumn text="Patient"  prefWidth="150"/>
+                                <TableColumn text="Médecin"  prefWidth="150"/>
+                                <TableColumn text="Date"     prefWidth="110"/>
+                                <TableColumn text="Heure"    prefWidth="80"/>
+                                <TableColumn text="Statut"   prefWidth="100"/>
+                                <TableColumn text="Actions"  prefWidth="90"/>
+                            </columns>
+                        </TableView>
+                    </VBox>
+
+                    <!-- Right column -->
+                    <VBox spacing="16" prefWidth="300">
+                        <VBox styleClass="content-card" spacing="14">
+                            <Label text="Aujourd'hui" styleClass="card-title"/>
+                            <VBox spacing="8">
+                                <HBox styleClass="quick-stat-item" spacing="12">
+                                    <Label text="🕘" styleClass="quick-stat-icon"/>
+                                    <VBox spacing="2">
+                                        <Label text="8 rendez-vous" styleClass="quick-stat-value"/>
+                                        <Label text="Programmés" styleClass="quick-stat-label"/>
+                                    </VBox>
+                                </HBox>
+                                <HBox styleClass="quick-stat-item" spacing="12">
+                                    <Label text="✅" styleClass="quick-stat-icon"/>
+                                    <VBox spacing="2">
+                                        <Label text="5 complétés" styleClass="quick-stat-value"/>
+                                        <Label text="Consultations" styleClass="quick-stat-label"/>
+                                    </VBox>
+                                </HBox>
+                                <HBox styleClass="quick-stat-item" spacing="12">
+                                    <Label text="⏳" styleClass="quick-stat-icon"/>
+                                    <VBox spacing="2">
+                                        <Label text="3 en attente" styleClass="quick-stat-value"/>
+                                        <Label text="Dans la file" styleClass="quick-stat-label"/>
+                                    </VBox>
+                                </HBox>
+                            </VBox>
+                        </VBox>
+
+                        <VBox styleClass="content-card" spacing="14" VBox.vgrow="ALWAYS">
+                            <Label text="Spécialités populaires" styleClass="card-title"/>
+                            <VBox fx:id="specialtiesChart" spacing="8" VBox.vgrow="ALWAYS"/>
+                        </VBox>
+                    </VBox>
+                </HBox>
+            </VBox>
+        </StackPane>
+    </center>
+
+</BorderPane>

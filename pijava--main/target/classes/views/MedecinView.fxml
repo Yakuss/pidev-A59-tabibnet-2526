@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.cell.PropertyValueFactory?>
+<?import java.lang.String?>
+
+<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="com.pidev.controllers.MedecinController"
+      spacing="20" styleClass="content-area" stylesheets="@../styles/style.css">
+
+    <!-- Header -->
+    <HBox alignment="CENTER_LEFT" spacing="16">
+        <VBox HBox.hgrow="ALWAYS">
+            <Label text="🩺 Gestion des Médecins" styleClass="page-title"/>
+            <Label text="Ajouter, modifier ou supprimer des médecins" styleClass="page-subtitle"/>
+        </VBox>
+        <TextField fx:id="searchField" promptText="🔍 Rechercher un médecin..." styleClass="search-field" prefWidth="250"
+                   onKeyReleased="#onSearch"/>
+    </HBox>
+
+    <HBox spacing="20" VBox.vgrow="ALWAYS">
+        <!-- TABLE -->
+        <VBox HBox.hgrow="ALWAYS" styleClass="card" spacing="12">
+            <TableView fx:id="tableMedecins" VBox.vgrow="ALWAYS">
+                <columns>
+                    <TableColumn text="ID" prefWidth="50">
+                        <cellValueFactory><PropertyValueFactory property="id"/></cellValueFactory>
+                    </TableColumn>
+                    <TableColumn text="Prénom" prefWidth="100">
+                        <cellValueFactory><PropertyValueFactory property="firstName"/></cellValueFactory>
+                    </TableColumn>
+                    <TableColumn text="Nom" prefWidth="100">
+                        <cellValueFactory><PropertyValueFactory property="lastName"/></cellValueFactory>
+                    </TableColumn>
+                    <TableColumn text="Spécialité" prefWidth="120">
+                        <cellValueFactory><PropertyValueFactory property="specialty"/></cellValueFactory>
+                    </TableColumn>
+                    <TableColumn text="Email" prefWidth="160">
+                        <cellValueFactory><PropertyValueFactory property="email"/></cellValueFactory>
+                    </TableColumn>
+                    <TableColumn text="Téléphone" prefWidth="100">
+                        <cellValueFactory><PropertyValueFactory property="phoneNumber"/></cellValueFactory>
+                    </TableColumn>
+                    <TableColumn text="Vérifié" prefWidth="70">
+                        <cellValueFactory><PropertyValueFactory property="verified"/></cellValueFactory>
+                    </TableColumn>
+                </columns>
+            </TableView>
+        </VBox>
+
+        <!-- FORM -->
+        <ScrollPane fitToWidth="true" prefWidth="340" style="-fx-background-color: transparent; -fx-border-color: transparent;">
+            <VBox styleClass="card" spacing="12">
+                <Label text="📝 Formulaire Médecin" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #a78bfa;"/>
+                <Separator/>
+
+                <Label text="Prénom" styleClass="form-label"/>
+                <TextField fx:id="tfFirstName" promptText="Entrer le prénom"/>
+
+                <Label text="Nom" styleClass="form-label"/>
+                <TextField fx:id="tfLastName" promptText="Entrer le nom"/>
+
+                <Label text="Email" styleClass="form-label"/>
+                <TextField fx:id="tfEmail" promptText="email@exemple.com"/>
+
+                <Label text="Mot de passe" styleClass="form-label"/>
+                <PasswordField fx:id="tfPassword" promptText="Mot de passe"/>
+
+                <Label text="Spécialité" styleClass="form-label"/>
+                <TextField fx:id="tfSpecialty" promptText="ex: Cardiologie"/>
+
+                <Label text="CIN" styleClass="form-label"/>
+                <TextField fx:id="tfCin" promptText="Numéro CIN"/>
+
+                <Label text="Téléphone" styleClass="form-label"/>
+                <TextField fx:id="tfPhone" promptText="+216 XX XXX XXX"/>
+
+                <Label text="Adresse" styleClass="form-label"/>
+                <TextField fx:id="tfAddress" promptText="Adresse"/>
+
+                <Label text="Gouvernorat" styleClass="form-label"/>
+                <TextField fx:id="tfGovernorate" promptText="Gouvernorat"/>
+
+                <HBox spacing="10">
+                    <VBox spacing="4" HBox.hgrow="ALWAYS">
+                        <Label text="Âge" styleClass="form-label"/>
+                        <TextField fx:id="tfAge" promptText="Âge"/>
+                    </VBox>
+                    <VBox spacing="4" HBox.hgrow="ALWAYS">
+                        <Label text="Genre" styleClass="form-label"/>
+                        <ComboBox fx:id="cbGender" promptText="Genre" maxWidth="Infinity">
+                            <items>
+                                <javafx.collections.FXCollections fx:factory="observableArrayList">
+                                    <String fx:value="Homme"/>
+                                    <String fx:value="Femme"/>
+                                </javafx.collections.FXCollections>
+                            </items>
+                        </ComboBox>
+                    </VBox>
+                </HBox>
+
+                <Label text="Éducation" styleClass="form-label"/>
+                <TextField fx:id="tfEducation" promptText="Formation / Diplômes"/>
+
+                <Label text="Expérience" styleClass="form-label"/>
+                <TextField fx:id="tfExperience" promptText="Années d'expérience"/>
+
+                <CheckBox fx:id="cbVerified" text="Médecin vérifié"/>
+
+                <Separator/>
+
+                <HBox spacing="10" alignment="CENTER">
+                    <Button text="➕ Ajouter" styleClass="btn-primary" onAction="#addMedecin"/>
+                    <Button text="✏️ Modifier" styleClass="btn-warning" onAction="#updateMedecin"/>
+                    <Button text="🗑️ Supprimer" styleClass="btn-danger" onAction="#deleteMedecin"/>
+                </HBox>
+                <Button text="🔄 Réinitialiser" styleClass="btn-secondary" onAction="#clearForm" maxWidth="Infinity"/>
+            </VBox>
+        </ScrollPane>
+    </HBox>
+</VBox>
