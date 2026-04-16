@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="700.0" prefWidth="1000.0" style="-fx-background-color: #F0F9FF;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.connexion3a77.controllers.PatientController" styleClass="page-root">
+    <children>
+        <VBox spacing="20.0" AnchorPane.topAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" styleClass="page-content">
+            <padding>
+                <Insets top="30.0" right="30.0" bottom="30.0" left="30.0" />
+            </padding>
+            <children>
+                <Label text="Bibliothèque Médicale" styleClass="page-title"><font><Font name="System Bold" size="28.0" /></font></Label>
+                <TextField fx:id="searchBar" promptText="Rechercher..." styleClass="search-field" />
+                <ScrollPane fitToWidth="true" style="-fx-background: transparent; -fx-background-color: transparent;" styleClass="transparent-scroll">
+                    <content>
+                        <FlowPane fx:id="containerMagazines" hgap="20.0" vgap="20.0" alignment="CENTER" styleClass="card-container" />
+                    </content>
+                </ScrollPane>
+            </children>
+        </VBox>
+    </children>
+</AnchorPane>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="720.0" prefWidth="1080.0" style="-fx-background-color: #F8FAFC;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.connexion3a77.controllers.MainController" styleClass="app-root">
+    <children>
+        <VBox spacing="20.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" styleClass="page-content">
+            <padding>
+                <Insets bottom="20.0" left="30.0" right="30.0" top="20.0" />
+            </padding>
+            <children>
+                <HBox alignment="CENTER_LEFT" spacing="20.0">
+                    <children>
+                        <Label text="Aperçu Admin : Magazines" textFill="#1e293b" styleClass="page-title">
+                            <font>
+                                <Font name="System Bold" size="24.0" />
+                            </font>
+                        </Label>
+                        <Button onAction="#ouvrirFormulaireAjoutMagazine" styleClass="primary-button" text="+ Ajouter" />
+                    </children>
+                </HBox>
+
+                <TableView fx:id="tableMagazines" prefHeight="400.0" prefWidth="800.0" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="colIdMag" prefWidth="75.0" text="ID" />
+                        <TableColumn fx:id="colTitreMag" prefWidth="250.0" text="Titre" />
+                        <TableColumn fx:id="colStatutMag" prefWidth="150.0" text="Statut" />
+                        <TableColumn fx:id="colDateCreateMag" prefWidth="200.0" text="Date de Création" />
+                    </columns>
+                    <columnResizePolicy>
+                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                    </columnResizePolicy>
+                </TableView>
+            </children>
+        </VBox>
+    </children>
+</AnchorPane>

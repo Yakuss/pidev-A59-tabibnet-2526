@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<ScrollPane fitToWidth="true" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.connexion3a77.controllers.ArticleController.ArticleDetailController" styleClass="page-root">
+    <content>
+        <VBox spacing="25.0" maxWidth="900.0" styleClass="article-detail-page">
+            <padding><Insets bottom="50.0" left="60.0" right="60.0" top="40.0" /></padding>
+            <children>
+                <Label fx:id="labelTitre" text="Guide de la Santé" wrapText="true" styleClass="article-title"><font><Font name="System Bold" size="32.0" /></font></Label>
+                <HBox spacing="15.0"><children><Label fx:id="labelDate" textFill="#64748B" /><Label fx:id="labelViews" textFill="#64748B" /></children></HBox>
+                <VBox spacing="10.0" styleClass="highlight-card">
+                    <padding>
+                        <Insets top="15.0" right="15.0" bottom="15.0" left="15.0" />
+                    </padding>
+                    <children>
+                        <Label text="Résumé" styleClass="section-label" />
+                        <Text fx:id="textSummary" wrappingWidth="700.0" />
+                    </children>
+                </VBox>
+                <Text fx:id="textFullContent" lineSpacing="5.0" wrappingWidth="750.0"><font><Font size="16.0" /></font></Text>
+                <Button onAction="#retourBibliotheque" styleClass="back-button" text="← Retour à la Bibliothèque" />
+            </children>
+        </VBox>
+    </content>
+</ScrollPane>

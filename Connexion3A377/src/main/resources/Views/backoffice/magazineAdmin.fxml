@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="720.0" prefWidth="1080.0" style="-fx-background-color: #eff6ff;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.connexion3a77.controllers.MainController">
+    <children>
+        <VBox spacing="24.0" AnchorPane.topAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.bottomAnchor="0.0">
+            <padding><Insets top="24.0" right="32.0" bottom="24.0" left="32.0" /></padding>
+            <children>
+                <VBox spacing="18.0" styleClass="admin-toolbar">
+                    <padding><Insets top="24.0" right="30.0" bottom="24.0" left="30.0" /></padding>
+                    <children>
+                        <HBox spacing="16.0" alignment="CENTER_LEFT">
+                            <children>
+                                <Label text="Admin Dashboard" textFill="WHITE" styleClass="admin-header-title"><font><Font name="System Bold" size="20.0" /></font></Label>
+                                <Region HBox.hgrow="ALWAYS" />
+                                <Button onAction="#ouvrirFormulaireAjoutMagazine" styleClass="primary-button add-button" text="+ Ajouter un Magazine" />
+                            </children>
+                        </HBox>
+                        <HBox spacing="12.0" styleClass="admin-nav-bar">
+                            <children>
+                                <Button text="Gestion des Magazines" styleClass="nav-pill nav-pill-active" onAction="#ouvrirPageMagazines" />
+                                <Button text="Rédaction d'Articles" styleClass="nav-pill" onAction="#ouvrirPageArticles" />
+                            </children>
+                        </HBox>
+                    </children>
+                </VBox>
+                <VBox spacing="18.0" styleClass="admin-card">
+                    <children>
+                        <Label text="Gestion des Magazines" styleClass="section-heading"><font><Font name="System Bold" size="28.0" /></font></Label>
+                        <TableView fx:id="tableMagazines" VBox.vgrow="ALWAYS" styleClass="table-card">
+                            <columns>
+                                <TableColumn fx:id="colIdMag" prefWidth="60.0" text="ID" />
+                                <TableColumn fx:id="colTitreMag" prefWidth="220.0" text="Title" />
+                                <TableColumn fx:id="colDescriptionMag" prefWidth="300.0" text="Description" />
+                                <TableColumn fx:id="colStatutMag" prefWidth="120.0" text="Status" />
+                                <TableColumn fx:id="colDateCreateMag" prefWidth="150.0" text="Creation Date" />
+                                <TableColumn fx:id="colActionsMag" prefWidth="180.0" text="Actions" />
+                            </columns>
+                        </TableView>
+                    </children>
+                </VBox>
+            </children>
+        </VBox>
+    </children>
+</AnchorPane>
