@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.shape.SVGPath?>
+
+<HBox xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.connexion3a77.controllers.DashboardController" styleClass="dashboard-main-container">
+    
+    <!-- LEFT SIDE : ADMIN SPACE -->
+    <VBox HBox.hgrow="ALWAYS" styleClass="dashboard-half, admin-half">
+        <padding>
+            <Insets top="80" right="60" bottom="80" left="60"/>
+        </padding>
+        <Label text="Espace Administrateur" styleClass="dash-title, dash-title-admin"/>
+        <Label text="Gérez les données, les magazines et les articles en toute simplicité dans cet espace sécurisé." styleClass="dash-subtitle, dash-subtitle-admin" wrapText="true"/>
+        
+        <Region VBox.vgrow="ALWAYS" />
+        
+        <VBox spacing="20">
+            <Button text="Gestion des Magazines" styleClass="dash-action-btn, admin-btn" onAction="#openAdminMagazine" maxWidth="Infinity"/>
+            <Button text="Gestion des Articles" styleClass="dash-action-btn, admin-btn" onAction="#openAdminArticle" maxWidth="Infinity"/>
+        </VBox>
+        
+        <Region VBox.vgrow="ALWAYS" />
+    </VBox>
+
+    <!-- RIGHT SIDE : PATIENT SPACE -->
+    <VBox HBox.hgrow="ALWAYS" styleClass="dashboard-half, patient-half">
+        <padding>
+            <Insets top="80" right="60" bottom="80" left="60"/>
+        </padding>
+        <Label text="Espace Utilisateur" styleClass="dash-title, dash-title-patient"/>
+        <Label text="Consultez nos ressources médicales de façon claire, rapide et intuitive." styleClass="dash-subtitle, dash-subtitle-patient" wrapText="true"/>
+        
+        <Region VBox.vgrow="ALWAYS" />
+        
+        <VBox spacing="20">
+            <Button text="Consulter les Magazines" styleClass="dash-action-btn, patient-btn" onAction="#openPatientMagazine" maxWidth="Infinity"/>
+            <Button text="Consulter les Articles" styleClass="dash-action-btn, patient-btn" onAction="#openPatientArticle" maxWidth="Infinity"/>
+        </VBox>
+        
+        <Region VBox.vgrow="ALWAYS" />
+    </VBox>
+
+</HBox>

@@ -80,7 +80,7 @@
 }
 
 .nav-pill:hover {
-    -fx-background-color: rgba(251, 146, 60, 0.25);
+    -fx-background-color: rgba(21, 95, 116, 0.25);
 }
 
 .nav-pill-active {
@@ -508,36 +508,92 @@ TextField:focused, TextArea:focused, ComboBox:focused, .search-field:focused {
 .card-container {
     -fx-padding: 12 0 0 0;
 }
+/* --- 1. Base et Couleurs --- */
+.root, .app-root, .page-root {
+    -fx-background-color: linear-gradient(to bottom, #f7f9ff, #eef4ff);
+    -fx-font-family: "Segoe UI", sans-serif;
+    -fx-text-fill: #0f172a;
+}
 
+/* --- 2. DESIGN DES CARTES (La partie que vous vouliez changer) --- */
 .magazine-card {
     -fx-background-color: white;
     -fx-background-radius: 24;
     -fx-border-radius: 24;
-    -fx-padding: 24;
-    -fx-spacing: 16;
-    -fx-effect: dropshadow(two-pass-box, rgba(15,23,42,0.08), 18, 0, 0, 8);
+    -fx-padding: 0; /* Garder à 0 pour que l'image soit collée aux bords */
+    -fx-spacing: 0;
+    -fx-effect: dropshadow(two-pass-box, rgba(15,23,42,0.1), 15, 0, 0, 8);
     -fx-min-width: 280;
     -fx-max-width: 280;
-    -fx-pref-width: 280;
-    -fx-min-height: 280;
+    -fx-min-height: 420;
+    -fx-cursor: hand;
 }
 
+.magazine-card:hover {
+    -fx-effect: dropshadow(two-pass-box, rgba(37, 99, 235, 0.2), 20, 0, 0, 10);
+    -fx-translate-y: -3; /* Petit effet de levée au survol */
+}
+
+/* On force l'image (si elle est dans un conteneur) à ne pas avoir de marges */
+.magazine-card ImageView {
+    -fx-background-radius: 24 24 0 0;
+}
+
+/* Espacement du texte à l'intérieur de la carte */
 .card-title {
-    -fx-font-size: 20px;
+    -fx-font-size: 18px;
     -fx-font-weight: bold;
-    -fx-text-fill: #0f172a;
+    -fx-text-fill: #1e293b;
+    -fx-padding: 15 20 5 20; /* Marges internes gauche/droite */
 }
 
 .card-description {
-    -fx-text-fill: #475569;
-    -fx-font-size: 14px;
+    -fx-text-fill: #64748b;
+    -fx-font-size: 13px;
+    -fx-padding: 0 20 12 20;
 }
 
 .card-meta {
-    -fx-text-fill: #64748b;
-    -fx-font-size: 13px;
+    -fx-text-fill: #94a3b8;
+    -fx-font-size: 11px;
+    -fx-padding: 0 20 15 20;
 }
 
+/* --- 3. Éléments Interactifs --- */
+.primary-button {
+    -fx-background-color: #2563eb;
+    -fx-text-fill: white;
+    -fx-background-radius: 20;
+    -fx-font-weight: bold;
+    -fx-padding: 10 20;
+    -fx-cursor: hand;
+}
+
+.primary-button:hover {
+    -fx-background-color: #1d4ed8;
+}
+
+.search-field {
+    -fx-background-color: white;
+    -fx-background-radius: 999;
+    -fx-padding: 10 15;
+    -fx-border-color: #e2e8f0;
+    -fx-border-radius: 999;
+}
+
+.search-field:focused {
+    -fx-border-color: #3b82f6;
+}
+
+/* --- 4. Badges de statut --- */
+.status-badge {
+    -fx-background-radius: 12;
+    -fx-padding: 4 10;
+    -fx-text-fill: white;
+    -fx-font-size: 11px;
+}
+.status-badge.published { -fx-background-color: #10b981; }
+.status-badge.draft { -fx-background-color: #f59e0b; }
 .article-detail-page {
     -fx-background-color: transparent;
     -fx-padding: 24 0 24 0;
@@ -581,4 +637,280 @@ TextField:focused, TextArea:focused, ComboBox:focused, .search-field:focused {
 .table-view .column-header, .table-view .column-header .label {
     -fx-font-weight: bold;
     -fx-text-fill: #0f172a;
+}
+
+/* --- DASHBOARD SPLIT DESIGN --- */
+.dashboard-main-container {
+    -fx-background-color: white;
+}
+
+.dashboard-half {
+    -fx-alignment: top-center;
+    -fx-pref-width: 500px;
+}
+
+/* Admin Half - Dark Professional */
+.admin-half {
+    -fx-background-color: linear-gradient(to bottom right, #0f172a, #1e293b);
+}
+
+/* Patient Half - Light Calming */
+.patient-half {
+    -fx-background-color: linear-gradient(to bottom right, #f8fafc, #e2e8f0);
+}
+
+.dash-title {
+    -fx-font-size: 36px;
+    -fx-font-weight: bold;
+    -fx-padding: 0 0 10 0;
+}
+
+.dash-title-admin {
+    -fx-text-fill: white;
+}
+
+.dash-title-patient {
+    -fx-text-fill: #0f172a;
+}
+
+.dash-subtitle {
+    -fx-font-size: 16px;
+    -fx-text-alignment: center;
+    -fx-opacity: 0.8;
+}
+
+.dash-subtitle-admin {
+    -fx-text-fill: #cbd5e1;
+}
+
+.dash-subtitle-patient {
+    -fx-text-fill: #475569;
+}
+
+.dash-action-btn {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-padding: 20 30;
+    -fx-background-radius: 16;
+    -fx-cursor: hand;
+    -fx-alignment: center-left;
+}
+
+.admin-btn {
+    -fx-background-color: rgba(255, 255, 255, 0.1);
+    -fx-text-fill: white;
+    -fx-border-color: rgba(255, 255, 255, 0.2);
+    -fx-border-radius: 16;
+    -fx-border-width: 1;
+}
+
+.admin-btn:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.2);
+    -fx-effect: dropshadow(two-pass-box, rgba(0,0,0,0.3), 15, 0, 0, 5);
+}
+
+.patient-btn {
+    -fx-background-color: white;
+    -fx-text-fill: #2563eb;
+    -fx-effect: dropshadow(two-pass-box, rgba(15,23,42,0.06), 20, 0, 0, 10);
+}
+
+.patient-btn:hover {
+    -fx-background-color: #f8fafc;
+    -fx-text-fill: #1d4ed8;
+    -fx-effect: dropshadow(two-pass-box, rgba(37,99,235,0.15), 25, 0, 0, 12);
+    -fx-translate-y: -2;
+}
+
+/* --- MAGAZINE ADMIN STYLES --- */
+.admin-topbar {
+    -fx-background-color: #1f3b5c; /* Dark blue from image */
+}
+
+.admin-topbar-title {
+    -fx-text-fill: white;
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+}
+
+.admin-tab {
+    -fx-background-color: transparent;
+    -fx-text-fill: #94a3b8;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 10 20 10 20;
+    -fx-background-radius: 6 6 0 0;
+    -fx-cursor: hand;
+}
+
+.admin-tab:hover {
+    -fx-background-color: #2f4f73;
+    -fx-text-fill: white;
+}
+
+.admin-tab-active {
+    -fx-background-color: #2f4f73;
+    -fx-text-fill: white;
+}
+
+.admin-page-title {
+    -fx-text-fill: #1f3b5c;
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+}
+
+.admin-add-btn {
+    -fx-background-color: #1f3b5c;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 13px;
+    -fx-padding: 8 16;
+    -fx-background-radius: 6;
+    -fx-cursor: hand;
+}
+
+.admin-add-btn:hover {
+    -fx-background-color: #2f4f73;
+}
+
+.admin-table-card {
+    -fx-background-color: white;
+    -fx-background-radius: 8;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 10, 0, 0, 2);
+    -fx-border-color: #e2e8f0;
+    -fx-border-radius: 8;
+}
+
+.admin-table {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
+.admin-table .column-header-background {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent transparent #e2e8f0 transparent;
+}
+
+.admin-table .column-header {
+    -fx-background-color: transparent;
+}
+
+.admin-table .column-header .label {
+    -fx-text-fill: #475569;
+    -fx-font-weight: bold;
+    -fx-font-size: 13px;
+}
+
+.admin-table .table-row-cell {
+    -fx-background-color: white;
+    -fx-border-color: transparent transparent #f1f5f9 transparent;
+}
+
+.admin-table .table-row-cell:hover {
+    -fx-background-color: #f8fafc;
+}
+
+.status-badge {
+    -fx-padding: 4 12;
+    -fx-background-radius: 12;
+    -fx-font-weight: bold;
+    -fx-font-size: 11px;
+}
+
+.status-badge.published {
+    -fx-background-color: #dcfce7 !important;
+    -fx-text-fill: #166534 !important;
+}
+
+.status-badge.draft {
+    -fx-background-color: #fef9c3 !important;
+    -fx-text-fill: #854d0e !important;
+}
+
+.status-badge.archived {
+    -fx-background-color: #f1f5f9 !important;
+    -fx-text-fill: #334155 !important;
+}
+
+.action-edit-button {
+    -fx-background-color: white !important;
+    -fx-text-fill: #3b82f6 !important;
+    -fx-border-color: #bfdbfe !important;
+    -fx-border-radius: 6 !important;
+    -fx-background-radius: 6 !important;
+    -fx-padding: 4 12 !important;
+    -fx-cursor: hand;
+}
+
+.action-edit-button:hover {
+    -fx-background-color: #eff6ff !important;
+}
+
+.action-delete-button {
+    -fx-background-color: white !important;
+    -fx-text-fill: #ef4444 !important;
+    -fx-border-color: #fecaca !important;
+    -fx-border-radius: 6 !important;
+    -fx-background-radius: 6 !important;
+    -fx-padding: 4 12 !important;
+    -fx-cursor: hand;
+}
+
+.action-delete-button:hover {
+    -fx-background-color: #fef2f2 !important;
+}
+
+/* --- ARTICLE ADMIN FORM STYLES --- */
+.admin-scroll-pane, .admin-scroll-pane .viewport {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+    -fx-padding: 0;
+}
+
+.admin-form-card {
+    -fx-background-color: white;
+    -fx-background-radius: 8;
+    -fx-border-color: #e2e8f0;
+    -fx-border-radius: 8;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 10, 0, 0, 2);
+}
+
+.form-label {
+    -fx-text-fill: #334155;
+    -fx-font-weight: bold;
+    -fx-font-size: 13px;
+}
+
+.form-input-field, .form-input-area {
+    -fx-background-color: #f1f5f9;
+    -fx-border-color: transparent;
+    -fx-background-radius: 6;
+    -fx-border-radius: 6;
+    -fx-padding: 10 14;
+    -fx-font-size: 14px;
+    -fx-text-fill: #334155;
+    -fx-prompt-text-fill: #94a3b8;
+}
+
+.form-input-area {
+    -fx-padding: 12 14;
+}
+
+.form-input-field:focused, .form-input-area:focused {
+    -fx-background-color: white;
+    -fx-border-color: #cbd5e1;
+}
+
+.admin-submit-btn {
+    -fx-background-color: #1f3b5c;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+    -fx-padding: 10 24;
+    -fx-background-radius: 6;
+    -fx-cursor: hand;
+}
+
+.admin-submit-btn:hover {
+    -fx-background-color: #2f4f73;
 }

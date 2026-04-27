@@ -2,27 +2,94 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
 
-<ScrollPane fitToWidth="true" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.connexion3a77.controllers.ArticleController.ArticleDetailController" styleClass="page-root">
-    <content>
-        <VBox spacing="25.0" maxWidth="900.0" styleClass="article-detail-page">
-            <padding><Insets bottom="50.0" left="60.0" right="60.0" top="40.0" /></padding>
-            <children>
-                <Label fx:id="labelTitre" text="Guide de la Santé" wrapText="true" styleClass="article-title"><font><Font name="System Bold" size="32.0" /></font></Label>
-                <HBox spacing="15.0"><children><Label fx:id="labelDate" textFill="#64748B" /><Label fx:id="labelViews" textFill="#64748B" /></children></HBox>
-                <VBox spacing="10.0" styleClass="highlight-card">
-                    <padding>
-                        <Insets top="15.0" right="15.0" bottom="15.0" left="15.0" />
-                    </padding>
-                    <children>
-                        <Label text="Résumé" styleClass="section-label" />
-                        <Text fx:id="textSummary" wrappingWidth="700.0" />
-                    </children>
-                </VBox>
-                <Text fx:id="textFullContent" lineSpacing="5.0" wrappingWidth="750.0"><font><Font size="16.0" /></font></Text>
-                <Button onAction="#retourBibliotheque" styleClass="back-button" text="← Retour à la Bibliothèque" />
-            </children>
+<VBox spacing="0" style="-fx-background-color: linear-gradient(to bottom, #f7f9ff, #eef4ff);"
+      xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="edu.connexion3a77.controllers.ArticleController.articlePatient">
+
+    <fx:define>
+        <ToggleGroup fx:id="tgPublic"/>
+    </fx:define>
+
+    <!-- HEADER -->
+    <HBox alignment="CENTER_LEFT" spacing="16"
+          style="-fx-background-color: #0f172a; -fx-padding: 18 28;">
+        <Label text="📚 Bibliothèque d'Articles"
+               style="-fx-text-fill: white; -fx-font-size: 20px; -fx-font-weight: bold;"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <TextField fx:id="tfSearch" promptText="Rechercher par titre ou description..."
+                   styleClass="search-field" prefWidth="320"
+                   onKeyReleased="#onSearchChanged"/>
+    </HBox>
+
+    <!-- FILTRES + TRI -->
+    <HBox alignment="CENTER_LEFT" spacing="12"
+          style="-fx-background-color: white; -fx-padding: 14 28;
+                 -fx-border-color: #e2e8f0; -fx-border-width: 0 0 1 0;">
+        <Label text="Public cible :"
+               style="-fx-font-weight: bold; -fx-text-fill: #334155;"/>
+        <ToggleButton fx:id="btnTous"    text="Tous"       toggleGroup="$tgPublic"
+                      selected="true" styleClass="nav-pill" onAction="#onFiltreChanged"/>
+        <ToggleButton fx:id="btnEnfants" text="Enfants"    toggleGroup="$tgPublic"
+                      styleClass="nav-pill" onAction="#onFiltreChanged"/>
+        <ToggleButton fx:id="btnJeunes"  text="Jeunes"     toggleGroup="$tgPublic"
+                      styleClass="nav-pill" onAction="#onFiltreChanged"/>
+        <ToggleButton fx:id="btnAdultes" text="Adultes"    toggleGroup="$tgPublic"
+                      styleClass="nav-pill" onAction="#onFiltreChanged"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Label text="Trier par :" style="-fx-font-weight: bold; -fx-text-fill: #334155;"/>
+        <ComboBox fx:id="cbTri" prefWidth="180" onAction="#onTriChanged"/>
+    </HBox>
+
+    <!-- CONTENU PRINCIPAL -->
+    <HBox VBox.vgrow="ALWAYS" spacing="0">
+
+        <!-- LISTE + PAGINATION -->
+        <VBox spacing="0" prefWidth="380"
+              style="-fx-background-color: white; -fx-border-color: #e2e8f0; -fx-border-width: 0 1 0 0;">
+            <ListView fx:id="listArticles" VBox.vgrow="ALWAYS" styleClass="transparent-scroll"/>
+            <HBox alignment="CENTER" spacing="12"
+                  style="-fx-padding: 12; -fx-background-color: #f8fafc;
+                         -fx-border-color: #e2e8f0; -fx-border-width: 1 0 0 0;">
+                <Button fx:id="btnPrev" text="Precedent" styleClass="secondary-button"
+                        onAction="#pagePrecedente" style="-fx-padding: 8 16;"/>
+                <Label fx:id="lblPage" text="Page 1 / 1"
+                       style="-fx-font-weight: bold; -fx-text-fill: #475569;"/>
+                <Button fx:id="btnNext" text="Suivant" styleClass="secondary-button"
+                        onAction="#pageSuivante" style="-fx-padding: 8 16;"/>
+            </HBox>
         </VBox>
-    </content>
-</ScrollPane>
+
+        <!-- DETAIL ARTICLE -->
+        <ScrollPane fitToWidth="true" HBox.hgrow="ALWAYS"
+                    style="-fx-background-color: transparent;">
+            <VBox fx:id="detailPane" spacing="18" style="-fx-padding: 32 40;">
+                <Label fx:id="lblTitre" text="Selectionnez un article"
+                       style="-fx-font-size: 26px; -fx-font-weight: bold; -fx-text-fill: #0f172a;"
+                       wrapText="true"/>
+                <HBox spacing="20">
+                    <Label fx:id="lblAuteur"      style="-fx-text-fill: #64748b;"/>
+                    <Label fx:id="lblDatePub"     style="-fx-text-fill: #64748b;"/>
+                    <Label fx:id="lblViews"       style="-fx-text-fill: #64748b;"/>
+                    <Label fx:id="lblPublicCible"/>
+                </HBox>
+                <Label fx:id="lblStatut" styleClass="status-badge"/>
+                <VBox style="-fx-background-color: #fffbeb; -fx-border-color: #fde047;
+                             -fx-border-width: 0 0 0 4; -fx-background-radius: 12;
+                             -fx-padding: 16;" spacing="6">
+                    <Label text="Resume"
+                           style="-fx-font-weight: bold; -fx-text-fill: #92400e;"/>
+                    <TextArea fx:id="taSummary" wrapText="true" editable="false"
+                              prefRowCount="3"
+                              style="-fx-background-color: transparent; -fx-border-color: transparent;"/>
+                </VBox>
+                <TextArea fx:id="taResume" wrapText="true" editable="false" prefRowCount="10"
+                          style="-fx-background-color: transparent; -fx-border-color: transparent;
+                                 -fx-font-size: 15px;"/>
+                <Button fx:id="btnOuvrirPdf" text="Ouvrir le PDF joint"
+                        styleClass="primary-button" onAction="#ouvrirPdf"
+                        visible="false" managed="false"/>
+            </VBox>
+        </ScrollPane>
+    </HBox>
+</VBox>

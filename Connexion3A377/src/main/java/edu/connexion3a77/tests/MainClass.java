@@ -17,36 +17,18 @@ public class MainClass extends Application {
 
     @Override
     public void start(Stage stage) {
-        stage.setTitle("Bienvenue - Choix du mode");
-        stage.setScene(createLauncherScene());
-        stage.setMinWidth(800);
-        stage.setMinHeight(520);
-        stage.show();
-    }
-
-    private Scene createLauncherScene() {
-        Label title = new Label("Bienvenue dans Connexion 3A377");
-        title.getStyleClass().add("page-title");
-
-        Label subtitle = new Label("Choisissez votre espace : administration ou consultation patient.");
-        subtitle.setWrapText(true);
-        subtitle.getStyleClass().add("card-description");
-
-        Button adminButton = createViewButton("Espace Admin", "/Views/backoffice/magazineAdmin.fxml");
-        adminButton.setStyle("-fx-min-width: 220px;");
-        Button patientButton = createViewButton("Espace Patient", "/Views/frontoffice/magazinePatient.fxml");
-        patientButton.setStyle("-fx-min-width: 220px;");
-
-        VBox buttonBox = new VBox(16, adminButton, patientButton);
-        buttonBox.setPadding(new Insets(10));
-
-        VBox root = new VBox(28, title, subtitle, buttonBox);
-        root.setPadding(new Insets(40));
-        root.getStyleClass().add("launcher-root");
-
-        Scene scene = new Scene(root, 820, 520);
-        applyStylesheet(scene);
-        return scene;
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource("/Views/dashboard.fxml"));
+            Scene scene = new Scene(root, 1000, 600);
+            applyStylesheet(scene);
+            stage.setTitle("Tableau de bord");
+            stage.setScene(scene);
+            stage.setMinWidth(900);
+            stage.setMinHeight(550);
+            stage.show();
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private Button createViewButton(String label, String fxmlPath) {
@@ -68,6 +50,17 @@ public class MainClass extends Application {
             stage.show();
         } catch (Exception e) {
             e.printStackTrace();
+            javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
+            alert.setTitle("Erreur de lancement");
+            alert.setHeaderText("Impossible d'ouvrir la vue : " + title);
+            
+            String cause = e.getCause() != null ? e.getCause().getMessage() : e.getMessage();
+            if (e.getCause() != null && e.getCause().getCause() != null) {
+                cause += "\n" + e.getCause().getCause().getMessage();
+            }
+            
+            alert.setContentText("Une erreur est survenue.\nSi c'est une erreur de base de données, VEUILLEZ DÉMARRER WAMP/XAMPP (MySQL).\n\nDétails :\n" + cause);
+            alert.showAndWait();
         }
     }
 

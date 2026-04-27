@@ -4,6 +4,11 @@ import java.time.LocalDateTime;
 
 public class Article {
 
+    /** Catégorie d'âge obligatoire de l'article. */
+    public enum Categorie {
+        ENFANT, JEUNE, ADULTE
+    }
+
     private int id;
     private String titre;
     private String resume;
@@ -14,8 +19,11 @@ public class Article {
     private String image;
     private int views = 0;
     private Magazine magazine;
+    private String publicCible; // "Enfants", "Jeunes", "Adultes"
+    private String pdfFile;
+    private Categorie categorie; // obligatoire : ENFANT, JEUNE ou ADULTE
 
-    // ==================== CONSTRUCTEUR PRINCIPAL (utilisé dans MainController) ====================
+    // ==================== CONSTRUCTEUR PRINCIPAL ====================
     public Article(String titre, String resume, String auteur, LocalDateTime datePub,
                    String summary, String statut, String image) {
         this.titre = titre;
@@ -28,9 +36,9 @@ public class Article {
         this.views = 0;
     }
 
-    // ==================== CONSTRUCTEUR COMPLET (utilisé par ServiceArticle) ====================
+    // ==================== CONSTRUCTEUR COMPLET (ServiceArticle) ====================
     public Article(int id, String titre, String resume, String auteur, LocalDateTime datePub,
-                   String summary, String statut, String image, int views) {
+                   String summary, String statut, String image, int views, String publicCible, String pdfFile) {
         this.id = id;
         this.titre = titre;
         this.resume = resume;
@@ -40,11 +48,17 @@ public class Article {
         this.statut = statut;
         this.image = image;
         this.views = views;
+        this.publicCible = publicCible;
+        this.pdfFile = pdfFile;
     }
 
-    public void incrementViews() {
-        this.views++;
+    // Rétrocompatibilité avec l'ancien constructeur à 9 paramètres
+    public Article(int id, String titre, String resume, String auteur, LocalDateTime datePub,
+                   String summary, String statut, String image, int views) {
+        this(id, titre, resume, auteur, datePub, summary, statut, image, views, null, null);
     }
+
+    public void incrementViews() { this.views++; }
 
     // ==================== GETTERS & SETTERS ====================
     public int getId() { return id; }
@@ -76,6 +90,27 @@ public class Article {
 
     public Magazine getMagazine() { return magazine; }
     public void setMagazine(Magazine magazine) { this.magazine = magazine; }
+
+    public String getPublicCible() { return publicCible; }
+    public void setPublicCible(String publicCible) { this.publicCible = publicCible; }
+
+    public String getPdfFile() { return pdfFile; }
+    public void setPdfFile(String pdfFile) { this.pdfFile = pdfFile; }
+
+    /**
+     * Retourne la catégorie d'âge de l'article.
+     * Valeurs possibles : ENFANT, JEUNE, ADULTE.
+     */
+    public Categorie getCategorie() { return categorie; }
+
+    /**
+     * Définit la catégorie d'âge. Ne peut être que ENFANT, JEUNE ou ADULTE.
+     * @throws IllegalArgumentException si la valeur est null
+     */
+    public void setCategorie(Categorie categorie) {
+        if (categorie == null) throw new IllegalArgumentException("La catégorie est obligatoire (ENFANT, JEUNE, ADULTE).");
+        this.categorie = categorie;
+    }
 
     @Override
     public String toString() {

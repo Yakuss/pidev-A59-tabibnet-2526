@@ -45,10 +45,10 @@ public class ArticleDetailController {
             labelViews.setText(article.getViews() + " vues");
         }
         if (textSummary != null) {
-            textSummary.setText(article.getResume() != null ? article.getResume() : "");
+            textSummary.setText(article.getSummary() != null ? article.getSummary() : "");
         }
         if (textFullContent != null) {
-            textFullContent.setText(article.getSummary() != null ? article.getSummary() : "");
+            textFullContent.setText(article.getResume() != null ? article.getResume() : "");
         }
     }
 

@@ -691,120 +691,103 @@ public class MainController {
         return true;
     }
 
+    private javafx.scene.layout.HBox createRequiredLabel(String text) {
+        javafx.scene.control.Label l1 = new javafx.scene.control.Label(text + " ");
+        l1.setStyle("-fx-font-weight: bold; -fx-text-fill: #1f3b5c;");
+        javafx.scene.control.Label l2 = new javafx.scene.control.Label("*");
+        l2.setStyle("-fx-font-weight: bold; -fx-text-fill: #ef4444;");
+        javafx.scene.layout.HBox box = new javafx.scene.layout.HBox(l1, l2);
+        box.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
+        return box;
+    }
+
+    private javafx.scene.layout.HBox createOptionalLabel(String text) {
+        javafx.scene.control.Label l1 = new javafx.scene.control.Label(text + " ");
+        l1.setStyle("-fx-font-weight: bold; -fx-text-fill: #1f3b5c;");
+        javafx.scene.control.Label l2 = new javafx.scene.control.Label("(optionnel)");
+        l2.setStyle("-fx-text-fill: #94a3b8;");
+        javafx.scene.layout.HBox box = new javafx.scene.layout.HBox(l1, l2);
+        box.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
+        return box;
+    }
+
     private void showMagazineAddDialog() {
         Stage dialog = new Stage(StageStyle.UNDECORATED);
         dialog.initModality(Modality.APPLICATION_MODAL);
 
         Label header = new Label("Nouveau Magazine");
-        header.getStyleClass().add("form-header-title");
+        header.setStyle("-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #1f3b5c;");
 
         Button closeBtn = new Button("✕");
-        closeBtn.getStyleClass().add("modal-close-button");
+        closeBtn.setStyle("-fx-background-color: transparent; -fx-font-size: 16px; -fx-cursor: hand; -fx-text-fill: #64748b;");
         closeBtn.setOnAction(evt -> dialog.close());
 
         HBox headerBar = new HBox(header, new Region(), closeBtn);
-        headerBar.getStyleClass().add("modal-header");
         HBox.setHgrow(headerBar.getChildren().get(1), Priority.ALWAYS);
 
         Label subtitle = new Label("Remplissez les informations pour créer un nouveau magazine");
-        subtitle.getStyleClass().add("form-subtitle");
+        subtitle.setStyle("-fx-text-fill: #64748b; -fx-font-size: 14px;");
         subtitle.setWrapText(true);
 
+        // Title
+        HBox titleLabel = createRequiredLabel("Title");
         TextField titleField = new TextField();
         titleField.setPromptText("Entrez le titre du magazine (3-255 caractères)");
-        titleField.getStyleClass().add("form-field");
+        titleField.setStyle("-fx-background-color: #f8fafc; -fx-border-color: #cbd5e1; -fx-border-radius: 6; -fx-background-radius: 6; -fx-padding: 8 12;");
+        Label titleHint = new Label("0/255 caractères");
+        titleHint.setStyle("-fx-text-fill: #64748b; -fx-font-size: 12px;");
+        VBox titleBox = new VBox(6, titleLabel, titleField, titleHint);
 
+        // Description
+        HBox descLabel = createRequiredLabel("Description");
         TextArea descriptionArea = new TextArea();
         descriptionArea.setPromptText("Entrez une description (minimum 10 caractères)");
-        descriptionArea.setPrefRowCount(6);
-        descriptionArea.getStyleClass().add("form-textarea");
+        descriptionArea.setPrefRowCount(4);
+        descriptionArea.setStyle("-fx-background-color: #f8fafc; -fx-border-color: #cbd5e1; -fx-background-radius: 6; -fx-border-radius: 6; -fx-padding: 8 12;");
+        Label descHint = new Label("0 caractères (minimum 10)");
+        descHint.setStyle("-fx-text-fill: #64748b; -fx-font-size: 12px;");
+        VBox descBox = new VBox(6, descLabel, descriptionArea, descHint);
 
+        // Image URL
+        HBox imageLabel = createOptionalLabel("Image URL");
         TextField imageField = new TextField();
-        imageField.setPromptText("Sélectionnez une image...");
-        imageField.getStyleClass().add("form-field");
-        imageField.setEditable(false);
+        imageField.setPromptText("https://exemple.com/image.jpg");
+        imageField.setStyle("-fx-background-color: #f1f5f9; -fx-border-color: transparent; -fx-border-radius: 6; -fx-background-radius: 6; -fx-padding: 8 12;");
+        VBox imageBox = new VBox(6, imageLabel, imageField);
 
-        Button browseButton = new Button("Parcourir");
-        browseButton.getStyleClass().addAll("secondary-button", "dialog-button");
-        browseButton.setOnAction(evt -> {
-            FileChooser chooser = new FileChooser();
-            chooser.setTitle("Choisir une image");
-            chooser.getExtensionFilters().addAll(
-                    new FileChooser.ExtensionFilter("Images", "*.png", "*.jpg", "*.jpeg", "*.gif"),
-                    new FileChooser.ExtensionFilter("Tous les fichiers", "*.*"));
-            File file = chooser.showOpenDialog(dialog);
-            if (file != null) {
-                imageField.setText(file.toURI().toString());
-            }
-        });
-
-        HBox imageRow = new HBox(10, imageField, browseButton);
-        imageRow.setAlignment(Pos.CENTER_LEFT);
-        imageRow.setFillHeight(false);
-        imageRow.setPrefWidth(520);
-
+        // PDF URL
+        HBox pdfLabel = createOptionalLabel("PDF File URL");
         TextField pdfField = new TextField();
-        pdfField.setPromptText("Sélectionnez un PDF ou collez une URL...");
-        pdfField.getStyleClass().add("form-field");
-        pdfField.setEditable(false);
+        pdfField.setPromptText("https://exemple.com/magazine.pdf");
+        pdfField.setStyle("-fx-background-color: #f1f5f9; -fx-border-color: transparent; -fx-border-radius: 6; -fx-background-radius: 6; -fx-padding: 8 12;");
+        VBox pdfBox = new VBox(6, pdfLabel, pdfField);
 
-        Button pdfBrowseButton = new Button("Parcourir");
-        pdfBrowseButton.getStyleClass().addAll("secondary-button", "dialog-button");
-        pdfBrowseButton.setOnAction(evt -> {
-            FileChooser chooser = new FileChooser();
-            chooser.setTitle("Choisir un PDF");
-            chooser.getExtensionFilters().addAll(
-                    new FileChooser.ExtensionFilter("PDF", "*.pdf"),
-                    new FileChooser.ExtensionFilter("Tous les fichiers", "*.*"));
-            File file = chooser.showOpenDialog(dialog);
-            if (file != null) {
-                pdfField.setText(file.toURI().toString());
-            }
-        });
-
-        HBox pdfRow = new HBox(10, pdfField, pdfBrowseButton);
-        pdfRow.setAlignment(Pos.CENTER_LEFT);
-        pdfRow.setFillHeight(false);
-        pdfRow.setPrefWidth(520);
-
+        // Statut
+        HBox statusLabel = createRequiredLabel("Statut");
         ComboBox<String> statusBox = new ComboBox<>();
         statusBox.getItems().addAll("draft", "published", "archived");
         statusBox.getSelectionModel().selectFirst();
-        statusBox.getStyleClass().add("form-combobox");
-        statusBox.setPrefWidth(520);
+        statusBox.setStyle("-fx-background-color: #f1f5f9; -fx-border-color: transparent; -fx-border-radius: 6; -fx-background-radius: 6; -fx-padding: 4 8;");
+        statusBox.setMaxWidth(Double.MAX_VALUE);
+        VBox statusVBox = new VBox(6, statusLabel, statusBox);
 
-        GridPane grid = new GridPane();
-        grid.setHgap(12);
-        grid.setVgap(16);
-        grid.setPadding(new Insets(10, 0, 0, 0));
-        grid.add(new Label("Titre *"), 0, 0);
-        grid.add(titleField, 0, 1);
-        grid.add(new Label("Description *"), 0, 2);
-        grid.add(descriptionArea, 0, 3);
-        grid.add(new Label("Image (optionnel)"), 0, 4);
-        grid.add(imageRow, 0, 5);
-        grid.add(new Label("PDF (optionnel)"), 0, 6);
-        grid.add(pdfRow, 0, 7);
-        grid.add(new Label("Statut *"), 0, 8);
-        grid.add(statusBox, 0, 9);
-
-        Label note = new Label("Note : L'ID et la date de création seront générés automatiquement.");
-        note.getStyleClass().add("form-note");
-        note.setWrapText(true);
+        VBox formContainer = new VBox(20, titleBox, descBox, imageBox, pdfBox, statusVBox);
+        formContainer.setPadding(new Insets(10, 0, 10, 0));
 
         Button saveBtn = new Button("Créer le Magazine");
-        saveBtn.getStyleClass().addAll("primary-button", "dialog-button");
+        saveBtn.setStyle("-fx-background-color: #1f3b5c; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 8 16; -fx-background-radius: 6; -fx-cursor: hand;");
         Button cancelBtn = new Button("Annuler");
-        cancelBtn.getStyleClass().addAll("secondary-button", "dialog-button");
+        cancelBtn.setStyle("-fx-background-color: transparent; -fx-text-fill: #64748b; -fx-font-weight: bold; -fx-cursor: hand;");
         cancelBtn.setOnAction(evt -> dialog.close());
 
-        HBox actionRow = new HBox(12, cancelBtn, saveBtn);
+        HBox actionRow = new HBox(15, cancelBtn, saveBtn);
         actionRow.setAlignment(Pos.CENTER_RIGHT);
+        actionRow.setPadding(new Insets(10, 0, 0, 0));
 
-        VBox content = new VBox(18, headerBar, subtitle, grid, note, actionRow);
-        content.getStyleClass().add("form-dialog");
-        content.setPadding(new Insets(20));
-        content.setPrefWidth(560);
+        VBox content = new VBox(15, headerBar, subtitle, formContainer, actionRow);
+        content.setStyle("-fx-background-color: white; -fx-background-radius: 12; -fx-border-radius: 12; -fx-border-color: #cbd5e1; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 20, 0, 0, 10);");
+        content.setPadding(new Insets(30));
+        content.setPrefWidth(600);
 
         saveBtn.setOnAction(evt -> {
             Magazine magazine = new Magazine(titleField.getText().trim(), descriptionArea.getText().trim(),
@@ -836,18 +819,7 @@ public class MainController {
     }
 
     private void editMagazine(Magazine magazine) {
-        Optional<Magazine> result = showMagazineEditDialog(magazine);
-        result.ifPresent(updated -> {
-            try {
-                serviceMagazine.modifier(updated);
-                if (tableMagazines != null) {
-                    tableMagazines.refresh();
-                }
-                showAlert(Alert.AlertType.INFORMATION, "Succès", "Magazine modifié avec succès !");
-            } catch (SQLException e) {
-                showAlert(Alert.AlertType.ERROR, "Erreur", e.getMessage());
-            }
-        });
+        showMagazineEditDialog(magazine);
     }
 
     private void deleteMagazine(Magazine magazine) {
@@ -870,7 +842,7 @@ public class MainController {
         }
     }
 
-    private Optional<Magazine> showMagazineEditDialog(Magazine existing) {
+    private void showMagazineEditDialog(Magazine existing) {
         Stage dialog = new Stage(StageStyle.UNDECORATED);
         dialog.initModality(Modality.APPLICATION_MODAL);
 
@@ -1012,7 +984,6 @@ public class MainController {
         }
         dialog.setScene(scene);
         dialog.showAndWait();
-        return Optional.empty();
     }
 
     private void showArticleAddDialog() {
@@ -1119,10 +1090,32 @@ public class MainController {
 
     // ====================== UTILITAIRES ======================
     private void remplirFormulaireMagazine(Magazine m) {
-        /* reste le même */ }
+        if (tfTitreMag != null) {
+            tfTitreMag.setText(m.getTitre());
+        }
+        if (taDescriptionMag != null) {
+            taDescriptionMag.setText(m.getDescription());
+        }
+        if (cbStatutMag != null) {
+            cbStatutMag.setValue(m.getStatut());
+        }
+    }
 
     private void clearFormMagazine() {
-        /* reste le même */ }
+        if (tfTitreMag != null) {
+            tfTitreMag.clear();
+        }
+        if (taDescriptionMag != null) {
+            taDescriptionMag.clear();
+        }
+        if (cbStatutMag != null) {
+            cbStatutMag.setValue(null);
+        }
+        selectedMagazine = null;
+        if (tableMagazines != null) {
+            tableMagazines.getSelectionModel().clearSelection();
+        }
+    }
 
     private void remplirFormulaireArticle(Article a) {
         tfTitreArt.setText(a.getTitre());
