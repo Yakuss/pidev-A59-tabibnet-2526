@@ -20,6 +20,10 @@ import javafx.util.StringConverter;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -148,17 +152,28 @@ public class articleAdmin {
         dialog.initModality(Modality.APPLICATION_MODAL);
         dialog.setTitle(existant == null ? "Nouvel Article" : "Modifier l'Article");
 
-        TextField tfTitre  = new TextField();  tfTitre.setPromptText("Titre");
-        TextField tfAuteur = new TextField();  tfAuteur.setPromptText("Auteur");
-        DatePicker dpDate  = new DatePicker();
+        // ── Champs ──────────────────────────────────────────────────────────
+        TextField tfTitre  = new TextField(); tfTitre.setPromptText("Entrez le titre de l'article");
+        tfTitre.setStyle(fieldStyle());
+
+        TextField tfAuteur = new TextField(); tfAuteur.setPromptText("Entrez le nom de l'auteur");
+        tfAuteur.setStyle(fieldStyle());
+
+        DatePicker dpDate = new DatePicker();
+        dpDate.setStyle(fieldStyle()); dpDate.setMaxWidth(Double.MAX_VALUE);
+
         ComboBox<String> cbStatut = new ComboBox<>();
-        cbStatut.getItems().addAll("draft","published"); cbStatut.setPromptText("Statut");
+        cbStatut.getItems().addAll("draft","published");
+        cbStatut.setPromptText("Choisir..."); cbStatut.setMaxWidth(Double.MAX_VALUE);
+        cbStatut.setStyle(fieldStyle());
+
         ComboBox<String> cbPublic = new ComboBox<>();
-        cbPublic.getItems().addAll("Enfants","Jeunes","Adultes"); cbPublic.setPromptText("Public cible");
-        TextArea taSummary = new TextArea(); taSummary.setPromptText("Résumé"); taSummary.setPrefRowCount(3); taSummary.setWrapText(true);
-        TextArea taResume  = new TextArea(); taResume.setPromptText("Contenu"); taResume.setPrefRowCount(6); taResume.setWrapText(true);
+        cbPublic.getItems().addAll("Enfants","Jeunes","Adultes");
+        cbPublic.setPromptText("Choisir..."); cbPublic.setMaxWidth(Double.MAX_VALUE);
+        cbPublic.setStyle(fieldStyle());
 
         ComboBox<Magazine> cbMag = new ComboBox<>();
+        cbMag.setMaxWidth(Double.MAX_VALUE); cbMag.setStyle(fieldStyle());
         try {
             cbMag.getItems().addAll(serviceMagazine.afficherTout());
             cbMag.setConverter(new StringConverter<>() {
@@ -167,9 +182,29 @@ public class articleAdmin {
             });
         } catch (SQLException ignored) {}
 
+        TextArea taResume = new TextArea();
+        taResume.setPromptText("Entrez le contenu de l'article");
+        taResume.setPrefRowCount(6); taResume.setWrapText(true);
+        taResume.setStyle(fieldStyle());
+
+        // Boutons traduction contenu
+        Button btnTrAr = new Button("🌐 Arabe");
+        Button btnTrFr = new Button("🌐 Français");
+        Button btnTrEn = new Button("🌐 Anglais");
+        for (Button b : new Button[]{btnTrAr, btnTrFr, btnTrEn}) {
+            b.setStyle("-fx-background-color:#1f3b5c;-fx-text-fill:white;-fx-background-radius:16;-fx-padding:5 14;-fx-cursor:hand;-fx-font-size:12px;");
+        }
+        btnTrAr.setOnAction(e -> traduireChamp(taResume, "arabe",   dialog));
+        btnTrFr.setOnAction(e -> traduireChamp(taResume, "francais", dialog));
+        btnTrEn.setOnAction(e -> traduireChamp(taResume, "englais",  dialog));
+        HBox tradRow = new HBox(8, new Label("Traduire :"), btnTrAr, btnTrFr, btnTrEn);
+        tradRow.setAlignment(Pos.CENTER_LEFT);
+
         // Upload image
-        Label lblImage = new Label("Aucune image");
-        Button btnImage = new Button("📷 Image (JPG/PNG, max 5 Mo)");
+        Label lblImageVal = new Label("Aucune image sélectionnée");
+        lblImageVal.setStyle("-fx-text-fill:#64748b; -fx-font-size:12px;");
+        Button btnImage = new Button("📷 Parcourir...");
+        btnImage.setStyle(secondaryBtnStyle());
         final String[] imgPath = {null};
         btnImage.setOnAction(e -> {
             FileChooser fc = new FileChooser();
@@ -178,13 +213,15 @@ public class articleAdmin {
             if (f != null) {
                 if (f.length() > MAX_SIZE) { alert(Alert.AlertType.ERROR,"Trop grand","Max 5 Mo."); return; }
                 imgPath[0] = copierFichier(f, "images");
-                lblImage.setText(f.getName());
+                lblImageVal.setText(f.getName());
             }
         });
 
         // Upload PDF
-        Label lblPdf = new Label("Aucun PDF");
-        Button btnPdf = new Button("📄 PDF joint (max 5 Mo)");
+        Label lblPdfVal = new Label("Aucun PDF sélectionné");
+        lblPdfVal.setStyle("-fx-text-fill:#64748b; -fx-font-size:12px;");
+        Button btnPdf = new Button("📄 Parcourir...");
+        btnPdf.setStyle(secondaryBtnStyle());
         final String[] pdfPath = {null};
         btnPdf.setOnAction(e -> {
             FileChooser fc = new FileChooser();
@@ -193,35 +230,43 @@ public class articleAdmin {
             if (f != null) {
                 if (f.length() > MAX_SIZE) { alert(Alert.AlertType.ERROR,"Trop grand","Max 5 Mo."); return; }
                 pdfPath[0] = copierFichier(f, "pdfs");
-                lblPdf.setText(f.getName());
+                lblPdfVal.setText(f.getName());
             }
         });
 
+        // Pré-remplissage si modification
         if (existant != null) {
             tfTitre.setText(existant.getTitre());
             tfAuteur.setText(existant.getAuteur());
             if (existant.getDatePub() != null) dpDate.setValue(existant.getDatePub().toLocalDate());
             cbStatut.setValue(existant.getStatut());
             cbPublic.setValue(existant.getPublicCible());
-            taSummary.setText(existant.getSummary());
             taResume.setText(existant.getResume());
             cbMag.setValue(existant.getMagazine());
-            if (existant.getImage()   != null) { imgPath[0]  = existant.getImage();   lblImage.setText(new File(existant.getImage()).getName()); }
-            if (existant.getPdfFile() != null) { pdfPath[0]  = existant.getPdfFile(); lblPdf.setText(new File(existant.getPdfFile()).getName()); }
+            if (existant.getImage()   != null) { imgPath[0] = existant.getImage();   lblImageVal.setText(new File(existant.getImage()).getName()); }
+            if (existant.getPdfFile() != null) { pdfPath[0] = existant.getPdfFile(); lblPdfVal.setText(new File(existant.getPdfFile()).getName()); }
         }
 
-        Button btnSave = new Button(existant == null ? "✅ Publier" : "💾 Enregistrer");
-        btnSave.setStyle("-fx-background-color:#1d4ed8;-fx-text-fill:white;-fx-font-weight:bold;-fx-background-radius:8;-fx-padding:10 24;");
+        // ── Boutons action ───────────────────────────────────────────────────
+        Button btnCancel = new Button("Annuler");
+        btnCancel.setStyle(secondaryBtnStyle());
+        btnCancel.setOnAction(e -> dialog.close());
+
+        Button btnSave = new Button(existant == null ? "Créer l'Article" : "Enregistrer");
+        btnSave.setStyle("-fx-background-color:#1f3b5c;-fx-text-fill:white;-fx-font-weight:bold;" +
+                         "-fx-padding:10 24;-fx-background-radius:6;-fx-cursor:hand;");
         btnSave.setOnAction(e -> {
-            if (tfTitre.getText().trim().length() < 2) { alert(Alert.AlertType.ERROR,"Erreur","Titre trop court."); return; }
+            if (tfTitre.getText().trim().length() < 2) { alert(Alert.AlertType.ERROR,"Erreur","Titre obligatoire (min 2 caractères)."); return; }
+            if (tfAuteur.getText().trim().isEmpty())   { alert(Alert.AlertType.ERROR,"Erreur","Auteur obligatoire."); return; }
             if (cbStatut.getValue() == null)           { alert(Alert.AlertType.ERROR,"Erreur","Statut obligatoire."); return; }
             if (cbPublic.getValue() == null)           { alert(Alert.AlertType.ERROR,"Erreur","Public cible obligatoire."); return; }
+            if (taResume.getText().trim().isEmpty())   { alert(Alert.AlertType.ERROR,"Erreur","Le contenu est obligatoire."); return; }
             try {
                 if (existant == null) {
                     Article a = new Article(tfTitre.getText().trim(), taResume.getText().trim(),
                             tfAuteur.getText().trim(),
                             dpDate.getValue() != null ? dpDate.getValue().atStartOfDay() : LocalDateTime.now(),
-                            taSummary.getText().trim(), cbStatut.getValue(), imgPath[0]);
+                            "", cbStatut.getValue(), imgPath[0]);
                     a.setPublicCible(cbPublic.getValue());
                     a.setPdfFile(pdfPath[0]);
                     a.setMagazine(cbMag.getValue());
@@ -231,7 +276,6 @@ public class articleAdmin {
                     existant.setResume(taResume.getText().trim());
                     existant.setAuteur(tfAuteur.getText().trim());
                     existant.setDatePub(dpDate.getValue() != null ? dpDate.getValue().atStartOfDay() : null);
-                    existant.setSummary(taSummary.getText().trim());
                     existant.setStatut(cbStatut.getValue());
                     existant.setPublicCible(cbPublic.getValue());
                     existant.setImage(imgPath[0]);
@@ -246,23 +290,90 @@ public class articleAdmin {
             }
         });
 
-        VBox form = new VBox(14,
-                lbl("Titre"),  tfTitre,
-                lbl("Auteur"), tfAuteur,
-                new HBox(14, vbox("Date", dpDate), vbox("Statut", cbStatut), vbox("Public cible", cbPublic)),
-                lbl("Magazine"), cbMag,
-                lbl("Résumé"),  taSummary,
-                lbl("Contenu"), taResume,
-                lbl("Image de couverture"), btnImage, lblImage,
-                lbl("Fichier PDF joint"),   btnPdf,   lblPdf,
-                btnSave
+        HBox actionRow = new HBox(12, btnCancel, btnSave);
+        actionRow.setAlignment(Pos.CENTER_RIGHT);
+        actionRow.setPadding(new Insets(10, 0, 0, 0));
+
+        // ── Layout ───────────────────────────────────────────────────────────
+        Label header = new Label(existant == null ? "Nouvel Article" : "Modifier l'Article");
+        header.setStyle("-fx-font-size:22px;-fx-font-weight:bold;-fx-text-fill:#1f3b5c;");
+
+        Label subtitle = new Label("Remplissez les informations pour " +
+                (existant == null ? "créer un nouvel article" : "modifier cet article"));
+        subtitle.setStyle("-fx-text-fill:#64748b;-fx-font-size:13px;");
+        subtitle.setWrapText(true);
+
+        VBox content = new VBox(16,
+                header, subtitle,
+                fieldBlock(true,  "Titre",        tfTitre),
+                fieldBlock(true,  "Auteur",        tfAuteur),
+                new HBox(14,
+                    fieldBlockH(false, "Date",         dpDate),
+                    fieldBlockH(true,  "Statut",       cbStatut),
+                    fieldBlockH(true,  "Public cible", cbPublic)
+                ),
+                fieldBlock(false, "Magazine",      cbMag),
+                fieldBlock(true,  "Contenu",       taResume),
+                tradRow,
+                fieldBlock(false, "Image de couverture (JPG/PNG, max 5 Mo)",
+                        rowWithBtn(btnImage, lblImageVal)),
+                fieldBlock(false, "Fichier PDF joint (max 5 Mo)",
+                        rowWithBtn(btnPdf, lblPdfVal)),
+                actionRow
         );
-        form.setPadding(new Insets(28));
-        form.setStyle("-fx-background-color:white;");
-        ScrollPane sp = new ScrollPane(form);
+        content.setPadding(new Insets(30));
+        content.setStyle("-fx-background-color:white;");
+
+        ScrollPane sp = new ScrollPane(content);
         sp.setFitToWidth(true);
-        dialog.setScene(new Scene(sp, 620, 700));
+        sp.setStyle("-fx-background-color:white;");
+        dialog.setScene(new Scene(sp, 640, 720));
         dialog.showAndWait();
+    }
+
+    // ── Helpers style ────────────────────────────────────────────────────────
+    private String fieldStyle() {
+        return "-fx-background-color:#f8fafc;-fx-border-color:#cbd5e1;-fx-border-radius:6;" +
+               "-fx-background-radius:6;-fx-padding:8 12;-fx-font-size:13px;";
+    }
+
+    private String secondaryBtnStyle() {
+        return "-fx-background-color:transparent;-fx-text-fill:#64748b;-fx-font-weight:bold;" +
+               "-fx-cursor:hand;-fx-border-color:#cbd5e1;-fx-border-radius:6;-fx-background-radius:6;-fx-padding:8 16;";
+    }
+
+    /** Bloc label + champ avec étoile rouge si obligatoire */
+    private VBox fieldBlock(boolean required, String labelText, javafx.scene.Node field) {
+        HBox labelRow = buildLabelRow(required, labelText);
+        VBox box = new VBox(6, labelRow, field);
+        return box;
+    }
+
+    /** Même chose mais avec HBox.hgrow pour les champs côte à côte */
+    private VBox fieldBlockH(boolean required, String labelText, Control field) {
+        HBox labelRow = buildLabelRow(required, labelText);
+        field.setMaxWidth(Double.MAX_VALUE);
+        VBox box = new VBox(6, labelRow, field);
+        HBox.setHgrow(box, Priority.ALWAYS);
+        return box;
+    }
+
+    private HBox buildLabelRow(boolean required, String labelText) {
+        Label l = new Label(labelText);
+        l.setStyle("-fx-font-weight:bold;-fx-text-fill:#1f3b5c;-fx-font-size:13px;");
+        HBox row = new HBox(4, l);
+        if (required) {
+            Label star = new Label("*");
+            star.setStyle("-fx-text-fill:#ef4444;-fx-font-weight:bold;");
+            row.getChildren().add(star);
+        }
+        return row;
+    }
+
+    private HBox rowWithBtn(Button btn, Label lbl) {
+        HBox row = new HBox(10, btn, lbl);
+        row.setAlignment(Pos.CENTER_LEFT);
+        return row;
     }
 
     private void supprimerArticle(Article article) {
@@ -290,17 +401,54 @@ public class articleAdmin {
         }
     }
 
-    private Label lbl(String text) {
-        Label l = new Label(text);
-        l.setStyle("-fx-font-weight:bold;-fx-text-fill:#334155;-fx-font-size:13px;");
-        return l;
+    private void traduireChamp(TextArea champ, String targetLang, Stage owner) {
+        if (champ.getText().trim().isEmpty()) return;
+        String body = "{\"text\": " + jsonEscape(champ.getText().trim()) +
+                      ", \"target_lang\": \"" + targetLang + "\"}";
+        HttpClient.newHttpClient()
+            .sendAsync(
+                HttpRequest.newBuilder()
+                    .uri(URI.create("http://127.0.0.1:8000/translate"))
+                    .header("Content-Type", "application/json")
+                    .POST(HttpRequest.BodyPublishers.ofString(body))
+                    .build(),
+                HttpResponse.BodyHandlers.ofString()
+            )
+            .thenAccept(response -> javafx.application.Platform.runLater(() -> {
+                if (response.statusCode() == 200) {
+                    String translated = extractJsonValue(response.body(), "translated_text");
+                    champ.setText(translated);
+                } else {
+                    alert(Alert.AlertType.ERROR, "Erreur", "Traduction échouée (" + response.statusCode() + ")");
+                }
+            }))
+            .exceptionally(ex -> {
+                javafx.application.Platform.runLater(() ->
+                    alert(Alert.AlertType.ERROR, "Erreur", "API inaccessible : " + ex.getMessage())
+                );
+                return null;
+            });
     }
 
-    private VBox vbox(String labelText, Control ctrl) {
-        VBox v = new VBox(6, lbl(labelText), ctrl);
-        HBox.setHgrow(v, Priority.ALWAYS);
-        ctrl.setMaxWidth(Double.MAX_VALUE);
-        return v;
+    /** Extrait la valeur d'une clé dans un JSON simple. */
+    private String extractJsonValue(String json, String key) {
+        String search = "\"" + key + "\"";
+        int idx = json.indexOf(search);
+        if (idx < 0) return json;
+        int colon = json.indexOf(":", idx + search.length());
+        int start = json.indexOf("\"", colon + 1);
+        if (start < 0) return json;
+        int end = start + 1;
+        while (end < json.length()) {
+            if (json.charAt(end) == '"' && json.charAt(end - 1) != '\\') break;
+            end++;
+        }
+        return json.substring(start + 1, end).replace("\\n", "\n").replace("\\\"", "\"");
+    }
+
+    private String jsonEscape(String text) {
+        return "\"" + text.replace("\\", "\\\\").replace("\"", "\\\"")
+                          .replace("\n", "\\n").replace("\r", "\\r") + "\"";
     }
 
     private void alert(Alert.AlertType type, String title, String msg) {

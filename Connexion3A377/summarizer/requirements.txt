@@ -1,0 +1,6 @@
+fastapi
+uvicorn
+sumy
+nltk
+python-dotenv
+deep-translator

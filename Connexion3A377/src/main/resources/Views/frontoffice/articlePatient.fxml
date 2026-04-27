@@ -74,18 +74,40 @@
                     <Label fx:id="lblPublicCible"/>
                 </HBox>
                 <Label fx:id="lblStatut" styleClass="status-badge"/>
-                <VBox style="-fx-background-color: #fffbeb; -fx-border-color: #fde047;
-                             -fx-border-width: 0 0 0 4; -fx-background-radius: 12;
-                             -fx-padding: 16;" spacing="6">
-                    <Label text="Resume"
-                           style="-fx-font-weight: bold; -fx-text-fill: #92400e;"/>
-                    <TextArea fx:id="taSummary" wrapText="true" editable="false"
-                              prefRowCount="3"
-                              style="-fx-background-color: transparent; -fx-border-color: transparent;"/>
-                </VBox>
+                <!-- TRADUCTION -->
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <Label text="Traduire en :" style="-fx-font-weight:bold;-fx-text-fill:#334155;"/>
+                    <Button fx:id="btnTradAr" text="🌐 Arabe"    onAction="#traduireArabe"
+                            style="-fx-background-color:#0f172a;-fx-text-fill:white;-fx-background-radius:20;-fx-padding:7 16;-fx-cursor:hand;" visible="false" managed="false"/>
+                    <Button fx:id="btnTradFr" text="🌐 Français" onAction="#traduireFrancais"
+                            style="-fx-background-color:#1d4ed8;-fx-text-fill:white;-fx-background-radius:20;-fx-padding:7 16;-fx-cursor:hand;" visible="false" managed="false"/>
+                    <Button fx:id="btnTradEn" text="🌐 Anglais"  onAction="#traduireAnglais"
+                            style="-fx-background-color:#0369a1;-fx-text-fill:white;-fx-background-radius:20;-fx-padding:7 16;-fx-cursor:hand;" visible="false" managed="false"/>
+                </HBox>
+
                 <TextArea fx:id="taResume" wrapText="true" editable="false" prefRowCount="10"
+                          visible="false" managed="false"
                           style="-fx-background-color: transparent; -fx-border-color: transparent;
                                  -fx-font-size: 15px;"/>
+
+                <!-- RÉSUMÉ AUTOMATIQUE -->
+                <Button fx:id="resumeButton" text="✨ Résumé automatique"
+                        onAction="#handleResume"
+                        visible="false" managed="false"
+                        style="-fx-background-color: #4CAF50; -fx-text-fill: white;
+                               -fx-font-weight: bold; -fx-background-radius: 20;
+                               -fx-padding: 10 22; -fx-cursor: hand;"/>
+                <VBox spacing="6"
+                      style="-fx-background-color: #f0fdf4; -fx-border-color: #86efac;
+                             -fx-border-width: 0 0 0 4; -fx-background-radius: 12; -fx-padding: 16;">
+                    <Label text="Résumé généré par IA"
+                           style="-fx-font-weight: bold; -fx-text-fill: #166534; -fx-font-size: 13px;"/>
+                    <TextArea fx:id="resumeArea" wrapText="true" editable="false" prefRowCount="4"
+                              promptText="Cliquez sur 'Résumé automatique' pour générer un résumé..."
+                              style="-fx-background-color: transparent; -fx-border-color: transparent;
+                                     -fx-font-size: 14px;"/>
+                </VBox>
+
                 <Button fx:id="btnOuvrirPdf" text="Ouvrir le PDF joint"
                         styleClass="primary-button" onAction="#ouvrirPdf"
                         visible="false" managed="false"/>
