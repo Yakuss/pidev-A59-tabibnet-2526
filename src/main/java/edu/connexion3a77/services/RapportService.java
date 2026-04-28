@@ -14,6 +14,15 @@ import java.util.List;
 
 public class RapportService implements IService<Rapport> {
 
+    private void checkSchema() {
+        try (Statement st = MyConnection.getInstance().getCnx().createStatement()) {
+            st.execute("ALTER TABLE rapport ADD COLUMN document_id INT DEFAULT NULL");
+            System.out.println("Migration : document_id ajoutée à rapport.");
+        } catch (SQLException e) {
+            // Ignore if exists
+        }
+    }
+
     @Override
     public void add(Rapport rapport) throws SQLException {
         String requete = "INSERT INTO rapport (consultation_reason, diagnosis, observations, recommendations, treatments, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?)";
@@ -74,6 +83,45 @@ public class RapportService implements IService<Rapport> {
     public List<Rapport> findAll() throws SQLException {
         List<Rapport> list = new ArrayList<>();
         String requete = "SELECT * FROM rapport";
+        try (Statement st = MyConnection.getInstance().getCnx().createStatement();
+             ResultSet rs = st.executeQuery(requete)) {
+            while (rs.next()) {
+                list.add(mapResultSetToRapport(rs));
+            }
+        }
+        return list;
+    }
+
+    public List<Rapport> findByDocumentId(int documentId) throws SQLException {
+        checkSchema();
+        List<Rapport> list = new ArrayList<>();
+        String requete = "SELECT * FROM rapport WHERE document_id = ?";
+        try (PreparedStatement pst = MyConnection.getInstance().getCnx().prepareStatement(requete)) {
+            pst.setInt(1, documentId);
+            try (ResultSet rs = pst.executeQuery()) {
+                while (rs.next()) {
+                    list.add(mapResultSetToRapport(rs));
+                }
+            }
+        }
+        System.out.println("SQL: Found " + list.size() + " rapports for document " + documentId);
+        return list;
+    }
+
+    public void linkOrphanedItems(int documentId) throws SQLException {
+        checkSchema();
+        String requete = "UPDATE rapport SET document_id = ? WHERE document_id IS NULL";
+        try (PreparedStatement pst = MyConnection.getInstance().getCnx().prepareStatement(requete)) {
+            pst.setInt(1, documentId);
+            int affected = pst.executeUpdate();
+            System.out.println("SQL: Linked " + affected + " orphaned rapports to document " + documentId);
+        }
+    }
+
+    public List<Rapport> findOrphans() throws SQLException {
+        checkSchema();
+        List<Rapport> list = new ArrayList<>();
+        String requete = "SELECT * FROM rapport WHERE document_id IS NULL";
         try (Statement st = MyConnection.getInstance().getCnx().createStatement();
              ResultSet rs = st.executeQuery(requete)) {
             while (rs.next()) {

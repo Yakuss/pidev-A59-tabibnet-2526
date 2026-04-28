@@ -14,6 +14,15 @@ import java.util.List;
 
 public class OrdonnanceService implements IService<Ordonnance> {
 
+    private void checkSchema() {
+        try (Statement st = MyConnection.getInstance().getCnx().createStatement()) {
+            st.execute("ALTER TABLE ordonnances ADD COLUMN document_id INT DEFAULT NULL");
+            System.out.println("Migration : document_id ajoutée à ordonnances.");
+        } catch (SQLException e) {
+            // Ignore if exists
+        }
+    }
+
     @Override
     public void add(Ordonnance ordonnance) throws SQLException {
         String requete = "INSERT INTO ordonnances (date_ordonnance, diagnosis, medicament, posologie, notes, instructions, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
@@ -76,6 +85,45 @@ public class OrdonnanceService implements IService<Ordonnance> {
     public List<Ordonnance> findAll() throws SQLException {
         List<Ordonnance> list = new ArrayList<>();
         String requete = "SELECT * FROM ordonnances";
+        try (Statement st = MyConnection.getInstance().getCnx().createStatement();
+             ResultSet rs = st.executeQuery(requete)) {
+            while (rs.next()) {
+                list.add(mapResultSetToOrdonnance(rs));
+            }
+        }
+        return list;
+    }
+
+    public List<Ordonnance> findByDocumentId(int documentId) throws SQLException {
+        checkSchema();
+        List<Ordonnance> list = new ArrayList<>();
+        String requete = "SELECT * FROM ordonnances WHERE document_id = ?";
+        try (PreparedStatement pst = MyConnection.getInstance().getCnx().prepareStatement(requete)) {
+            pst.setInt(1, documentId);
+            try (ResultSet rs = pst.executeQuery()) {
+                while (rs.next()) {
+                    list.add(mapResultSetToOrdonnance(rs));
+                }
+            }
+        }
+        System.out.println("SQL: Found " + list.size() + " ordonnances for document " + documentId);
+        return list;
+    }
+
+    public void linkOrphanedItems(int documentId) throws SQLException {
+        checkSchema();
+        String requete = "UPDATE ordonnances SET document_id = ? WHERE document_id IS NULL";
+        try (PreparedStatement pst = MyConnection.getInstance().getCnx().prepareStatement(requete)) {
+            pst.setInt(1, documentId);
+            int affected = pst.executeUpdate();
+            System.out.println("SQL: Linked " + affected + " orphaned ordonnances to document " + documentId);
+        }
+    }
+
+    public List<Ordonnance> findOrphans() throws SQLException {
+        checkSchema();
+        List<Ordonnance> list = new ArrayList<>();
+        String requete = "SELECT * FROM ordonnances WHERE document_id IS NULL";
         try (Statement st = MyConnection.getInstance().getCnx().createStatement();
              ResultSet rs = st.executeQuery(requete)) {
             while (rs.next()) {

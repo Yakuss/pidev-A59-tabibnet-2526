@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+
+<ScrollPane fitToWidth="true" hbarPolicy="NEVER" maxHeight="-Infinity" prefHeight="650.0" prefWidth="800.0" style="-fx-background-color: #f8fafc;" vbarPolicy="AS_NEEDED" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.connexion3a77.controller.DocumentController">
+    <content>
+        <AnchorPane prefHeight="850.0" prefWidth="780.0" style="-fx-background-color: #f8fafc; -fx-padding: 40 20;">
+            <children>
+                <!-- Container Principal -->
+                <AnchorPane fx:id="formCard" layoutX="40.0" layoutY="20.0" prefWidth="700.0" style="-fx-background-color: white; -fx-background-radius: 24;">
+                    <effect>
+                        <DropShadow color="#00000020" height="40.0" offsetY="10.0" radius="19.5" width="40.0" />
+                    </effect>
+                    <children>
+                        <!-- HEADER avec dégradé bleu -->
+                        <AnchorPane prefHeight="180.0" prefWidth="700.0" style="-fx-background-color: linear-gradient(to bottom right, #1d4ed8, #2563eb, #1e3a8a); -fx-background-radius: 24 24 0 0;">
+                            <children>
+                                <Circle fill="rgba(255,255,255,0.08)" layoutX="620.0" layoutY="-10.0" radius="140.0" />
+                                <Circle fill="rgba(255,255,255,0.05)" layoutX="580.0" layoutY="60.0" radius="90.0" />
+
+                                <!-- Badge -->
+                                <HBox alignment="CENTER_LEFT" layoutX="40.0" layoutY="30.0" spacing="8.0" style="-fx-background-color: rgba(255,255,255,0.15); -fx-background-radius: 100; -fx-padding: 8 16; -fx-border-color: rgba(255,255,255,0.2); -fx-border-radius: 100; -fx-border-width: 1;">
+                                    <children>
+                                        <Label text="📂" textFill="white" />
+                                        <Label fx:id="badgeLabel" text="DOCUMENTATION PATIENT" textFill="rgba(255,255,255,0.9)">
+                                            <font>
+                                                <Font name="System Bold" size="11.0" />
+                                            </font>
+                                        </Label>
+                                    </children>
+                                </HBox>
+
+                                <!-- Titre -->
+                                <Label fx:id="titleLabel" layoutX="40.0" layoutY="75.0" text="Nouveau document" textFill="white">
+                                    <font>
+                                        <Font name="System Bold" size="32.0" />
+                                    </font>
+                                </Label>
+
+                                <!-- Sous-titre -->
+                                <Label layoutX="40.0" layoutY="115.0" text="Enregistrement d'une nouvelle pièce au dossier" textFill="rgba(255,255,255,0.8)">
+                                    <font>
+                                        <Font size="15.0" />
+                                    </font>
+                                </Label>
+                            </children>
+                        </AnchorPane>
+
+                        <!-- CORPS DU FORMULAIRE -->
+                        <VBox layoutY="180.0" prefWidth="700.0" spacing="35.0" style="-fx-padding: 40;">
+                            <children>
+                                
+                                <!-- SECTION 1: INFORMATIONS DU FICHIER -->
+                                <VBox spacing="20.0">
+                                    <children>
+                                        <HBox alignment="CENTER_LEFT" spacing="12.0">
+                                            <children>
+                                                <AnchorPane prefHeight="36.0" prefWidth="36.0" style="-fx-background-color: linear-gradient(to bottom right, #3b82f6, #1d4ed8); -fx-background-radius: 10;">
+                                                    <children>
+                                                        <Label layoutX="7.0" layoutY="5.0" text="📄" textFill="white">
+                                                            <font><Font size="18.0" /></font>
+                                                        </Label>
+                                                    </children>
+                                                </AnchorPane>
+                                                <VBox spacing="2.0">
+                                                    <children>
+                                                        <Label text="Informations du fichier" textFill="#1e293b">
+                                                            <font><Font name="System Bold" size="18.0" /></font>
+                                                        </Label>
+                                                        <Label text="Détails techniques du document" textFill="#64748b">
+                                                            <font><Font size="13.0" /></font>
+                                                        </Label>
+                                                    </children>
+                                                </VBox>
+                                            </children>
+                                        </HBox>
+                                        <Rectangle fill="#e2e8f0" height="2.0" width="620.0" />
+
+                                        <VBox spacing="15.0">
+                                            <children>
+                                                <!-- Nom du document -->
+                                                <VBox spacing="8.0">
+                                                    <children>
+                                                        <HBox spacing="4.0">
+                                                            <children>
+                                                                <Label text="Nom du document" textFill="#475569"><font><Font name="System Bold" size="14.0" /></font></Label>
+                                                                <Label text="*" textFill="#ef4444"><font><Font name="System Bold" size="14.0" /></font></Label>
+                                                            </children>
+                                                        </HBox>
+                                                        <TextField fx:id="nomField" prefHeight="48.0" promptText="Ex: Compte-rendu opératoire, IRM..." style="-fx-background-color: white; -fx-border-color: #e2e8f0; -fx-border-width: 2; -fx-border-radius: 12; -fx-background-radius: 12; -fx-padding: 0 15; -fx-font-size: 14;" />
+                                                    </children>
+                                                </VBox>
+
+                                                <!-- Type + Taille -->
+                                                <HBox spacing="20.0">
+                                                    <children>
+                                                        <VBox prefWidth="300.0" spacing="8.0">
+                                                            <children>
+                                                                <Label text="Type de document" textFill="#475569"><font><Font name="System Bold" size="14.0" /></font></Label>
+                                                                <TextField fx:id="typeField" prefHeight="48.0" promptText="Ex: PDF, JPG, DOCX..." style="-fx-background-color: white; -fx-border-color: #e2e8f0; -fx-border-width: 2; -fx-border-radius: 12; -fx-background-radius: 12; -fx-padding: 0 15; -fx-font-size: 14;" />
+                                                            </children>
+                                                        </VBox>
+                                                        <VBox prefWidth="300.0" spacing="8.0">
+                                                            <children>
+                                                                <Label text="Taille (Ko)" textFill="#475569"><font><Font name="System Bold" size="14.0" /></font></Label>
+                                                                <TextField fx:id="tailleField" prefHeight="48.0" promptText="Ex: 1024" style="-fx-background-color: white; -fx-border-color: #e2e8f0; -fx-border-width: 2; -fx-border-radius: 12; -fx-background-radius: 12; -fx-padding: 0 15; -fx-font-size: 14;" />
+                                                            </children>
+                                                        </VBox>
+                                                    </children>
+                                                </HBox>
+                                            </children>
+                                        </VBox>
+                                    </children>
+                                </VBox>
+
+                                <!-- SECTION 2: DESCRIPTION -->
+                                <VBox spacing="20.0">
+                                    <children>
+                                        <HBox alignment="CENTER_LEFT" spacing="12.0">
+                                            <children>
+                                                <AnchorPane prefHeight="36.0" prefWidth="36.0" style="-fx-background-color: linear-gradient(to bottom right, #3b82f6, #1d4ed8); -fx-background-radius: 10;">
+                                                    <children>
+                                                        <Label layoutX="7.0" layoutY="5.0" text="📝" textFill="white">
+                                                            <font><Font size="18.0" /></font>
+                                                        </Label>
+                                                    </children>
+                                                </AnchorPane>
+                                                <VBox spacing="2.0">
+                                                    <children>
+                                                        <Label text="Description" textFill="#1e293b">
+                                                            <font><Font name="System Bold" size="18.0" /></font>
+                                                        </Label>
+                                                        <Label text="Notes et contexte du document" textFill="#64748b">
+                                                            <font><Font size="13.0" /></font>
+                                                        </Label>
+                                                    </children>
+                                                </VBox>
+                                            </children>
+                                        </HBox>
+                                        <Rectangle fill="#e2e8f0" height="2.0" width="620.0" />
+
+                                        <VBox spacing="8.0">
+                                            <children>
+                                                <TextArea fx:id="descriptionArea" prefHeight="120.0" promptText="Détaillez le contenu ou le but de ce document..." style="-fx-background-color: white; -fx-border-color: #e2e8f0; -fx-border-width: 2; -fx-border-radius: 12; -fx-background-radius: 12; -fx-padding: 10; -fx-font-size: 14;" wrapText="true" />
+                                                <Label text="💡 Ces informations aideront à la recherche ultérieure" textFill="#64748b">
+                                                    <font><Font size="12.0" /></font>
+                                                </Label>
+                                            </children>
+                                        </VBox>
+                                    </children>
+                                </VBox>
+
+                                <!-- ACTIONS -->
+                                <HBox fx:id="actionBox" alignment="CENTER_RIGHT" prefHeight="80.0" spacing="15.0" style="-fx-padding: 20 0 0 0; -fx-border-color: #e2e8f0 transparent transparent transparent; -fx-border-width: 2 0 0 0;">
+                                    <children>
+                                        <HBox alignment="CENTER_LEFT" spacing="8.0" HBox.hgrow="ALWAYS">
+                                            <children>
+                                                <Circle fill="#3b82f6" radius="4.0" />
+                                                <Label fx:id="statusLabel" text="Prêt pour l'enregistrement" textFill="#64748b">
+                                                    <font><Font size="13.0" /></font>
+                                                </Label>
+                                            </children>
+                                        </HBox>
+                                        <Button mnemonicParsing="false" onAction="#handleCancel" prefHeight="50.0" prefWidth="120.0" style="-fx-background-color: white; -fx-border-color: #e2e8f0; -fx-border-width: 2; -fx-border-radius: 12; -fx-background-radius: 12; -fx-text-fill: #64748b; -fx-font-weight: bold; -fx-cursor: hand;" text="Annuler" />
+                                        <Button mnemonicParsing="false" onAction="#handleSave" prefHeight="50.0" prefWidth="250.0" style="-fx-background-color: linear-gradient(to bottom right, #2563eb, #1d4ed8); -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 12; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(37,99,235,0.4), 10, 0, 0, 4);" text="Enregistrer le document" />
+                                    </children>
+                                </HBox>
+                            </children>
+                        </VBox>
+                    </children>
+                </AnchorPane>
+            </children>
+        </AnchorPane>
+    </content>
+</ScrollPane>

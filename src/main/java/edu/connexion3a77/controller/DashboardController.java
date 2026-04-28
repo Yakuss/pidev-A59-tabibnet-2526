@@ -2,6 +2,7 @@ package edu.connexion3a77.controller;
 
 import edu.connexion3a77.entities.Ordonnance;
 import edu.connexion3a77.entities.Rapport;
+import edu.connexion3a77.entities.Document;
 import edu.connexion3a77.services.OrdonnanceService;
 import edu.connexion3a77.services.RapportService;
 import javafx.beans.property.SimpleStringProperty;
@@ -177,8 +178,8 @@ public class DashboardController {
     @FXML
     public void refreshData() {
         try {
-            // ========== CHARGEMENT ORDONNANCES ==========
-            List<Ordonnance> listOrdonnances = ordonnanceService.findAll();
+            // ========== CHARGEMENT ORDONNANCES (ORPHELINES) ==========
+            List<Ordonnance> listOrdonnances = ordonnanceService.findOrphans();
             ordonnancesList = FXCollections.observableArrayList(listOrdonnances);
             filteredOrdonnances = new FilteredList<>(ordonnancesList, p -> true);
             ordonnanceTable.setItems(filteredOrdonnances);
@@ -186,8 +187,8 @@ public class DashboardController {
             // Mise à jour du compteur d'ordonnances
             updateOrdonnanceCount();
 
-            // ========== CHARGEMENT RAPPORTS ==========
-            List<Rapport> listRapports = rapportService.findAll();
+            // ========== CHARGEMENT RAPPORTS (ORPHELINS) ==========
+            List<Rapport> listRapports = rapportService.findOrphans();
             rapportsList = FXCollections.observableArrayList(listRapports);
             filteredRapports = new FilteredList<>(rapportsList, p -> true);
             rapportTable.setItems(filteredRapports);
@@ -283,6 +284,22 @@ public class DashboardController {
     public void openAjouterRapport(ActionEvent event) {
         openModal("src/main/resources/RapportView.fxml", "Nouveau Rapport", null);
     }
+
+    @FXML
+    public void openAiAssistant(ActionEvent event) {
+        openModal("src/main/resources/AiAssistantView.fxml", "Assistant IA", null);
+    }
+
+    @FXML
+    public void openDossierMedical(ActionEvent event) {
+        openModal("src/main/resources/DossierMedicalView.fxml", "Dossier Médical Complet", null);
+    }
+
+    @FXML
+    public void openAjouterDocument(ActionEvent event) {
+        openModal("src/main/resources/DocumentView.fxml", "Nouveau Document", null);
+    }
+
 
     private void setupOrdonnanceActions() {
         ordActionsCol.setCellFactory(param -> new TableCell<>() {
@@ -417,7 +434,16 @@ public class DashboardController {
             Parent root = loader.load();
 
             // Injection des données si on est en mode "Modifier" ou "Voir"
-            if (data != null) {
+            if (loader.getController() instanceof DocumentController) {
+                DocumentController dc = loader.getController();
+                if (data != null) {
+                    dc.initData((Document) data, readOnly);
+                } else {
+                    // Nouveau document : on passe les rapports/ordonnances orphelins du dashboard
+                    System.out.println("Dashboard: Passing " + rapportsList.size() + " rapports and " + ordonnancesList.size() + " ordonnances to DocumentController");
+                    dc.setItemsToLink(rapportsList, ordonnancesList);
+                }
+            } else if (data != null) {
                 if (data instanceof Ordonnance) {
                     OrdonnanceController oc = loader.getController();
                     oc.initData((Ordonnance) data);

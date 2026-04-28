@@ -102,8 +102,39 @@
                                     <Font size="14.0"/>
                                 </font>
                             </Button>
+
+                            <Button mnemonicParsing="false"
+                                    onAction="#openAiAssistant"
+                                    prefHeight="40.0"
+                                    prefWidth="160.0"
+                                    style="-fx-background-color: #7c3aed;
+                                           -fx-text-fill: white;
+                                           -fx-font-weight: bold;
+                                           -fx-background-radius: 8;
+                                           -fx-cursor: hand;"
+                                    text="Assistance IA">
+                                <font>
+                                    <Font size="14.0"/>
+                                </font>
+                            </Button>
+
+                            <Button mnemonicParsing="false"
+                                    onAction="#openDossierMedical"
+                                    prefHeight="40.0"
+                                    prefWidth="180.0"
+                                    style="-fx-background-color: #f59e0b;
+                                           -fx-text-fill: white;
+                                           -fx-font-weight: bold;
+                                           -fx-background-radius: 8;
+                                           -fx-cursor: hand;"
+                                    text="📁 Dossier Médical">
+                                <font>
+                                    <Font size="14.0"/>
+                                </font>
+                            </Button>
                         </children>
                     </HBox>
+
                 </children>
             </AnchorPane>
 
@@ -263,6 +294,70 @@
                 </children>
             </AnchorPane>
 
+            <!-- ==================== SECTION RESSOURCES = : AI ASSISTANT ==================== -->
+            <AnchorPane prefHeight="180.0"
+                        style="-fx-background-color: white;
+                               -fx-background-radius: 12;">
+                <effect>
+                    <DropShadow color="#0000001a" height="12.0" radius="6.0" width="12.0"/>
+                </effect>
+
+                <children>
+                    <AnchorPane prefHeight="60.0"
+                                style="-fx-background-color: linear-gradient(to right, #ffffff, #f8fafc);
+                                       -fx-background-radius: 12 12 0 0;
+                                       -fx-border-color: #e2e8f0;
+                                       -fx-border-width: 0 0 1 0;">
+                        <children>
+                            <HBox layoutX="24.0" layoutY="18.0"
+                                  spacing="12.0"
+                                  alignment="CENTER_LEFT">
+                                <children>
+                                    <Rectangle width="4.0" height="24.0"
+                                               fill="#7c3aed"
+                                               arcWidth="2.0"
+                                               arcHeight="2.0"/>
+                                    <Label text="Ressources &amp; IA" textFill="#1e293b">
+                                        <font>
+                                            <Font name="System Bold" size="20.0"/>
+                                        </font>
+                                    </Label>
+                                </children>
+                            </HBox>
+                        </children>
+                    </AnchorPane>
+
+                    <HBox alignment="CENTER" layoutX="24.0" layoutY="80.0" spacing="40.0" AnchorPane.leftAnchor="24.0" AnchorPane.rightAnchor="24.0">
+                        <children>
+                            <VBox alignment="CENTER" spacing="10.0">
+                                <children>
+                                    <Label text="Gestion des Documents" style="-fx-font-weight: bold; -fx-font-size: 18px;" textFill="#1e293b"/>
+                                    <Label text="Ajoutez de nouveaux documents médicaux, analyses ou comptes-rendus au dossier patient." 
+                                           wrapText="true" textFill="#64748b" alignment="CENTER" maxWidth="500.0"/>
+                                </children>
+                            </VBox>
+                            
+                            <Button mnemonicParsing="false"
+                                    onAction="#openAjouterDocument"
+                                    prefHeight="56.0"
+                                    prefWidth="260.0"
+                                    style="-fx-background-color: linear-gradient(to right, #0d9488, #0f766e);
+                                           -fx-text-fill: white;
+                                           -fx-font-weight: bold;
+                                           -fx-background-radius: 14;
+                                           -fx-cursor: hand;
+                                           -fx-font-size: 16px;"
+                                    text="➕ Créer un document">
+                                <effect>
+                                    <DropShadow color="#0d948840" radius="15" offsetY="6"/>
+                                </effect>
+                            </Button>
+                        </children>
+                    </HBox>
+                </children>
+            </AnchorPane>
+
         </VBox>
+
     </content>
 </ScrollPane>
