@@ -116,6 +116,28 @@ public class EmailService {
         sendAsync(toEmail, subject, body, onSuccess, onError);
     }
 
+    /**
+     * Sends an appointment confirmation email.
+     */
+    public void sendAppointmentConfirmation(String toEmail, String patientName, 
+                                           String doctorName, String date, String time,
+                                           Runnable onSuccess, java.util.function.Consumer<String> onError) {
+        String subject = "Confirmation de Rendez-vous — PiDev Medical";
+        String body = buildAppointmentConfirmationHtml(patientName, doctorName, date, time);
+        sendAsync(toEmail, subject, body, onSuccess, onError);
+    }
+
+    /**
+     * Sends an appointment cancellation email.
+     */
+    public void sendAppointmentCancellation(String toEmail, String patientName, 
+                                           String doctorName, String date, String time,
+                                           Runnable onSuccess, java.util.function.Consumer<String> onError) {
+        String subject = "Annulation de Rendez-vous — PiDev Medical";
+        String body = buildAppointmentCancellationHtml(patientName, doctorName, date, time);
+        sendAsync(toEmail, subject, body, onSuccess, onError);
+    }
+
     // ── HTML Templates ───────────────────────────────────────────────────────
 
     private String buildOTPEmailHtml(String firstName, String otp) {
@@ -241,5 +263,225 @@ public class EmailService {
             </body>
             </html>
             """.formatted(firstName);
+    }
+
+    private String buildAppointmentConfirmationHtml(String patientName, String doctorName, 
+                                                    String date, String time) {
+        return """
+            <!DOCTYPE html>
+            <html>
+            <head><meta charset="UTF-8"></head>
+            <body style="margin:0;padding:0;background:#080b14;font-family:'Segoe UI',Arial,sans-serif;">
+              <table width="100%%" cellpadding="0" cellspacing="0" style="background:#080b14;padding:40px 0;">
+                <tr><td align="center">
+                  <table width="520" cellpadding="0" cellspacing="0"
+                         style="background:#0e1220;border-radius:14px;border:1px solid #252d42;overflow:hidden;">
+
+                    <!-- Header -->
+                    <tr>
+                      <td style="background:#141826;padding:32px 40px;text-align:center;
+                                 border-bottom:1px solid #252d42;">
+                        <div style="font-size:32px;margin-bottom:8px;">📅</div>
+                        <div style="color:#f1f5f9;font-size:20px;font-weight:700;">PiDev Medical</div>
+                        <div style="color:#475569;font-size:13px;margin-top:4px;">Confirmation de Rendez-vous</div>
+                      </td>
+                    </tr>
+
+                    <!-- Body -->
+                    <tr>
+                      <td style="padding:36px 40px;">
+                        <p style="color:#94a3b8;font-size:15px;margin:0 0 8px 0;">
+                          Bonjour <strong style="color:#f1f5f9;">%s</strong>,
+                        </p>
+                        <p style="color:#94a3b8;font-size:14px;margin:0 0 28px 0;line-height:1.6;">
+                          Votre rendez-vous a été confirmé avec succès ! 🎉<br>
+                          Voici les détails de votre consultation :
+                        </p>
+
+                        <!-- Appointment Details Box -->
+                        <div style="background:#141826;border:1px solid #252d42;border-radius:12px;
+                                    padding:24px;margin-bottom:28px;">
+                          
+                          <!-- Doctor -->
+                          <div style="margin-bottom:20px;">
+                            <div style="color:#475569;font-size:11px;font-weight:600;
+                                        letter-spacing:1px;margin-bottom:6px;">MÉDECIN</div>
+                            <div style="color:#f1f5f9;font-size:16px;font-weight:600;">
+                              👨‍⚕️ %s
+                            </div>
+                          </div>
+
+                          <!-- Date -->
+                          <div style="margin-bottom:20px;">
+                            <div style="color:#475569;font-size:11px;font-weight:600;
+                                        letter-spacing:1px;margin-bottom:6px;">DATE</div>
+                            <div style="color:#f1f5f9;font-size:16px;font-weight:600;">
+                              📅 %s
+                            </div>
+                          </div>
+
+                          <!-- Time -->
+                          <div>
+                            <div style="color:#475569;font-size:11px;font-weight:600;
+                                        letter-spacing:1px;margin-bottom:6px;">HEURE</div>
+                            <div style="color:#f1f5f9;font-size:16px;font-weight:600;">
+                              🕐 %s
+                            </div>
+                          </div>
+                        </div>
+
+                        <!-- Status Badge -->
+                        <div style="background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.3);
+                                    border-radius:8px;padding:12px 16px;text-align:center;margin-bottom:24px;">
+                          <div style="color:#22c55e;font-size:13px;font-weight:600;">
+                            ✓ STATUT : EN ATTENTE
+                          </div>
+                        </div>
+
+                        <!-- Important Note -->
+                        <div style="background:rgba(251,191,36,0.1);border-left:3px solid #fbbf24;
+                                    padding:14px 16px;border-radius:6px;margin-bottom:20px;">
+                          <div style="color:#fbbf24;font-size:12px;font-weight:600;margin-bottom:4px;">
+                            ⚠️ IMPORTANT
+                          </div>
+                          <div style="color:#94a3b8;font-size:12px;line-height:1.5;">
+                            Veuillez arriver 10 minutes avant l'heure prévue.<br>
+                            En cas d'empêchement, annulez votre rendez-vous depuis votre espace patient.
+                          </div>
+                        </div>
+
+                        <p style="color:#475569;font-size:12px;margin:0;line-height:1.6;">
+                          Vous pouvez consulter et gérer vos rendez-vous depuis votre espace patient.<br>
+                          Merci de votre confiance ! 💙
+                        </p>
+                      </td>
+                    </tr>
+
+                    <!-- Footer -->
+                    <tr>
+                      <td style="background:#080b14;padding:20px 40px;text-align:center;
+                                 border-top:1px solid #252d42;">
+                        <div style="color:#475569;font-size:11px;">
+                          © 2026 PiDev Medical — Tous droits réservés
+                        </div>
+                      </td>
+                    </tr>
+
+                  </table>
+                </td></tr>
+              </table>
+            </body>
+            </html>
+            """.formatted(patientName, doctorName, date, time);
+    }
+
+    private String buildAppointmentCancellationHtml(String patientName, String doctorName, 
+                                                    String date, String time) {
+        return """
+            <!DOCTYPE html>
+            <html>
+            <head><meta charset="UTF-8"></head>
+            <body style="margin:0;padding:0;background:#080b14;font-family:'Segoe UI',Arial,sans-serif;">
+              <table width="100%%" cellpadding="0" cellspacing="0" style="background:#080b14;padding:40px 0;">
+                <tr><td align="center">
+                  <table width="520" cellpadding="0" cellspacing="0"
+                         style="background:#0e1220;border-radius:14px;border:1px solid #252d42;overflow:hidden;">
+
+                    <!-- Header -->
+                    <tr>
+                      <td style="background:#141826;padding:32px 40px;text-align:center;
+                                 border-bottom:1px solid #252d42;">
+                        <div style="font-size:32px;margin-bottom:8px;">❌</div>
+                        <div style="color:#f1f5f9;font-size:20px;font-weight:700;">PiDev Medical</div>
+                        <div style="color:#475569;font-size:13px;margin-top:4px;">Annulation de Rendez-vous</div>
+                      </td>
+                    </tr>
+
+                    <!-- Body -->
+                    <tr>
+                      <td style="padding:36px 40px;">
+                        <p style="color:#94a3b8;font-size:15px;margin:0 0 8px 0;">
+                          Bonjour <strong style="color:#f1f5f9;">%s</strong>,
+                        </p>
+                        <p style="color:#94a3b8;font-size:14px;margin:0 0 28px 0;line-height:1.6;">
+                          Votre rendez-vous a été <strong style="color:#ef4444;">annulé avec succès</strong>.<br>
+                          Voici les détails du rendez-vous annulé :
+                        </p>
+
+                        <!-- Appointment Details Box -->
+                        <div style="background:#141826;border:1px solid #252d42;border-radius:12px;
+                                    padding:24px;margin-bottom:28px;">
+                          
+                          <!-- Doctor -->
+                          <div style="margin-bottom:20px;">
+                            <div style="color:#475569;font-size:11px;font-weight:600;
+                                        letter-spacing:1px;margin-bottom:6px;">MÉDECIN</div>
+                            <div style="color:#f1f5f9;font-size:16px;font-weight:600;">
+                              👨‍⚕️ %s
+                            </div>
+                          </div>
+
+                          <!-- Date -->
+                          <div style="margin-bottom:20px;">
+                            <div style="color:#475569;font-size:11px;font-weight:600;
+                                        letter-spacing:1px;margin-bottom:6px;">DATE</div>
+                            <div style="color:#f1f5f9;font-size:16px;font-weight:600;">
+                              📅 %s
+                            </div>
+                          </div>
+
+                          <!-- Time -->
+                          <div>
+                            <div style="color:#475569;font-size:11px;font-weight:600;
+                                        letter-spacing:1px;margin-bottom:6px;">HEURE</div>
+                            <div style="color:#f1f5f9;font-size:16px;font-weight:600;">
+                              🕐 %s
+                            </div>
+                          </div>
+                        </div>
+
+                        <!-- Status Badge -->
+                        <div style="background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);
+                                    border-radius:8px;padding:12px 16px;text-align:center;margin-bottom:24px;">
+                          <div style="color:#ef4444;font-size:13px;font-weight:600;">
+                            ❌ STATUT : ANNULÉ
+                          </div>
+                        </div>
+
+                        <!-- Info Note -->
+                        <div style="background:rgba(59,130,246,0.1);border-left:3px solid #3b82f6;
+                                    padding:14px 16px;border-radius:6px;margin-bottom:20px;">
+                          <div style="color:#3b82f6;font-size:12px;font-weight:600;margin-bottom:4px;">
+                            ℹ️ INFORMATION
+                          </div>
+                          <div style="color:#94a3b8;font-size:12px;line-height:1.5;">
+                            Vous pouvez prendre un nouveau rendez-vous à tout moment depuis l'annuaire des médecins.<br>
+                            Nous espérons vous revoir bientôt !
+                          </div>
+                        </div>
+
+                        <p style="color:#475569;font-size:12px;margin:0;line-height:1.6;">
+                          Si vous avez des questions, n'hésitez pas à nous contacter.<br>
+                          Prenez soin de vous ! 💙
+                        </p>
+                      </td>
+                    </tr>
+
+                    <!-- Footer -->
+                    <tr>
+                      <td style="background:#080b14;padding:20px 40px;text-align:center;
+                                 border-top:1px solid #252d42;">
+                        <div style="color:#475569;font-size:11px;">
+                          © 2026 PiDev Medical — Tous droits réservés
+                        </div>
+                      </td>
+                    </tr>
+
+                  </table>
+                </td></tr>
+              </table>
+            </body>
+            </html>
+            """.formatted(patientName, doctorName, date, time);
     }
 }

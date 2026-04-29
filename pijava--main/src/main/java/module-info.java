@@ -5,6 +5,13 @@ module com.pidev {
     requires transitive java.sql;
     requires mysql.connector.j;
     requires jakarta.mail;
+    requires org.json;
+    requires jdk.httpserver;
+    requires java.net.http;
+    requires vosk;
+    requires java.desktop;
+    requires jdk.jsobject;
+    requires javafx.web;  // For Gemini AI HTTP client
 
     // Standard controller access
     opens com.pidev.controllers to javafx.fxml;

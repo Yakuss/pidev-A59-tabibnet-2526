@@ -23,6 +23,23 @@ public class LoginController {
     private final AuthService authService = new AuthService();
 
     @FXML
+    public void initialize() {
+        // Hide error message initially
+        if (errorMessage != null) {
+            errorMessage.setVisible(false);
+            errorMessage.setManaged(false);
+        }
+        
+        // Clear error message when user starts typing
+        if (emailField != null) {
+            emailField.textProperty().addListener((obs, oldVal, newVal) -> hideError());
+        }
+        if (passwordField != null) {
+            passwordField.textProperty().addListener((obs, oldVal, newVal) -> hideError());
+        }
+    }
+
+    @FXML
     public void handleLogin() {
         String email = emailField.getText().trim();
         String password = passwordField.getText();
@@ -42,8 +59,16 @@ public class LoginController {
                 showError("Email ou mot de passe incorrect.");
             }
         } catch (Exception e) {
-            e.printStackTrace();
-            showError("Erreur de connexion à la base de données.");
+            // Check if it's an inactive account error
+            if (e.getMessage() != null && e.getMessage().startsWith("ACCOUNT_INACTIVE:")) {
+                // Extract the user-friendly message after the prefix
+                String userMessage = e.getMessage().substring("ACCOUNT_INACTIVE:".length()).trim();
+                showError(userMessage);
+            } else {
+                // Generic error for other exceptions
+                e.printStackTrace();
+                showError("Erreur de connexion. Veuillez réessayer.");
+            }
         }
     }
 
@@ -100,7 +125,17 @@ public class LoginController {
     }
 
     private void showError(String message) {
-        errorMessage.setText("❌ " + message);
-        errorMessage.setVisible(true);
+        if (errorMessage != null) {
+            errorMessage.setText("❌ " + message);
+            errorMessage.setVisible(true);
+            errorMessage.setManaged(true);
+        }
+    }
+
+    private void hideError() {
+        if (errorMessage != null) {
+            errorMessage.setVisible(false);
+            errorMessage.setManaged(false);
+        }
     }
 }

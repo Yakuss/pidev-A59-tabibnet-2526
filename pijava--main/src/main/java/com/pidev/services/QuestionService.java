@@ -18,14 +18,15 @@ public class QuestionService implements IService<Question> {
 
     @Override
     public void add(Question question) throws SQLException {
-        String sql = "INSERT INTO question (titre, description, created_at, specialite_id, patient_id) " +
-                     "VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO question (titre, description, created_at, specialite_id, patient_id, image_name) " +
+                     "VALUES (?, ?, ?, ?, ?, ?)";
         PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
         ps.setString(1, question.getTitre());
         ps.setString(2, question.getDescription());
         ps.setTimestamp(3, Timestamp.valueOf(LocalDateTime.now()));
         ps.setInt(4, question.getSpecialiteId());
         ps.setInt(5, question.getPatientId());
+        ps.setString(6, question.getImageName()); // Save image name
         ps.executeUpdate();
 
         ResultSet keys = ps.getGeneratedKeys();
@@ -92,6 +93,32 @@ public class QuestionService implements IService<Question> {
                      "ORDER BY q.created_at DESC";
         PreparedStatement ps = conn.prepareStatement(sql);
         ps.setInt(1, specialiteId);
+        ResultSet rs = ps.executeQuery();
+        while (rs.next()) {
+            list.add(mapResultSet(rs));
+        }
+        return list;
+    }
+
+    /**
+     * Get all questions by a specific patient (for gamification)
+     * @param patientId Patient ID
+     * @return List of questions by this patient
+     * @throws SQLException if database error occurs
+     */
+    public List<Question> getByPatient(int patientId) throws SQLException {
+        List<Question> list = new ArrayList<>();
+        String sql = "SELECT q.*, " +
+                     "COALESCE(CONCAT(p.first_name, ' ', p.last_name), 'Anonyme') AS patient_name, " +
+                     "COALESCE(s.nom, 'Non classée') AS specialite_nom, " +
+                     "(SELECT COUNT(*) FROM reponse r WHERE r.question_id = q.id) AS answer_count " +
+                     "FROM question q " +
+                     "LEFT JOIN patients p ON q.patient_id = p.id " +
+                     "LEFT JOIN specialite s ON q.specialite_id = s.id " +
+                     "WHERE q.patient_id = ? " +
+                     "ORDER BY q.created_at DESC";
+        PreparedStatement ps = conn.prepareStatement(sql);
+        ps.setInt(1, patientId);
         ResultSet rs = ps.executeQuery();
         while (rs.next()) {
             list.add(mapResultSet(rs));

@@ -123,6 +123,13 @@
 
             <!-- Footer -->
             <VBox styleClass="sidebar-footer" spacing="6">
+                <Button fx:id="btnLogout"
+                        text="Déconnexion"
+                        onAction="#handleLogout"
+                        styleClass="btn-danger"
+                        maxWidth="Infinity"
+                        style="-fx-font-size: 12px; -fx-padding: 8 12;"/>
+                <Separator style="-fx-padding: 4 0;"/>
                 <HBox spacing="8" alignment="CENTER">
                     <Circle radius="4" style="-fx-fill: #22c55e;"/>
                     <Label text="Système opérationnel" styleClass="status-label"/>

@@ -15,44 +15,64 @@
             <Label text="🩺 Gestion des Médecins" styleClass="page-title"/>
             <Label text="Ajouter, modifier ou supprimer des médecins" styleClass="page-subtitle"/>
         </VBox>
-        <TextField fx:id="searchField" promptText="🔍 Rechercher un médecin..." styleClass="search-field" prefWidth="250"
-                   onKeyReleased="#onSearch"/>
     </HBox>
 
     <HBox spacing="20" VBox.vgrow="ALWAYS">
-        <!-- TABLE -->
+        <!-- MEDECIN CARDS LIST -->
         <VBox HBox.hgrow="ALWAYS" styleClass="card" spacing="12">
-            <TableView fx:id="tableMedecins" VBox.vgrow="ALWAYS">
-                <columns>
-                    <TableColumn text="ID" prefWidth="50">
-                        <cellValueFactory><PropertyValueFactory property="id"/></cellValueFactory>
-                    </TableColumn>
-                    <TableColumn text="Prénom" prefWidth="100">
-                        <cellValueFactory><PropertyValueFactory property="firstName"/></cellValueFactory>
-                    </TableColumn>
-                    <TableColumn text="Nom" prefWidth="100">
-                        <cellValueFactory><PropertyValueFactory property="lastName"/></cellValueFactory>
-                    </TableColumn>
-                    <TableColumn text="Spécialité" prefWidth="120">
-                        <cellValueFactory><PropertyValueFactory property="specialty"/></cellValueFactory>
-                    </TableColumn>
-                    <TableColumn text="Email" prefWidth="160">
-                        <cellValueFactory><PropertyValueFactory property="email"/></cellValueFactory>
-                    </TableColumn>
-                    <TableColumn text="Téléphone" prefWidth="100">
-                        <cellValueFactory><PropertyValueFactory property="phoneNumber"/></cellValueFactory>
-                    </TableColumn>
-                    <TableColumn text="Vérifié" prefWidth="70">
-                        <cellValueFactory><PropertyValueFactory property="verified"/></cellValueFactory>
-                    </TableColumn>
-                </columns>
-            </TableView>
+            <Label text="👥 Liste des Médecins" 
+                   style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #f1f5f9;"/>
+            
+            <!-- Advanced Search Filters -->
+            <VBox spacing="12" style="-fx-padding: 12; -fx-background-color: #141826; -fx-background-radius: 8; -fx-border-color: #252d42; -fx-border-width: 1; -fx-border-radius: 8;">
+                <Label text="🔍 Filtres de recherche" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #818cf8;"/>
+                
+                <HBox spacing="12" alignment="CENTER_LEFT">
+                    <VBox spacing="4" HBox.hgrow="ALWAYS">
+                        <Label text="Nom" styleClass="form-label" style="-fx-font-size: 11px;"/>
+                        <TextField fx:id="searchName" promptText="Rechercher par nom..." 
+                                   styleClass="text-field" prefHeight="32"/>
+                    </VBox>
+                    
+                    <VBox spacing="4" HBox.hgrow="ALWAYS">
+                        <Label text="Spécialité" styleClass="form-label" style="-fx-font-size: 11px;"/>
+                        <ComboBox fx:id="searchSpecialty" promptText="Toutes les spécialités" 
+                                  maxWidth="Infinity" styleClass="combo-box" prefHeight="32"/>
+                    </VBox>
+                    
+                    <VBox spacing="4" HBox.hgrow="ALWAYS">
+                        <Label text="Gouvernorat" styleClass="form-label" style="-fx-font-size: 11px;"/>
+                        <ComboBox fx:id="searchGovernorate" promptText="Tous les gouvernorats" 
+                                  maxWidth="Infinity" styleClass="combo-box" prefHeight="32"/>
+                    </VBox>
+                    
+                    <VBox spacing="4" alignment="BOTTOM_CENTER">
+                        <Label text=" " style="-fx-font-size: 11px;"/> <!-- Spacer -->
+                        <Button text="🔄 Effacer" onAction="#clearFilters" 
+                                styleClass="btn-secondary" prefHeight="32" prefWidth="80"/>
+                    </VBox>
+                </HBox>
+            </VBox>
+            
+            <ListView fx:id="listMedecins" VBox.vgrow="ALWAYS" 
+                      style="-fx-background-color: transparent; -fx-border-color: transparent;">
+                <placeholder>
+                    <VBox alignment="CENTER" spacing="12" style="-fx-padding: 40;">
+                        <Label text="👨‍⚕️" style="-fx-font-size: 48px;"/>
+                        <Label text="Aucun médecin trouvé" 
+                               style="-fx-text-fill: #6b7280; -fx-font-size: 16px;"/>
+                        <Label text="Ajoutez un nouveau médecin ou modifiez les filtres" 
+                               style="-fx-text-fill: #9ca3af; -fx-font-size: 13px;"/>
+                    </VBox>
+                </placeholder>
+            </ListView>
         </VBox>
 
         <!-- FORM -->
-        <ScrollPane fitToWidth="true" prefWidth="340" style="-fx-background-color: transparent; -fx-border-color: transparent;">
-            <VBox styleClass="card" spacing="12">
-                <Label text="📝 Formulaire Médecin" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #a78bfa;"/>
+        <ScrollPane fitToWidth="true" prefWidth="380" minWidth="360" style="-fx-background-color: transparent; -fx-border-color: transparent;">
+            <VBox styleClass="card" spacing="12" style="-fx-min-width: 340;">
+                <Label fx:id="formTitle" text="➕ Ajouter un Médecin" 
+                       style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #a78bfa;"/>
                 <Separator/>
 
                 <Label text="Prénom" styleClass="form-label"/>
@@ -64,11 +84,13 @@
                 <Label text="Email" styleClass="form-label"/>
                 <TextField fx:id="tfEmail" promptText="email@exemple.com"/>
 
-                <Label text="Mot de passe" styleClass="form-label"/>
-                <PasswordField fx:id="tfPassword" promptText="Mot de passe"/>
+                <VBox fx:id="passwordSection" spacing="4">
+                    <Label text="Mot de passe" styleClass="form-label"/>
+                    <PasswordField fx:id="tfPassword" promptText="Mot de passe (obligatoire)"/>
+                </VBox>
 
                 <Label text="Spécialité" styleClass="form-label"/>
-                <TextField fx:id="tfSpecialty" promptText="ex: Cardiologie"/>
+                <ComboBox fx:id="cbSpecialty" promptText="Choisir une spécialité" maxWidth="Infinity"/>
 
                 <Label text="CIN" styleClass="form-label"/>
                 <TextField fx:id="tfCin" promptText="Numéro CIN"/>
@@ -80,7 +102,7 @@
                 <TextField fx:id="tfAddress" promptText="Adresse"/>
 
                 <Label text="Gouvernorat" styleClass="form-label"/>
-                <TextField fx:id="tfGovernorate" promptText="Gouvernorat"/>
+                <ComboBox fx:id="cbGovernorate" promptText="Choisir un gouvernorat" maxWidth="Infinity"/>
 
                 <HBox spacing="10">
                     <VBox spacing="4" HBox.hgrow="ALWAYS">
@@ -110,12 +132,61 @@
 
                 <Separator/>
 
-                <HBox spacing="10" alignment="CENTER">
-                    <Button text="➕ Ajouter" styleClass="btn-primary" onAction="#addMedecin"/>
-                    <Button text="✏️ Modifier" styleClass="btn-warning" onAction="#updateMedecin"/>
-                    <Button text="🗑️ Supprimer" styleClass="btn-danger" onAction="#deleteMedecin"/>
-                </HBox>
-                <Button text="🔄 Réinitialiser" styleClass="btn-secondary" onAction="#clearForm" maxWidth="Infinity"/>
+                <!-- Admin Actions (for admin users only) -->
+                <VBox spacing="8" style="-fx-padding: 8; -fx-background-color: #1a1f2e; -fx-background-radius: 8; -fx-border-color: #374151; -fx-border-width: 1; -fx-border-radius: 8;">
+                    <Label text="🔧 Actions Administrateur" style="-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #f59e0b;"/>
+                    
+                    <HBox spacing="8">
+                        <Button text="🔍 Vérifier Authenticité" onAction="#checkMedecinAuthenticity" 
+                                styleClass="btn-info" prefHeight="28" HBox.hgrow="ALWAYS" 
+                                style="-fx-font-size: 10px;"/>
+                        <Button text="🔄 Activer/Désactiver" onAction="#toggleMedecinStatus" 
+                                styleClass="btn-warning" prefHeight="28" HBox.hgrow="ALWAYS" 
+                                style="-fx-font-size: 10px;"/>
+                    </HBox>
+                    
+                    <HBox spacing="8">
+                        <Button text="📊 Statistiques" onAction="#showMedecinStatistics" 
+                                styleClass="btn-info" prefHeight="28" HBox.hgrow="ALWAYS" 
+                                style="-fx-font-size: 10px;"/>
+                        <Button text="📄 Export CSV" onAction="#exportMedecinsToCSV" 
+                                styleClass="btn-secondary" prefHeight="28" HBox.hgrow="ALWAYS" 
+                                style="-fx-font-size: 10px;"/>
+                    </HBox>
+                    
+                    <HBox spacing="8">
+                        <Button text="📋 Export PDF" onAction="#exportMedecinsToPDF" 
+                                styleClass="btn-secondary" prefHeight="28" HBox.hgrow="ALWAYS" 
+                                style="-fx-font-size: 10px;"/>
+                    </HBox>
+                </VBox>
+
+                <Separator/>
+
+                <!-- Action Buttons -->
+                <VBox spacing="10">
+                    <!-- Add Mode Button -->
+                    <Button fx:id="btnAdd" text="➕ Ajouter le Médecin" 
+                            styleClass="btn-primary" onAction="#addMedecin" 
+                            maxWidth="Infinity"/>
+                    
+                    <!-- Edit Mode Buttons -->
+                    <HBox spacing="10" alignment="CENTER">
+                        <Button fx:id="btnUpdate" text="✏️ Modifier" 
+                                styleClass="btn-warning" onAction="#updateMedecin" 
+                                visible="false" managed="false" HBox.hgrow="ALWAYS"/>
+                        <Button fx:id="btnDelete" text="🗑️ Supprimer" 
+                                styleClass="btn-danger" onAction="#deleteMedecin"
+                                visible="false" managed="false" HBox.hgrow="ALWAYS"/>
+                    </HBox>
+                    
+                    <Button fx:id="btnCancel" text="❌ Annuler" 
+                            styleClass="btn-secondary" onAction="#cancelEdit" 
+                            maxWidth="Infinity" visible="false" managed="false"/>
+                </VBox>
+                
+                <Button text="🔄 Réinitialiser" styleClass="btn-secondary" 
+                        onAction="#clearForm" maxWidth="Infinity"/>
             </VBox>
         </ScrollPane>
     </HBox>

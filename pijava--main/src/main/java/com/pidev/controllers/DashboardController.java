@@ -20,7 +20,7 @@ import java.io.IOException;
 public class DashboardController {
 
     @FXML private StackPane contentArea;
-    @FXML private Button btnDashboard, btnPatients, btnMedecins, btnAppointments, btnFeedback, btnSpecialites, btnSettings;
+    @FXML private Button btnDashboard, btnPatients, btnMedecins, btnAppointments, btnFeedback, btnSpecialites, btnSettings, btnLogout;
     @FXML private Label lblTotalPatients, lblTotalMedecins, lblTotalAppointments, lblTotalFeedbacks;
     @FXML private Label userNameLabel;
     @FXML private VBox dashboardHome;
@@ -139,6 +139,34 @@ public class DashboardController {
         activeButton = button;
         if (!button.getStyleClass().contains("nav-button-active")) {
             button.getStyleClass().add("nav-button-active");
+        }
+    }
+
+    /**
+     * Handle admin logout
+     */
+    @FXML
+    public void handleLogout() {
+        try {
+            // Clear user session
+            com.pidev.utils.UserSession.getInstance().cleanUserSession();
+            
+            // Load login view
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/LoginView.fxml"));
+            javafx.scene.Parent loginView = loader.load();
+            
+            // Get the stage from the current scene
+            javafx.stage.Stage stage = (javafx.stage.Stage) contentArea.getScene().getWindow();
+            
+            // Set the new scene
+            javafx.scene.Scene scene = new javafx.scene.Scene(loginView);
+            stage.setScene(scene);
+            stage.setTitle("PiDev Medical - Connexion");
+            stage.show();
+            
+        } catch (Exception e) {
+            System.err.println("❌ Error during logout: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 }

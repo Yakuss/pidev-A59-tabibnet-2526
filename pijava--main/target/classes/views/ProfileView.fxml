@@ -215,13 +215,11 @@
                             <Label text="Genre"
                                    style="-fx-text-fill: #94a3b8; -fx-font-size: 13px;
                                           -fx-min-width: 160;"/>
-                            <TextField fx:id="tfGender"
-                                       promptText="Genre"
-                                       HBox.hgrow="ALWAYS"
-                                       style="-fx-background-color: transparent;
-                                              -fx-text-fill: #f1f5f9; -fx-font-size: 13px;
-                                              -fx-border-width: 0; -fx-padding: 0;
-                                              -fx-background-radius: 0;"/>
+                            <ComboBox fx:id="cbGender"
+                                      promptText="Genre"
+                                      HBox.hgrow="ALWAYS"
+                                      maxWidth="Infinity"
+                                      styleClass="combo-box"/>
                         </HBox>
                     </VBox>
                 </VBox>
@@ -313,12 +311,40 @@
                                               -fx-background-radius: 0;"/>
                         </HBox>
                         <HBox alignment="CENTER_LEFT" spacing="0"
-                              style="-fx-padding: 16 24;">
+                              style="-fx-padding: 16 24;
+                                     -fx-border-color: transparent transparent #1c2133 transparent;
+                                     -fx-border-width: 0 0 1 0;">
+                            <Label text="Date de naissance"
+                                   style="-fx-text-fill: #94a3b8; -fx-font-size: 13px;
+                                          -fx-min-width: 160;"/>
+                            <DatePicker fx:id="dpDateOfBirth"
+                                        promptText="Date de naissance"
+                                        HBox.hgrow="ALWAYS"
+                                        maxWidth="Infinity"
+                                        styleClass="date-picker"/>
+                        </HBox>
+                        <HBox alignment="CENTER_LEFT" spacing="0"
+                              style="-fx-padding: 16 24;
+                                     -fx-border-color: transparent transparent #1c2133 transparent;
+                                     -fx-border-width: 0 0 1 0;">
                             <Label text="Assurance"
                                    style="-fx-text-fill: #94a3b8; -fx-font-size: 13px;
                                           -fx-min-width: 160;"/>
-                            <Label fx:id="lblInsurance" text="—"
-                                   style="-fx-text-fill: #f1f5f9; -fx-font-size: 13px;"/>
+                            <CheckBox fx:id="cbHasInsurance" text="J'ai une assurance médicale"
+                                      style="-fx-text-fill: #f1f5f9; -fx-font-size: 13px;"/>
+                        </HBox>
+                        <HBox alignment="CENTER_LEFT" spacing="0"
+                              style="-fx-padding: 16 24;">
+                            <Label text="N° d'assurance"
+                                   style="-fx-text-fill: #94a3b8; -fx-font-size: 13px;
+                                          -fx-min-width: 160;"/>
+                            <TextField fx:id="tfInsuranceNumber"
+                                       promptText="Numéro d'assurance"
+                                       HBox.hgrow="ALWAYS"
+                                       style="-fx-background-color: transparent;
+                                              -fx-text-fill: #f1f5f9; -fx-font-size: 13px;
+                                              -fx-border-width: 0; -fx-padding: 0;
+                                              -fx-background-radius: 0;"/>
                         </HBox>
                     </VBox>
                 </VBox>
@@ -348,13 +374,11 @@
                             <Label text="Spécialité"
                                    style="-fx-text-fill: #94a3b8; -fx-font-size: 13px;
                                           -fx-min-width: 160;"/>
-                            <TextField fx:id="tfSpecialty"
-                                       promptText="Votre spécialité"
-                                       HBox.hgrow="ALWAYS"
-                                       style="-fx-background-color: transparent;
-                                              -fx-text-fill: #f1f5f9; -fx-font-size: 13px;
-                                              -fx-border-width: 0; -fx-padding: 0;
-                                              -fx-background-radius: 0;"/>
+                            <ComboBox fx:id="tfSpecialty"
+                                      promptText="Votre spécialité"
+                                      HBox.hgrow="ALWAYS"
+                                      maxWidth="Infinity"
+                                      styleClass="combo-box"/>
                         </HBox>
                         <HBox alignment="CENTER_LEFT" spacing="0"
                               style="-fx-padding: 16 24;
@@ -363,13 +387,11 @@
                             <Label text="Gouvernorat"
                                    style="-fx-text-fill: #94a3b8; -fx-font-size: 13px;
                                           -fx-min-width: 160;"/>
-                            <TextField fx:id="tfGovernorate"
-                                       promptText="Gouvernorat"
-                                       HBox.hgrow="ALWAYS"
-                                       style="-fx-background-color: transparent;
-                                              -fx-text-fill: #f1f5f9; -fx-font-size: 13px;
-                                              -fx-border-width: 0; -fx-padding: 0;
-                                              -fx-background-radius: 0;"/>
+                            <ComboBox fx:id="tfGovernorate"
+                                      promptText="Gouvernorat"
+                                      HBox.hgrow="ALWAYS"
+                                      maxWidth="Infinity"
+                                      styleClass="combo-box"/>
                         </HBox>
                         <HBox alignment="CENTER_LEFT" spacing="0"
                               style="-fx-padding: 16 24;">

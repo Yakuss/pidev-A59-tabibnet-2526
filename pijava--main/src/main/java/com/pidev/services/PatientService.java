@@ -123,4 +123,51 @@ public class PatientService implements IService<Patient> {
         p.setInsuranceNumber(rs.getString("insurance_number"));
         return p;
     }
+
+    /**
+     * Toggle the active status of a patient account (for admin use)
+     */
+    public void toggleActiveStatus(int patientId) throws SQLException {
+        String sql = "UPDATE patients SET is_active = NOT is_active WHERE id = ?";
+        PreparedStatement ps = conn.prepareStatement(sql);
+        ps.setInt(1, patientId);
+        int rowsAffected = ps.executeUpdate();
+        if (rowsAffected > 0) {
+            System.out.println("✅ Patient active status toggled for ID: " + patientId);
+        } else {
+            throw new SQLException("Patient not found with ID: " + patientId);
+        }
+    }
+
+    /**
+     * Set the active status of a patient account (for admin use)
+     */
+    public void setActiveStatus(int patientId, boolean isActive) throws SQLException {
+        String sql = "UPDATE patients SET is_active = ? WHERE id = ?";
+        PreparedStatement ps = conn.prepareStatement(sql);
+        ps.setBoolean(1, isActive);
+        ps.setInt(2, patientId);
+        int rowsAffected = ps.executeUpdate();
+        if (rowsAffected > 0) {
+            System.out.println("✅ Patient active status set to " + isActive + " for ID: " + patientId);
+        } else {
+            throw new SQLException("Patient not found with ID: " + patientId);
+        }
+    }
+
+    /**
+     * Get count of active and inactive patients
+     */
+    public int[] getActiveInactiveCounts() throws SQLException {
+        String sql = "SELECT " +
+                     "SUM(CASE WHEN is_active = 1 THEN 1 ELSE 0 END) as active_count, " +
+                     "SUM(CASE WHEN is_active = 0 THEN 1 ELSE 0 END) as inactive_count " +
+                     "FROM patients";
+        PreparedStatement ps = conn.prepareStatement(sql);
+        ResultSet rs = ps.executeQuery();
+        if (rs.next()) {
+            return new int[]{rs.getInt("active_count"), rs.getInt("inactive_count")};
+        }
+        return new int[]{0, 0};
+    }
 }

@@ -60,8 +60,8 @@
             </VBox>
 
             <Label fx:id="errorMessage"
-                   style="-fx-text-fill: #f43f5e; -fx-font-size: 12px; -fx-wrap-text: true;"
-                   visible="false" managed="false"/>
+                   style="-fx-text-fill: #f43f5e; -fx-font-size: 12px; -fx-wrap-text: true; -fx-padding: 8 12; -fx-background-color: rgba(244,63,94,0.1); -fx-background-radius: 6; -fx-border-color: rgba(244,63,94,0.3); -fx-border-width: 1; -fx-border-radius: 6;"
+                   visible="false"/>
 
             <Button fx:id="loginButton"
                     text="Se connecter"

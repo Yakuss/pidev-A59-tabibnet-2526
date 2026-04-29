@@ -1,5 +1,7 @@
 package com.pidev.controllers;
 
+import com.pidev.constant.Governorate;
+import com.pidev.constant.Specialty;
 import com.pidev.models.BaseUser;
 import com.pidev.models.Medecin;
 import com.pidev.models.Patient;
@@ -7,12 +9,16 @@ import com.pidev.services.MedecinService;
 import com.pidev.services.PatientService;
 import com.pidev.utils.BCrypt;
 import com.pidev.utils.UserSession;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+
+import java.time.LocalDate;
+import java.time.Period;
 
 /**
  * Profile Controller — displays and edits the currently logged-in user's profile.
@@ -35,7 +41,7 @@ public class ProfileController {
     @FXML private TextField tfFirstName;
     @FXML private TextField tfLastName;
     @FXML private TextField tfAge;
-    @FXML private TextField tfGender;
+    @FXML private ComboBox<String> cbGender;
     @FXML private TextField tfEmail;
     @FXML private TextField tfPhone;
     @FXML private Button btnEditProfile;
@@ -45,12 +51,14 @@ public class ProfileController {
     // ── Patient extra ────────────────────────────────────────────
     @FXML private VBox sectionPatientExtra;
     @FXML private TextField tfAddress;
-    @FXML private Label lblInsurance;
+    @FXML private TextField tfInsuranceNumber;
+    @FXML private DatePicker dpDateOfBirth;
+    @FXML private CheckBox cbHasInsurance;
 
     // ── Medecin extra ────────────────────────────────────────────
     @FXML private VBox sectionMedecinExtra;
-    @FXML private TextField tfSpecialty;
-    @FXML private TextField tfGovernorate;
+    @FXML private ComboBox<Specialty> tfSpecialty;
+    @FXML private ComboBox<Governorate> tfGovernorate;
     @FXML private TextField tfExperience;
 
     // ── Security section ─────────────────────────────────────────
@@ -88,8 +96,24 @@ public class ProfileController {
 
     @FXML
     public void initialize() {
+        // Populate enum ComboBoxes
+        tfSpecialty.setItems(FXCollections.observableArrayList(Specialty.values()));
+        tfGovernorate.setItems(FXCollections.observableArrayList(Governorate.values()));
+        
+        // Populate gender ComboBox
+        cbGender.setItems(FXCollections.observableArrayList("Homme", "Femme"));
+
         currentUser = UserSession.getInstance().getUser();
         if (currentUser == null) return;
+
+        // Enable/disable insurance number field based on checkbox
+        if (cbHasInsurance != null && tfInsuranceNumber != null) {
+            tfInsuranceNumber.setDisable(true);
+            cbHasInsurance.selectedProperty().addListener((obs, oldVal, newVal) -> {
+                tfInsuranceNumber.setDisable(!newVal);
+                if (!newVal) tfInsuranceNumber.clear();
+            });
+        }
 
         populateUserData();
         setFieldsEditable(false);
@@ -113,7 +137,7 @@ public class ProfileController {
         tfFirstName.setText(nvl(currentUser.getFirstName()));
         tfLastName.setText(nvl(currentUser.getLastName()));
         tfAge.setText(currentUser.getAge() > 0 ? String.valueOf(currentUser.getAge()) : "");
-        tfGender.setText(nvl(currentUser.getGender()));
+        cbGender.setValue(currentUser.getGender());
         tfEmail.setText(nvl(currentUser.getEmail()));
 
         // Role-specific
@@ -121,9 +145,19 @@ public class ProfileController {
             lblRoleBadge.setText("Patient");
             tfPhone.setText(nvl(p.getPhoneNumber()));
             tfAddress.setText(nvl(p.getAddress()));
-            lblInsurance.setText(p.isHasInsurance()
-                    ? "Oui — " + nvl(p.getInsuranceNumber())
-                    : "Non");
+            
+            // Set date of birth in DatePicker
+            if (p.getDateOfBirth() != null) {
+                dpDateOfBirth.setValue(p.getDateOfBirth().toLocalDate());
+            } else {
+                dpDateOfBirth.setValue(null);
+            }
+            
+            // Set insurance fields
+            cbHasInsurance.setSelected(p.isHasInsurance());
+            tfInsuranceNumber.setText(nvl(p.getInsuranceNumber()));
+            tfInsuranceNumber.setDisable(!p.isHasInsurance());
+            
             sectionPatientExtra.setVisible(true);
             sectionPatientExtra.setManaged(true);
             sectionMedecinExtra.setVisible(false);
@@ -142,8 +176,8 @@ public class ProfileController {
                     "-fx-border-color: rgba(34,197,94,0.3);" +
                     "-fx-border-width: 1; -fx-border-radius: 20;");
             tfPhone.setText(nvl(m.getPhoneNumber()));
-            tfSpecialty.setText(nvl(m.getSpecialty()));
-            tfGovernorate.setText(nvl(m.getGovernorate()));
+            tfSpecialty.setValue(m.getSpecialty());
+            tfGovernorate.setValue(m.getGovernorate());
             tfExperience.setText(nvl(m.getExperience()));
             sectionMedecinExtra.setVisible(true);
             sectionMedecinExtra.setManaged(true);
@@ -217,15 +251,26 @@ public class ProfileController {
 
         String style = editable ? editStyle : readStyle;
 
+        // Plain text fields
         for (TextField tf : new TextField[]{
-                tfFirstName, tfLastName, tfAge, tfGender,
-                tfEmail, tfPhone, tfAddress,
-                tfSpecialty, tfGovernorate, tfExperience}) {
+                tfFirstName, tfLastName, tfAge,
+                tfEmail, tfPhone, tfAddress, tfExperience, tfInsuranceNumber}) {
             if (tf != null) {
                 tf.setEditable(editable);
                 tf.setStyle(style);
             }
         }
+
+        // DatePicker for patient date of birth
+        if (dpDateOfBirth != null) dpDateOfBirth.setDisable(!editable);
+
+        // CheckBox for insurance
+        if (cbHasInsurance != null) cbHasInsurance.setDisable(!editable);
+
+        // ComboBoxes
+        if (cbGender != null) cbGender.setDisable(!editable);
+        if (tfSpecialty != null)   tfSpecialty.setDisable(!editable);
+        if (tfGovernorate != null) tfGovernorate.setDisable(!editable);
     }
 
     // ── Save profile ─────────────────────────────────────────────
@@ -239,17 +284,33 @@ public class ProfileController {
             if (!tfAge.getText().trim().isEmpty()) {
                 currentUser.setAge(Integer.parseInt(tfAge.getText().trim()));
             }
-            currentUser.setGender(tfGender.getText().trim());
+            currentUser.setGender(cbGender.getValue());
 
             if (currentUser instanceof Patient p) {
                 p.setPhoneNumber(tfPhone.getText().trim());
                 p.setAddress(tfAddress.getText().trim());
+                
+                // Set date of birth and calculate age
+                if (dpDateOfBirth.getValue() != null) {
+                    LocalDate dob = dpDateOfBirth.getValue();
+                    p.setDateOfBirth(dob.atStartOfDay());
+                    p.setAge(calculateAge(dob));
+                }
+                
+                // Set insurance fields
+                p.setHasInsurance(cbHasInsurance.isSelected());
+                if (cbHasInsurance.isSelected()) {
+                    p.setInsuranceNumber(tfInsuranceNumber.getText().trim());
+                } else {
+                    p.setInsuranceNumber(null);
+                }
+                
                 new PatientService().update(p);
 
             } else if (currentUser instanceof Medecin m) {
                 m.setPhoneNumber(tfPhone.getText().trim());
-                m.setSpecialty(tfSpecialty.getText().trim());
-                m.setGovernorate(tfGovernorate.getText().trim());
+                m.setSpecialty(tfSpecialty.getValue());
+                m.setGovernorate(tfGovernorate.getValue());
                 m.setExperience(tfExperience.getText().trim());
                 new MedecinService().update(m);
             }
@@ -389,5 +450,13 @@ public class ProfileController {
 
     private String nvl(String s) {
         return s != null ? s : "";
+    }
+
+    /**
+     * Calculate age from date of birth
+     */
+    private int calculateAge(LocalDate dateOfBirth) {
+        if (dateOfBirth == null) return 0;
+        return Period.between(dateOfBirth, LocalDate.now()).getYears();
     }
 }

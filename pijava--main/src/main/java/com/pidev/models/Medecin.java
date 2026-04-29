@@ -1,5 +1,8 @@
 package com.pidev.models;
 
+import com.pidev.constant.Governorate;
+import com.pidev.constant.Specialty;
+
 import java.time.LocalDateTime;
 
 /**
@@ -7,24 +10,28 @@ import java.time.LocalDateTime;
  */
 public class Medecin extends BaseUser {
     private String phoneNumber;
-    private String specialty;
+    private Specialty specialty;
     private String cin;
     private String address;
-    private String governorate;
+    private Governorate governorate;
     private String education;
     private String experience;
     private boolean isVerified;
     private Double aiAverageScore;
     private LocalDateTime aiScoreUpdatedAt;
+    private Double averageRating;      // Average rating from patient feedback (0.00 to 5.00)
+    private Integer totalReviews;      // Total number of reviews/feedback
 
     public Medecin() {
         super();
+        this.averageRating = 0.0;
+        this.totalReviews = 0;
     }
 
     public Medecin(int id, String email, String password, String firstName, String lastName,
                    int age, String gender, boolean isActive, String roles,
-                   String phoneNumber, String specialty, String cin, String address,
-                   String governorate, String education, String experience,
+                   String phoneNumber, Specialty specialty, String cin, String address,
+                   Governorate governorate, String education, String experience,
                    boolean isVerified, Double aiAverageScore) {
         super(id, email, password, firstName, lastName, age, gender, isActive, roles);
         this.phoneNumber = phoneNumber;
@@ -41,8 +48,8 @@ public class Medecin extends BaseUser {
     public String getPhoneNumber() { return phoneNumber; }
     public void setPhoneNumber(String phoneNumber) { this.phoneNumber = phoneNumber; }
 
-    public String getSpecialty() { return specialty; }
-    public void setSpecialty(String specialty) { this.specialty = specialty; }
+    public Specialty getSpecialty() { return specialty; }
+    public void setSpecialty(Specialty specialty) { this.specialty = specialty; }
 
     public String getCin() { return cin; }
     public void setCin(String cin) { this.cin = cin; }
@@ -50,8 +57,8 @@ public class Medecin extends BaseUser {
     public String getAddress() { return address; }
     public void setAddress(String address) { this.address = address; }
 
-    public String getGovernorate() { return governorate; }
-    public void setGovernorate(String governorate) { this.governorate = governorate; }
+    public Governorate getGovernorate() { return governorate; }
+    public void setGovernorate(Governorate governorate) { this.governorate = governorate; }
 
     public String getEducation() { return education; }
     public void setEducation(String education) { this.education = education; }
@@ -67,4 +74,10 @@ public class Medecin extends BaseUser {
 
     public LocalDateTime getAiScoreUpdatedAt() { return aiScoreUpdatedAt; }
     public void setAiScoreUpdatedAt(LocalDateTime aiScoreUpdatedAt) { this.aiScoreUpdatedAt = aiScoreUpdatedAt; }
+
+    public Double getAverageRating() { return averageRating; }
+    public void setAverageRating(Double averageRating) { this.averageRating = averageRating; }
+
+    public Integer getTotalReviews() { return totalReviews; }
+    public void setTotalReviews(Integer totalReviews) { this.totalReviews = totalReviews; }
 }

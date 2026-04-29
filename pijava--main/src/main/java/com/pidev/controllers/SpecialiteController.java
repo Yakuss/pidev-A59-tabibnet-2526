@@ -17,7 +17,8 @@ import javafx.util.Duration;
 public class SpecialiteController {
 
     @FXML private TableView<Specialite> tableSpecialites;
-    @FXML private TextField tfNom, tfDescription, searchField;
+    @FXML private TextField tfNom, searchField;
+    @FXML private TextArea tfDescription;
     @FXML private Label lblStatus, lblCount;
     @FXML private Button btnAdd, btnUpdate, btnDelete, btnClear;
 

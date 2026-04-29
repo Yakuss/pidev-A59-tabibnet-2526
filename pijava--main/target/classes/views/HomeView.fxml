@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.shape.*?>
+
+<ScrollPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.pidev.controllers.HomeController"
+            fitToWidth="true"
+            stylesheets="@../styles/style.css"
+            style="-fx-background-color: #080b14;
+                   -fx-background: #080b14;
+                   -fx-border-color: transparent;">
+
+    <VBox spacing="0" style="-fx-background-color: #080b14;">
+
+        <!-- ═══════════════════════════════════════════
+             HERO SECTION
+        ════════════════════════════════════════════ -->
+        <VBox alignment="CENTER" spacing="24"
+              style="-fx-background-color: #0e1220;
+                     -fx-border-color: transparent transparent #252d42 transparent;
+                     -fx-border-width: 0 0 1 0;
+                     -fx-padding: 64 80 56 80;">
+
+            <!-- Badge -->
+            <HBox alignment="CENTER">
+                <Label text="⚕  Plateforme Médicale Intelligente"
+                       style="-fx-background-color: rgba(91,110,245,0.12);
+                              -fx-text-fill: #818cf8;
+                              -fx-font-size: 12px;
+                              -fx-font-weight: 700;
+                              -fx-padding: 5 16;
+                              -fx-background-radius: 20;
+                              -fx-border-color: rgba(91,110,245,0.3);
+                              -fx-border-width: 1;
+                              -fx-border-radius: 20;"/>
+            </HBox>
+
+            <!-- Main title -->
+            <VBox alignment="CENTER" spacing="10">
+                <Label text="Bienvenue sur PiDev Medical"
+                       style="-fx-font-size: 38px;
+                              -fx-font-weight: 700;
+                              -fx-text-fill: #f1f5f9;
+                              -fx-alignment: CENTER;"/>
+                <Label fx:id="lblWelcomeUser"
+                       text="Votre santé, notre priorité"
+                       style="-fx-font-size: 16px;
+                              -fx-text-fill: #94a3b8;
+                              -fx-alignment: CENTER;"/>
+            </VBox>
+
+            <!-- CTA Buttons -->
+            <HBox alignment="CENTER" spacing="14">
+                <Button text="📅  Prendre un rendez-vous"
+                        onAction="#goToAppointments"
+                        prefHeight="44" prefWidth="220"
+                        styleClass="btn-primary"
+                        style="-fx-font-size: 14px;"/>
+                <Button text="💬  Accéder au Forum"
+                        onAction="#goToForum"
+                        prefHeight="44" prefWidth="200"
+                        styleClass="btn-secondary"
+                        style="-fx-font-size: 14px;"/>
+            </HBox>
+
+            <!-- Stats row -->
+            <HBox alignment="CENTER" spacing="48"
+                  style="-fx-padding: 20 0 0 0;">
+                <VBox alignment="CENTER" spacing="4">
+                    <Label fx:id="lblStatPatients" text="—"
+                           style="-fx-font-size: 26px; -fx-font-weight: 700; -fx-text-fill: #818cf8;"/>
+                    <Label text="Patients"
+                           style="-fx-font-size: 12px; -fx-text-fill: #475569;"/>
+                </VBox>
+                <Region style="-fx-background-color: #252d42; -fx-min-width: 1; -fx-min-height: 40;"/>
+                <VBox alignment="CENTER" spacing="4">
+                    <Label fx:id="lblStatMedecins" text="—"
+                           style="-fx-font-size: 26px; -fx-font-weight: 700; -fx-text-fill: #22c55e;"/>
+                    <Label text="Médecins"
+                           style="-fx-font-size: 12px; -fx-text-fill: #475569;"/>
+                </VBox>
+                <Region style="-fx-background-color: #252d42; -fx-min-width: 1; -fx-min-height: 40;"/>
+                <VBox alignment="CENTER" spacing="4">
+                    <Label fx:id="lblStatQuestions" text="—"
+                           style="-fx-font-size: 26px; -fx-font-weight: 700; -fx-text-fill: #f59e0b;"/>
+                    <Label text="Questions Forum"
+                           style="-fx-font-size: 12px; -fx-text-fill: #475569;"/>
+                </VBox>
+                <Region style="-fx-background-color: #252d42; -fx-min-width: 1; -fx-min-height: 40;"/>
+                <VBox alignment="CENTER" spacing="4">
+                    <Label fx:id="lblStatAppointments" text="—"
+                           style="-fx-font-size: 26px; -fx-font-weight: 700; -fx-text-fill: #f43f5e;"/>
+                    <Label text="Rendez-vous"
+                           style="-fx-font-size: 12px; -fx-text-fill: #475569;"/>
+                </VBox>
+            </HBox>
+        </VBox>
+
+        <!-- ═══════════════════════════════════════════
+             QUICK ACCESS CARDS
+        ════════════════════════════════════════════ -->
+        <VBox spacing="20" style="-fx-padding: 48 80 40 80; -fx-background-color: #080b14;">
+
+            <Label text="Accès rapide"
+                   style="-fx-font-size: 20px; -fx-font-weight: 700; -fx-text-fill: #f1f5f9;"/>
+
+            <HBox spacing="16">
+
+                <!-- Forum Card -->
+                <VBox fx:id="cardForum" spacing="16" HBox.hgrow="ALWAYS"
+                      onMouseClicked="#goToForum"
+                      style="-fx-background-color: #0e1220;
+                             -fx-background-radius: 14;
+                             -fx-border-color: #252d42;
+                             -fx-border-width: 1;
+                             -fx-border-radius: 14;
+                             -fx-padding: 24;
+                             -fx-cursor: hand;">
+                    <StackPane alignment="CENTER_LEFT">
+                        <Circle radius="22"
+                                style="-fx-fill: rgba(91,110,245,0.15);
+                                       -fx-stroke: rgba(91,110,245,0.3);
+                                       -fx-stroke-width: 1;"/>
+                        <Label text="💬"
+                               style="-fx-font-size: 20px;"/>
+                    </StackPane>
+                    <VBox spacing="6">
+                        <Label text="Forum Communautaire"
+                               style="-fx-font-size: 15px; -fx-font-weight: 700; -fx-text-fill: #f1f5f9;"/>
+                        <Label text="Posez vos questions médicales et échangez avec des professionnels de santé."
+                               style="-fx-font-size: 12px; -fx-text-fill: #64748b; -fx-wrap-text: true;"
+                               wrapText="true"/>
+                    </VBox>
+                    <HBox alignment="CENTER_LEFT" spacing="8">
+                        <Label fx:id="lblForumCount" text="0 questions actives"
+                               style="-fx-font-size: 11px; -fx-text-fill: #818cf8; -fx-font-weight: 600;"/>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Label text="→"
+                               style="-fx-font-size: 14px; -fx-text-fill: #475569;"/>
+                    </HBox>
+                </VBox>
+
+                <!-- Appointments Card -->
+                <VBox fx:id="cardAppointments" spacing="16" HBox.hgrow="ALWAYS"
+                      onMouseClicked="#goToAppointments"
+                      style="-fx-background-color: #0e1220;
+                             -fx-background-radius: 14;
+                             -fx-border-color: #252d42;
+                             -fx-border-width: 1;
+                             -fx-border-radius: 14;
+                             -fx-padding: 24;
+                             -fx-cursor: hand;">
+                    <StackPane alignment="CENTER_LEFT">
+                        <Circle radius="22"
+                                style="-fx-fill: rgba(34,197,94,0.15);
+                                       -fx-stroke: rgba(34,197,94,0.3);
+                                       -fx-stroke-width: 1;"/>
+                        <Label text="📅"
+                               style="-fx-font-size: 20px;"/>
+                    </StackPane>
+                    <VBox spacing="6">
+                        <Label text="Mes Rendez-vous"
+                               style="-fx-font-size: 15px; -fx-font-weight: 700; -fx-text-fill: #f1f5f9;"/>
+                        <Label text="Consultez et gérez vos rendez-vous médicaux avec vos médecins."
+                               style="-fx-font-size: 12px; -fx-text-fill: #64748b; -fx-wrap-text: true;"
+                               wrapText="true"/>
+                    </VBox>
+                    <HBox alignment="CENTER_LEFT" spacing="8">
+                        <Label fx:id="lblAppointmentCount" text="0 rendez-vous"
+                               style="-fx-font-size: 11px; -fx-text-fill: #22c55e; -fx-font-weight: 600;"/>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Label text="→"
+                               style="-fx-font-size: 14px; -fx-text-fill: #475569;"/>
+                    </HBox>
+                </VBox>
+
+                <!-- Profile Card -->
+                <VBox fx:id="cardProfile" spacing="16" HBox.hgrow="ALWAYS"
+                      onMouseClicked="#goToProfile"
+                      style="-fx-background-color: #0e1220;
+                             -fx-background-radius: 14;
+                             -fx-border-color: #252d42;
+                             -fx-border-width: 1;
+                             -fx-border-radius: 14;
+                             -fx-padding: 24;
+                             -fx-cursor: hand;">
+                    <StackPane alignment="CENTER_LEFT">
+                        <Circle radius="22"
+                                style="-fx-fill: rgba(147,51,234,0.15);
+                                       -fx-stroke: rgba(147,51,234,0.3);
+                                       -fx-stroke-width: 1;"/>
+                        <Label text="👤"
+                               style="-fx-font-size: 20px;"/>
+                    </StackPane>
+                    <VBox spacing="6">
+                        <Label text="Mon Profil"
+                               style="-fx-font-size: 15px; -fx-font-weight: 700; -fx-text-fill: #f1f5f9;"/>
+                        <Label text="Mettez à jour vos informations personnelles et médicales."
+                               style="-fx-font-size: 12px; -fx-text-fill: #64748b; -fx-wrap-text: true;"
+                               wrapText="true"/>
+                    </VBox>
+                    <HBox alignment="CENTER_LEFT" spacing="8">
+                        <Label text="Voir mon profil"
+                               style="-fx-font-size: 11px; -fx-text-fill: #a78bfa; -fx-font-weight: 600;"/>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Label text="→"
+                               style="-fx-font-size: 14px; -fx-text-fill: #475569;"/>
+                    </HBox>
+                </VBox>
+
+            </HBox>
+        </VBox>
+
+        <!-- ═══════════════════════════════════════════
+             RECENT QUESTIONS + MY NEXT APPOINTMENT
+        ════════════════════════════════════════════ -->
+        <HBox spacing="20"
+              style="-fx-padding: 0 80 48 80; -fx-background-color: #080b14;">
+
+            <!-- Recent Forum Questions -->
+            <VBox spacing="16" HBox.hgrow="ALWAYS"
+                  style="-fx-background-color: #0e1220;
+                         -fx-background-radius: 14;
+                         -fx-border-color: #252d42;
+                         -fx-border-width: 1;
+                         -fx-border-radius: 14;
+                         -fx-padding: 24;">
+
+                <HBox alignment="CENTER_LEFT" spacing="10">
+                    <Label text="Questions récentes"
+                           style="-fx-font-size: 15px; -fx-font-weight: 700; -fx-text-fill: #f1f5f9;"
+                           HBox.hgrow="ALWAYS"/>
+                    <Button text="Voir tout →"
+                            onAction="#goToForum"
+                            style="-fx-background-color: transparent;
+                                   -fx-text-fill: #818cf8;
+                                   -fx-font-size: 12px;
+                                   -fx-font-weight: 600;
+                                   -fx-cursor: hand;
+                                   -fx-border-width: 0;
+                                   -fx-padding: 4 8;"/>
+                </HBox>
+
+                <VBox fx:id="recentQuestionsBox" spacing="10"/>
+
+            </VBox>
+
+            <!-- Right column: Next Appointment + Specialties -->
+            <VBox spacing="16" prefWidth="320">
+
+                <!-- Next Appointment -->
+                <VBox spacing="14"
+                      style="-fx-background-color: #0e1220;
+                             -fx-background-radius: 14;
+                             -fx-border-color: rgba(91,110,245,0.35);
+                             -fx-border-width: 1;
+                             -fx-border-radius: 14;
+                             -fx-padding: 24;">
+
+                    <HBox alignment="CENTER_LEFT" spacing="10">
+                        <Label text="📅" style="-fx-font-size: 16px;"/>
+                        <Label text="Prochain rendez-vous"
+                               style="-fx-font-size: 14px; -fx-font-weight: 700; -fx-text-fill: #f1f5f9;"/>
+                    </HBox>
+
+                    <VBox fx:id="nextAppointmentBox" spacing="10"/>
+
+                </VBox>
+
+                <!-- Specialties -->
+                <VBox spacing="14" VBox.vgrow="ALWAYS"
+                      style="-fx-background-color: #0e1220;
+                             -fx-background-radius: 14;
+                             -fx-border-color: #252d42;
+                             -fx-border-width: 1;
+                             -fx-border-radius: 14;
+                             -fx-padding: 24;">
+
+                    <Label text="🏥  Spécialités disponibles"
+                           style="-fx-font-size: 14px; -fx-font-weight: 700; -fx-text-fill: #f1f5f9;"/>
+
+                    <VBox fx:id="specialitiesBox" spacing="8"/>
+
+                </VBox>
+
+            </VBox>
+        </HBox>
+
+        <!-- ═══════════════════════════════════════════
+             FOOTER
+        ════════════════════════════════════════════ -->
+        <HBox alignment="CENTER" spacing="8"
+              style="-fx-background-color: #0e1220;
+                     -fx-border-color: #252d42 transparent transparent transparent;
+                     -fx-border-width: 1 0 0 0;
+                     -fx-padding: 20 80;">
+            <Circle radius="4" style="-fx-fill: #22c55e;"/>
+            <Label text="PiDev Medical v3.0  ·  Tous droits réservés © 2026"
+                   style="-fx-text-fill: #475569; -fx-font-size: 12px;"/>
+        </HBox>
+
+    </VBox>
+</ScrollPane>

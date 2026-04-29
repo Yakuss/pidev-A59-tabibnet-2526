@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.pidev.controllers.AnnuaireController"
+            styleClass="content-area"
+            stylesheets="@../styles/style.css"
+            style="-fx-background-color: #080b14;">
+
+    <!-- CENTER - SCROLLABLE ENTIRE CONTENT -->
+    <center>
+        <ScrollPane fitToWidth="true" 
+                    style="-fx-background: transparent; -fx-background-color: transparent; -fx-control-inner-background: transparent;">
+            <BorderPane style="-fx-background-color: #080b14;">
+                
+                <!-- TOP HEADER - INSIDE SCROLL -->
+                <top>
+                    <VBox spacing="20" style="-fx-padding: 24 24 16 24;">
+                        <!-- Title and Refresh -->
+                        <HBox alignment="CENTER_LEFT" spacing="16">
+                            <VBox HBox.hgrow="ALWAYS" spacing="6">
+                                <Label text="🏥 Annuaire National des Médecins" styleClass="page-title"/>
+                                <Label text="Recherchez parmi tous les médecins de libre pratique en Tunisie" styleClass="page-subtitle"/>
+                            </VBox>
+                            <Button text="🎤 Recherche Vocale" 
+                                    onAction="#openVoskVoiceSearch"
+                                    prefHeight="42"
+                                    style="-fx-background-color: linear-gradient(to right, #f093fb, #f5576c); -fx-text-fill: white; -fx-font-weight: 800; -fx-font-size: 14px; -fx-background-radius: 12; -fx-cursor: hand; -fx-padding: 0 24; -fx-effect: dropshadow(gaussian, rgba(245,87,108,0.5), 12, 0, 0, 4);"/>
+                            <Button text="🔄 Actualiser" onAction="#handleRefresh" styleClass="btn-secondary" prefHeight="38"/>
+                        </HBox>
+
+                        <!-- API Status Bar -->
+                        <HBox alignment="CENTER_LEFT" spacing="16" 
+                              style="-fx-padding: 14; -fx-background-color: #141826; -fx-background-radius: 10; -fx-border-color: #252d42; -fx-border-width: 1; -fx-border-radius: 10;">
+                            <Label text="📡 Statut API:" style="-fx-text-fill: #94a3b8; -fx-font-size: 12px; -fx-font-weight: 600;"/>
+                            <Label fx:id="apiStatusLabel" text="Vérification..." style="-fx-text-fill: #9ca3af; -fx-font-size: 12px;"/>
+                            <Region HBox.hgrow="ALWAYS"/>
+                            <Label fx:id="statusLabel" text="Chargement..." 
+                                   style="-fx-text-fill: #9ca3af; -fx-font-size: 13px; -fx-font-weight: 600;"/>
+                        </HBox>
+                    </VBox>
+                </top>
+
+                <!-- LEFT SIDEBAR - FILTERS - INSIDE SCROLL -->
+                <left>
+                    <VBox spacing="20" styleClass="card" 
+                          style="-fx-min-width: 300; -fx-max-width: 300; -fx-padding: 24; -fx-background-color: #0e1220; -fx-background-radius: 0;">
+                        
+                        <Label text="🔍 Filtres de Recherche" 
+                               style="-fx-font-size: 17px; -fx-font-weight: bold; -fx-text-fill: #f1f5f9;"/>
+                        
+                        <Separator style="-fx-background-color: #252d42;"/>
+
+                        <!-- Name Filter -->
+                        <VBox spacing="8">
+                            <Label text="Nom du médecin" styleClass="form-label" style="-fx-font-size: 13px;"/>
+                            <TextField fx:id="searchNameField" 
+                                       promptText="Ex: Ahmed" 
+                                       styleClass="text-field"
+                                       prefHeight="38"/>
+                            <Label text="Recherche floue (85%)" 
+                                   style="-fx-text-fill: #6b7280; -fx-font-size: 10px;"/>
+                        </VBox>
+
+                        <!-- Specialty Filter -->
+                        <VBox spacing="8">
+                            <Label text="Spécialité" styleClass="form-label" style="-fx-font-size: 13px;"/>
+                            <ComboBox fx:id="searchSpecialtyCombo" 
+                                      promptText="Toutes" 
+                                      maxWidth="Infinity"
+                                      styleClass="combo-box"
+                                      prefHeight="38"/>
+                        </VBox>
+
+                        <!-- Governorate Filter -->
+                        <VBox spacing="8">
+                            <Label text="Gouvernorat" styleClass="form-label" style="-fx-font-size: 13px;"/>
+                            <ComboBox fx:id="searchGovernorateCombo" 
+                                      promptText="Tous" 
+                                      maxWidth="Infinity"
+                                      styleClass="combo-box"
+                                      prefHeight="38"/>
+                        </VBox>
+
+                        <Separator style="-fx-background-color: #252d42;"/>
+
+                        <!-- Action Buttons -->
+                        <VBox spacing="12">
+                            <Button text="🔍 Rechercher" onAction="#handleSearch" 
+                                    styleClass="btn-primary" prefHeight="42" maxWidth="Infinity"
+                                    style="-fx-font-size: 14px; -fx-font-weight: 600;"/>
+                            
+                            <Button text="🔄 Effacer les filtres" onAction="#handleClearFilters" 
+                                    styleClass="btn-secondary" prefHeight="38" maxWidth="Infinity"/>
+                        </VBox>
+
+                        <!-- Error Message -->
+                        <Label fx:id="errorLabel"
+                               wrapText="true"
+                               style="-fx-text-fill: #f43f5e; -fx-font-size: 11px; -fx-padding: 10; -fx-background-color: rgba(244,63,94,0.1); -fx-background-radius: 8; -fx-border-color: rgba(244,63,94,0.3); -fx-border-width: 1; -fx-border-radius: 8;"
+                               visible="false"/>
+
+                        <Region VBox.vgrow="ALWAYS"/>
+
+                        <!-- Info Box -->
+                        <VBox spacing="8" 
+                              style="-fx-padding: 14; -fx-background-color: rgba(91,110,245,0.1); -fx-background-radius: 10; -fx-border-color: rgba(91,110,245,0.3); -fx-border-width: 1; -fx-border-radius: 10;">
+                            <Label text="ℹ️ Information" 
+                                   style="-fx-text-fill: #818cf8; -fx-font-size: 13px; -fx-font-weight: 600;"/>
+                            <Label text="Source: API Flask" 
+                                   wrapText="true"
+                                   style="-fx-text-fill: #94a3b8; -fx-font-size: 11px;"/>
+                            <Label text="Total: 8692 médecins" 
+                                   wrapText="true"
+                                   style="-fx-text-fill: #94a3b8; -fx-font-size: 11px;"/>
+                        </VBox>
+                    </VBox>
+                </left>
+
+                <!-- CENTER - RESULTS -->
+                <center>
+                    <VBox spacing="20" style="-fx-padding: 24 24 24 20;">
+                        <!-- Results Card -->
+                        <VBox styleClass="card" spacing="16" style="-fx-padding: 20;">
+                            <HBox alignment="CENTER_LEFT" spacing="16">
+                                <Label text="👨‍⚕️ Résultats de la recherche" 
+                                       style="-fx-font-size: 17px; -fx-font-weight: bold; -fx-text-fill: #f1f5f9;"/>
+                                <Region HBox.hgrow="ALWAYS"/>
+                                <Label fx:id="paginationLabel" text="Page 1/1" 
+                                       style="-fx-text-fill: #818cf8; -fx-font-size: 14px; -fx-font-weight: 600;"/>
+                            </HBox>
+                            
+                            <Separator style="-fx-background-color: #252d42;"/>
+                            
+                            <!-- Doctor List -->
+                            <ListView fx:id="doctorListView" 
+                                      style="-fx-background-color: transparent; -fx-border-color: transparent;">
+                                <placeholder>
+                                    <VBox alignment="CENTER" spacing="20" style="-fx-padding: 100;">
+                                        <Label text="🏥" style="-fx-font-size: 80px;"/>
+                                        <Label text="Aucun médecin trouvé" 
+                                               style="-fx-text-fill: #6b7280; -fx-font-size: 20px; -fx-font-weight: 600;"/>
+                                        <Label text="Essayez de modifier vos critères de recherche" 
+                                               style="-fx-text-fill: #9ca3af; -fx-font-size: 15px;"/>
+                                        <Label text="La recherche utilise un algorithme de correspondance floue" 
+                                               wrapText="true"
+                                               style="-fx-text-fill: #6b7280; -fx-font-size: 13px; -fx-text-alignment: center; -fx-max-width: 450;"/>
+                                    </VBox>
+                                </placeholder>
+                            </ListView>
+                        </VBox>
+
+                        <!-- Pagination Controls -->
+                        <HBox spacing="20" alignment="CENTER" 
+                              styleClass="card"
+                              style="-fx-padding: 20 32; -fx-background-color: #141826; -fx-border-color: #252d42; -fx-border-width: 1; -fx-border-radius: 10;">
+                            
+                            <Button fx:id="btnPrevious" text="◀ Précédent" onAction="#handlePreviousPage" 
+                                    styleClass="btn-secondary" 
+                                    prefHeight="44" prefWidth="150"
+                                    style="-fx-font-size: 14px; -fx-font-weight: 600;"/>
+                            
+                            <Region HBox.hgrow="ALWAYS"/>
+                            
+                            <VBox alignment="CENTER" spacing="6">
+                                <Label fx:id="paginationLabel2" text="Page 1 / 435" 
+                                       style="-fx-text-fill: #f1f5f9; -fx-font-size: 18px; -fx-font-weight: bold;"/>
+                                <Label text="20 médecins par page" 
+                                       style="-fx-text-fill: #94a3b8; -fx-font-size: 12px;"/>
+                            </VBox>
+                            
+                            <Region HBox.hgrow="ALWAYS"/>
+                            
+                            <Button fx:id="btnNext" text="Suivant ▶" onAction="#handleNextPage" 
+                                    styleClass="btn-secondary" 
+                                    prefHeight="44" prefWidth="150"
+                                    style="-fx-font-size: 14px; -fx-font-weight: 600;"/>
+                        </HBox>
+                    </VBox>
+                </center>
+
+                <!-- Loading Overlay -->
+                <StackPane fx:id="loadingOverlay" 
+                           style="-fx-background-color: rgba(8, 11, 20, 0.92);"
+                           visible="false"
+                           mouseTransparent="false">
+                    <VBox alignment="CENTER" spacing="24">
+                        <ProgressIndicator fx:id="loadingIndicator" 
+                                           style="-fx-progress-color: #818cf8;"
+                                           prefWidth="80" prefHeight="80"/>
+                        <Label text="Chargement des données..." 
+                               style="-fx-text-fill: #f1f5f9; -fx-font-size: 17px; -fx-font-weight: 600;"/>
+                        <Label text="Connexion à l'API Flask..." 
+                               style="-fx-text-fill: #94a3b8; -fx-font-size: 14px;"/>
+                    </VBox>
+                </StackPane>
+            </BorderPane>
+        </ScrollPane>
+    </center>
+
+</BorderPane>

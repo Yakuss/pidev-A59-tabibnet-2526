@@ -6,17 +6,24 @@ import com.pidev.models.Specialite;
 import com.pidev.services.QuestionService;
 import com.pidev.services.ReponseService;
 import com.pidev.services.SpecialiteService;
+import com.pidev.services.GeminiAIService;
 import com.pidev.utils.TTSService;
 import javafx.animation.FadeTransition;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 
+import java.io.File;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
@@ -272,6 +279,69 @@ public class ForumController {
         descLabel.setMaxWidth(Double.MAX_VALUE);
 
         body.getChildren().addAll(title, descLabel);
+        
+        // ── Display image if exists ──
+        if (q.getImageName() != null && !q.getImageName().isEmpty()) {
+            try {
+                // Try multiple possible paths
+                File imageFile = resolveImageFile(q.getImageName());
+                
+                if (imageFile != null && imageFile.exists()) {
+                    Image image = new Image(imageFile.toURI().toString());
+                    
+                    // Image container with rounded corners
+                    VBox imageContainer = new VBox();
+                    imageContainer.setStyle(
+                        "-fx-background-color: #141826;" +
+                        "-fx-background-radius: 8;" +
+                        "-fx-padding: 8;"
+                    );
+                    VBox.setMargin(imageContainer, new Insets(4, 0, 4, 0));
+                    
+                    ImageView imageView = new ImageView(image);
+                    imageView.setFitWidth(460);
+                    imageView.setPreserveRatio(true);
+                    imageView.setSmooth(true);
+                    imageView.setStyle(
+                        "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.4), 10, 0, 0, 3);" +
+                        "-fx-background-radius: 6;"
+                    );
+                    imageView.setCursor(javafx.scene.Cursor.HAND);
+                    
+                    // 📸 label
+                    Label imgLabel = new Label("📸 Image jointe");
+                    imgLabel.setStyle("-fx-text-fill: #64748b; -fx-font-size: 11px; -fx-padding: 0 0 4 0;");
+                    
+                    imageContainer.getChildren().addAll(imgLabel, imageView);
+                    body.getChildren().add(imageContainer);
+                    
+                    // Click to view full size
+                    imageView.setOnMouseClicked(evt -> {
+                        evt.consume();
+                        Stage imageStage = new Stage();
+                        imageStage.setTitle("📸 " + q.getTitre());
+                        
+                        ImageView fullImageView = new ImageView(image);
+                        fullImageView.setPreserveRatio(true);
+                        fullImageView.setFitWidth(850);
+                        fullImageView.setSmooth(true);
+                        
+                        ScrollPane sp = new ScrollPane(fullImageView);
+                        sp.setStyle("-fx-background: #0e1220; -fx-background-color: #0e1220;");
+                        sp.setFitToWidth(true);
+                        
+                        Scene scene = new Scene(sp, 900, 650);
+                        scene.setFill(javafx.scene.paint.Color.web("#0e1220"));
+                        imageStage.setScene(scene);
+                        imageStage.show();
+                    });
+                } else {
+                    System.out.println("⚠️ Image not found: " + q.getImageName());
+                }
+            } catch (Exception e) {
+                System.err.println("❌ Failed to load image: " + e.getMessage());
+            }
+        }
 
         // ── Divider ──
         Region divider = new Region();
@@ -320,6 +390,64 @@ public class ForumController {
         Button btnVoice = createVoiceButton(
                 q.getTitre() + ". " + (q.getDescription() != null ? q.getDescription() : "")
         );
+        
+        // Translate button
+        Button btnTranslate = new Button("🌐");
+        String translateBase = "-fx-background-color: transparent;" +
+                          "-fx-text-fill: #3b82f6; -fx-font-size: 12px;" +
+                          "-fx-padding: 4 12; -fx-background-radius: 6;" +
+                          "-fx-border-color: #252d42; -fx-border-width: 1;" +
+                          "-fx-border-radius: 6; -fx-cursor: hand;";
+        String translateHover = "-fx-background-color: #1c2133;" +
+                           "-fx-text-fill: #60a5fa; -fx-font-size: 12px;" +
+                           "-fx-padding: 4 12; -fx-background-radius: 6;" +
+                           "-fx-border-color: #3b82f6; -fx-border-width: 1;" +
+                           "-fx-border-radius: 6; -fx-cursor: hand;";
+        btnTranslate.setStyle(translateBase);
+        btnTranslate.setOnMouseEntered(e2 -> btnTranslate.setStyle(translateHover));
+        btnTranslate.setOnMouseExited(e2  -> btnTranslate.setStyle(translateBase));
+        btnTranslate.setTooltip(new Tooltip("Traduire"));
+        
+        btnTranslate.setOnAction(e -> {
+            btnTranslate.setDisable(true);
+            btnTranslate.setText("⏳");
+            
+            new Thread(() -> {
+                try {
+                    GeminiAIService aiService = new GeminiAIService();
+                    
+                    if (!aiService.isConfigured()) {
+                        Platform.runLater(() -> {
+                            showAlert(Alert.AlertType.ERROR, "Erreur", 
+                                "Clé API non configurée!");
+                            btnTranslate.setDisable(false);
+                            btnTranslate.setText("🌐");
+                        });
+                        return;
+                    }
+                    
+                    String translatedTitle = aiService.autoTranslate(q.getTitre());
+                    String translatedDesc = aiService.autoTranslate(q.getDescription() != null ? q.getDescription() : "");
+                    
+                    Platform.runLater(() -> {
+                        title.setText(translatedTitle);
+                        String shortDesc = translatedDesc.length() > 160 ? translatedDesc.substring(0, 160) + "…" : translatedDesc;
+                        descLabel.setText(shortDesc);
+                        btnTranslate.setText("✓");
+                        btnTranslate.setDisable(false);
+                        showStatus("✓ Traduction terminée", "#22c55e");
+                    });
+                    
+                } catch (Exception ex) {
+                    Platform.runLater(() -> {
+                        btnTranslate.setDisable(false);
+                        btnTranslate.setText("🌐");
+                        showAlert(Alert.AlertType.ERROR, "Erreur", 
+                            "Échec de la traduction: " + ex.getMessage());
+                    });
+                }
+            }).start();
+        });
 
         // Edit button
         Button btnEdit = new Button("Éditer");
@@ -338,7 +466,7 @@ public class ForumController {
         btnEdit.setOnMouseExited(e2  -> btnEdit.setStyle(editBase));
         btnEdit.setOnAction(e -> openEditDialog(q));
 
-        footer.getChildren().addAll(avatarPane, authorLabel, footerSpacer, answerChip, btnVoice, btnEdit);
+        footer.getChildren().addAll(avatarPane, authorLabel, footerSpacer, answerChip, btnVoice, btnTranslate, btnEdit);
 
         card.getChildren().addAll(topRow, body, divider, footer);
 
@@ -353,6 +481,34 @@ public class ForumController {
     private String getBadgeColor(int specialiteId) {
         if (specialiteId <= 0) return BADGE_COLORS[0];
         return BADGE_COLORS[specialiteId % BADGE_COLORS.length];
+    }
+
+    /**
+     * Resolve image file from multiple possible paths
+     */
+    private File resolveImageFile(String imageName) {
+        String[] possiblePaths = {
+            "uploads/forum_images/" + imageName,
+            "pijava--main/uploads/forum_images/" + imageName,
+            System.getProperty("user.dir") + "/uploads/forum_images/" + imageName,
+            System.getProperty("user.dir") + "/pijava--main/uploads/forum_images/" + imageName,
+            "../uploads/forum_images/" + imageName,
+        };
+
+        for (String path : possiblePaths) {
+            File f = new File(path);
+            if (f.exists()) {
+                System.out.println("✅ Image found at: " + f.getAbsolutePath());
+                return f;
+            }
+        }
+
+        // Log all tried paths for debugging
+        System.out.println("⚠️ Image '" + imageName + "' not found. Tried:");
+        for (String path : possiblePaths) {
+            System.out.println("   - " + new File(path).getAbsolutePath());
+        }
+        return null;
     }
 
     // ═══════════════════════════════════════════════
@@ -402,7 +558,7 @@ public class ForumController {
         pane.getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
 
         VBox content = new VBox(14);
-        content.setPadding(new Insets(20 , 24, 8, 24));
+        content.setPadding(new Insets(20, 24, 8, 24));
         content.setPrefWidth(500);
         content.setStyle("-fx-background-color: #0e1220;");
 
@@ -422,10 +578,125 @@ public class ForumController {
         cbSpec.setStyle(getInputStyle());
         if (specialites != null) cbSpec.setItems(FXCollections.observableArrayList(specialites));
 
+        // ═══════════════════════════════════════════════════════════════
+        // 📸 IMAGE UPLOAD SECTION
+        // ═══════════════════════════════════════════════════════════════
+        Label imageLabel = createFormLabel("📸 Image médicale (optionnel)");
+        
+        HBox imageBox = new HBox(10);
+        imageBox.setAlignment(Pos.CENTER_LEFT);
+        
+        Label selectedImageLabel = new Label("Aucune image sélectionnée");
+        selectedImageLabel.setStyle("-fx-text-fill: #94a3b8; -fx-font-size: 12px;");
+        
+        Button chooseImageBtn = new Button("Choisir une image");
+        chooseImageBtn.setStyle(
+            "-fx-background-color: #8b5cf6;" +
+            "-fx-text-fill: white;" +
+            "-fx-padding: 8 16;" +
+            "-fx-background-radius: 6;" +
+            "-fx-cursor: hand;"
+        );
+        
+        File[] selectedImage = new File[1];
+        
+        chooseImageBtn.setOnAction(e -> {
+            javafx.stage.FileChooser fileChooser = new javafx.stage.FileChooser();
+            fileChooser.setTitle("Choisir une image médicale");
+            fileChooser.getExtensionFilters().addAll(
+                new javafx.stage.FileChooser.ExtensionFilter("Images", "*.png", "*.jpg", "*.jpeg", "*.gif")
+            );
+            
+            File file = fileChooser.showOpenDialog(dialog.getOwner());
+            if (file != null) {
+                long fileSizeInMB = file.length() / (1024 * 1024);
+                if (fileSizeInMB > 5) {
+                    showAlert(Alert.AlertType.WARNING, "Attention", 
+                        "L'image est trop grande! Maximum 5 MB.");
+                    return;
+                }
+                
+                selectedImage[0] = file;
+                selectedImageLabel.setText("✓ " + file.getName());
+                selectedImageLabel.setStyle("-fx-text-fill: #22c55e; -fx-font-size: 12px; -fx-font-weight: 600;");
+            }
+        });
+        
+        imageBox.getChildren().addAll(chooseImageBtn, selectedImageLabel);
+        
+        // ═══════════════════════════════════════════════════════════════
+        // ✨ AI ANALYSIS BUTTON
+        // ═══════════════════════════════════════════════════════════════
+        Button analyzeImageBtn = new Button("✨ Générer titre et description automatiquement");
+        analyzeImageBtn.setStyle(
+            "-fx-background-color: #f59e0b;" +
+            "-fx-text-fill: white;" +
+            "-fx-padding: 8 16;" +
+            "-fx-background-radius: 6;" +
+            "-fx-cursor: hand;" +
+            "-fx-font-weight: 600;"
+        );
+        
+        analyzeImageBtn.setOnAction(e -> {
+            if (selectedImage[0] == null) {
+                showAlert(Alert.AlertType.WARNING, "Attention", 
+                    "Veuillez d'abord choisir une image!");
+                return;
+            }
+            
+            analyzeImageBtn.setDisable(true);
+            analyzeImageBtn.setText("⏳ Analyse en cours...");
+            
+            new Thread(() -> {
+                try {
+                    com.pidev.services.GeminiAIService aiService = new com.pidev.services.GeminiAIService();
+                    
+                    if (!aiService.isConfigured()) {
+                        javafx.application.Platform.runLater(() -> {
+                            showAlert(Alert.AlertType.ERROR, "Erreur", 
+                                "Clé API non configurée! Veuillez ajouter votre clé Gemini API dans GeminiAIService.java");
+                            analyzeImageBtn.setDisable(false);
+                            analyzeImageBtn.setText("✨ Générer titre et description automatiquement");
+                        });
+                        return;
+                    }
+                    
+                    org.json.JSONObject result = aiService.analyzeImage(selectedImage[0]);
+                    
+                    javafx.application.Platform.runLater(() -> {
+                        tfTitre.setText(result.getString("title"));
+                        taDesc.setText(result.getString("description"));
+                        
+                        analyzeImageBtn.setDisable(false);
+                        analyzeImageBtn.setText("✓ Analyse terminée");
+                        analyzeImageBtn.setStyle(
+                            "-fx-background-color: #22c55e;" +
+                            "-fx-text-fill: white;" +
+                            "-fx-padding: 8 16;" +
+                            "-fx-background-radius: 6;" +
+                            "-fx-font-weight: 600;"
+                        );
+                        
+                        showStatus("✓ Titre et description générés automatiquement", "#22c55e");
+                    });
+                    
+                } catch (Exception ex) {
+                    javafx.application.Platform.runLater(() -> {
+                        analyzeImageBtn.setDisable(false);
+                        analyzeImageBtn.setText("✨ Générer titre et description automatiquement");
+                        showAlert(Alert.AlertType.ERROR, "Erreur", 
+                            "Échec de l'analyse: " + ex.getMessage());
+                        ex.printStackTrace();
+                    });
+                }
+            }).start();
+        });
+
         content.getChildren().addAll(
                 createFormLabel("Titre *"), tfTitre,
                 createFormLabel("Description"), taDesc,
-                createFormLabel("Spécialité"), cbSpec
+                createFormLabel("Spécialité"), cbSpec,
+                imageLabel, imageBox, analyzeImageBtn
         );
 
         pane.setContent(content);
@@ -433,10 +704,47 @@ public class ForumController {
         dialog.setResultConverter(btn -> {
             if (btn == ButtonType.OK) {
                 if (tfTitre.getText().trim().isEmpty()) return null;
+                
+                // Save image if selected
+                String imageName = null;
+                if (selectedImage[0] != null) {
+                    try {
+                        // Use absolute path based on working directory
+                        String uploadDirPath = System.getProperty("user.dir") + "/uploads/forum_images";
+                        // Also try pijava--main subfolder
+                        File uploadDir = new File(uploadDirPath);
+                        if (!uploadDir.exists()) {
+                            uploadDirPath = System.getProperty("user.dir") + "/pijava--main/uploads/forum_images";
+                            uploadDir = new File(uploadDirPath);
+                        }
+                        if (!uploadDir.exists()) {
+                            uploadDir.mkdirs();
+                            System.out.println("✅ Created directory: " + uploadDir.getAbsolutePath());
+                        }
+                        
+                        String timestamp = String.valueOf(System.currentTimeMillis());
+                        String extension = selectedImage[0].getName()
+                            .substring(selectedImage[0].getName().lastIndexOf("."));
+                        imageName = "question_" + timestamp + extension;
+                        
+                        java.io.File destFile = new java.io.File(uploadDir, imageName);
+                        java.nio.file.Files.copy(selectedImage[0].toPath(), destFile.toPath(), 
+                                   java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+                        
+                        System.out.println("✅ Image saved: " + imageName);
+                        
+                    } catch (Exception ex) {
+                        showAlert(Alert.AlertType.ERROR, "Erreur", 
+                            "Échec de la sauvegarde de l'image: " + ex.getMessage());
+                        ex.printStackTrace();
+                    }
+                }
+                
                 Question q = new Question();
                 q.setTitre(tfTitre.getText().trim());
                 q.setDescription(taDesc.getText().trim());
                 q.setStatus("open");
+                q.setImageName(imageName);
                 if (cbSpec.getValue() != null) q.setSpecialiteId(cbSpec.getValue().getId());
                 com.pidev.models.BaseUser user = com.pidev.utils.UserSession.getInstance().getUser();
                 if (user != null) q.setPatientId(user.getId());
@@ -591,6 +899,120 @@ public class ForumController {
         );
 
         descRow.getChildren().addAll(descLabel, btnVoiceQuestion);
+        
+        // ── Display image in detail view if exists ──
+        VBox imageContainer = null;
+        if (q.getImageName() != null && !q.getImageName().isEmpty()) {
+            try {
+                File imageFile = new File("uploads/forum_images/" + q.getImageName());
+                if (imageFile.exists()) {
+                    Label imageLabel = new Label("📸 Image médicale:");
+                    imageLabel.setStyle("-fx-text-fill: #94a3b8; -fx-font-size: 14px; -fx-font-weight: 600;");
+                    
+                    Image image = new Image(imageFile.toURI().toString());
+                    ImageView imageView = new ImageView(image);
+                    imageView.setFitWidth(580);
+                    imageView.setPreserveRatio(true);
+                    imageView.setStyle(
+                        "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 12, 0, 0, 4);"
+                    );
+                    imageView.setCursor(javafx.scene.Cursor.HAND);
+                    
+                    imageContainer = new VBox(10);
+                    imageContainer.getChildren().addAll(imageLabel, imageView);
+                    VBox.setMargin(imageContainer, new Insets(10, 0, 10, 0));
+                    
+                    // Click to view full size
+                    imageView.setOnMouseClicked(evt -> {
+                        Stage imageStage = new Stage();
+                        imageStage.setTitle("Image - " + q.getTitre());
+                        
+                        ImageView fullImageView = new ImageView(image);
+                        fullImageView.setPreserveRatio(true);
+                        fullImageView.setFitWidth(900);
+                        
+                        ScrollPane scrollPane = new ScrollPane(fullImageView);
+                        scrollPane.setStyle("-fx-background: #0e1220;");
+                        
+                        Scene scene = new Scene(scrollPane, 950, 700);
+                        imageStage.setScene(scene);
+                        imageStage.show();
+                    });
+                }
+            } catch (Exception e) {
+                System.err.println("Failed to load image in detail view: " + e.getMessage());
+            }
+        }
+        
+        // ── Translate button for question in detail view ──
+        Button btnTranslateDetail = new Button("🌐 Traduire la question");
+        btnTranslateDetail.setStyle(
+            "-fx-background-color: #3b82f6;" +
+            "-fx-text-fill: white;" +
+            "-fx-padding: 8 16;" +
+            "-fx-background-radius: 8;" +
+            "-fx-cursor: hand;" +
+            "-fx-font-weight: 600;" +
+            "-fx-font-size: 13px;"
+        );
+        btnTranslateDetail.setOnMouseEntered(e -> btnTranslateDetail.setStyle(
+            "-fx-background-color: #60a5fa;" +
+            "-fx-text-fill: white;" +
+            "-fx-padding: 8 16;" +
+            "-fx-background-radius: 8;" +
+            "-fx-cursor: hand;" +
+            "-fx-font-weight: 600;" +
+            "-fx-font-size: 13px;"
+        ));
+        btnTranslateDetail.setOnMouseExited(e -> btnTranslateDetail.setStyle(
+            "-fx-background-color: #3b82f6;" +
+            "-fx-text-fill: white;" +
+            "-fx-padding: 8 16;" +
+            "-fx-background-radius: 8;" +
+            "-fx-cursor: hand;" +
+            "-fx-font-weight: 600;" +
+            "-fx-font-size: 13px;"
+        ));
+        
+        btnTranslateDetail.setOnAction(e -> {
+            btnTranslateDetail.setDisable(true);
+            btnTranslateDetail.setText("⏳ Traduction en cours...");
+            
+            new Thread(() -> {
+                try {
+                    GeminiAIService aiService = new GeminiAIService();
+                    
+                    if (!aiService.isConfigured()) {
+                        Platform.runLater(() -> {
+                            showAlert(Alert.AlertType.ERROR, "Erreur", 
+                                "Clé API non configurée!");
+                            btnTranslateDetail.setDisable(false);
+                            btnTranslateDetail.setText("🌐 Traduire la question");
+                        });
+                        return;
+                    }
+                    
+                    String translatedTitle = aiService.autoTranslate(q.getTitre());
+                    String translatedDesc = aiService.autoTranslate(q.getDescription() != null ? q.getDescription() : "");
+                    
+                    Platform.runLater(() -> {
+                        titleLabel.setText(translatedTitle);
+                        descLabel.setText(translatedDesc);
+                        btnTranslateDetail.setText("✓ Traduit");
+                        btnTranslateDetail.setDisable(false);
+                        showStatus("✓ Question traduite", "#22c55e");
+                    });
+                    
+                } catch (Exception ex) {
+                    Platform.runLater(() -> {
+                        btnTranslateDetail.setDisable(false);
+                        btnTranslateDetail.setText("🌐 Traduire la question");
+                        showAlert(Alert.AlertType.ERROR, "Erreur", 
+                            "Échec de la traduction: " + ex.getMessage());
+                    });
+                }
+            }).start();
+        });
 
         // Responses header
         HBox respHeader = new HBox(8);
@@ -670,7 +1092,15 @@ public class ForumController {
         });
 
         inputSection.getChildren().addAll(addRespMsg, taReponse, btnSubmit);
-        content.getChildren().addAll(descRow, respHeader, responsesBox, div, inputSection);
+        
+        // Add all elements to content
+        content.getChildren().add(descRow);
+        content.getChildren().add(btnTranslateDetail);
+        if (imageContainer != null) {
+            content.getChildren().add(imageContainer);
+        }
+        content.getChildren().addAll(respHeader, responsesBox, div, inputSection);
+        
         sp.setContent(content);
 
         // ── Bottom bar ──
@@ -739,6 +1169,23 @@ public class ForumController {
         Button btnVoiceReponse = createVoiceButton(
                 medName + " dit : " + r.getContenu()
         );
+        
+        // ── Translate button for response ──
+        Button btnTranslateReponse = new Button("🌐");
+        String translateBase = "-fx-background-color: transparent;" +
+                          "-fx-text-fill: #3b82f6; -fx-font-size: 11px; -fx-font-weight: 600;" +
+                          "-fx-padding: 3 10; -fx-background-radius: 6;" +
+                          "-fx-border-color: rgba(59,130,246,0.3); -fx-border-width: 1;" +
+                          "-fx-border-radius: 6; -fx-cursor: hand;";
+        String translateHover = "-fx-background-color: rgba(59,130,246,0.15);" +
+                           "-fx-text-fill: #3b82f6; -fx-font-size: 11px; -fx-font-weight: 600;" +
+                           "-fx-padding: 3 10; -fx-background-radius: 6;" +
+                           "-fx-border-color: rgba(59,130,246,0.5); -fx-border-width: 1;" +
+                           "-fx-border-radius: 6; -fx-cursor: hand;";
+        btnTranslateReponse.setStyle(translateBase);
+        btnTranslateReponse.setOnMouseEntered(e -> btnTranslateReponse.setStyle(translateHover));
+        btnTranslateReponse.setOnMouseExited(e  -> btnTranslateReponse.setStyle(translateBase));
+        btnTranslateReponse.setTooltip(new Tooltip("Traduire"));
 
         // ── Edit button ──
         Button btnEditReponse = new Button("Modifier");        String editBase = "-fx-background-color: transparent;" +
@@ -793,7 +1240,7 @@ public class ForumController {
             });
         });
 
-        head.getChildren().addAll(avatarPane, name, spacer, date, btnVoiceReponse, btnEditReponse, btnDeleteReponse);
+        head.getChildren().addAll(avatarPane, name, spacer, date, btnVoiceReponse, btnTranslateReponse, btnEditReponse, btnDeleteReponse);
 
         // ── Content ──
         Label text = new Label(r.getContenu());
@@ -801,6 +1248,45 @@ public class ForumController {
         text.setWrapText(true);
 
         bubble.getChildren().addAll(head, text);
+        
+        // ── Translate button action (after text label is created) ──
+        btnTranslateReponse.setOnAction(e -> {
+            btnTranslateReponse.setDisable(true);
+            btnTranslateReponse.setText("⏳");
+            
+            new Thread(() -> {
+                try {
+                    GeminiAIService aiService = new GeminiAIService();
+                    
+                    if (!aiService.isConfigured()) {
+                        Platform.runLater(() -> {
+                            showAlert(Alert.AlertType.ERROR, "Erreur", 
+                                "Clé API non configurée!");
+                            btnTranslateReponse.setDisable(false);
+                            btnTranslateReponse.setText("🌐");
+                        });
+                        return;
+                    }
+                    
+                    String translatedText = aiService.autoTranslate(r.getContenu());
+                    
+                    Platform.runLater(() -> {
+                        text.setText(translatedText);
+                        btnTranslateReponse.setText("✓");
+                        btnTranslateReponse.setDisable(false);
+                    });
+                    
+                } catch (Exception ex) {
+                    Platform.runLater(() -> {
+                        btnTranslateReponse.setDisable(false);
+                        btnTranslateReponse.setText("🌐");
+                        showAlert(Alert.AlertType.ERROR, "Erreur", 
+                            "Échec de la traduction: " + ex.getMessage());
+                    });
+                }
+            }).start();
+        });
+        
         return bubble;
     }
 

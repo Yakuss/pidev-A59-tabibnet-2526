@@ -17,14 +17,20 @@ import java.io.IOException;
 public class MainUserController {
 
     @FXML private StackPane contentArea;
-    @FXML private Button btnForum, btnProfile;
+    @FXML private Button btnForum, btnProfile, btnHome, btnMedecins, btnAnnuaire, btnAppointments;
 
     private Button activeButton;
 
     @FXML
     public void initialize() {
-        // Load Forum by default
-        showForum();
+        // Load Home page by default
+        showHome();
+    }
+
+    @FXML
+    public void showHome() {
+        setActiveButton(btnHome);
+        loadView("/views/HomeView.fxml");
     }
 
     @FXML
@@ -37,6 +43,34 @@ public class MainUserController {
     public void showProfile() {
         setActiveButton(btnProfile);
         loadView("/views/ProfileView.fxml");
+    }
+
+    @FXML
+    public void showMedecins() {
+        setActiveButton(btnMedecins);
+        loadView("/views/MedecinDirectoryView.fxml");
+    }
+
+    @FXML
+    public void showAnnuaire() {
+        setActiveButton(btnAnnuaire);
+        loadView("/views/AnnuaireView.fxml");
+    }
+
+    @FXML
+    public void showAppointments() {
+        setActiveButton(btnAppointments);
+        
+        // Check if user is a doctor or patient
+        com.pidev.models.BaseUser user = com.pidev.utils.UserSession.getInstance().getUser();
+        String viewPath = "/views/PatientAppointmentsView.fxml";
+        
+        if (user != null && user.getRoles() != null && user.getRoles().contains("ROLE_MEDECIN")) {
+            // Doctor view
+            viewPath = "/views/DoctorAppointmentsView.fxml";
+        }
+        
+        loadView(viewPath);
     }
 
     @FXML

@@ -107,6 +107,28 @@ public class ReponseService implements IService<Reponse> {
         return 0;
     }
 
+    /**
+     * Get all responses by a specific doctor (for gamification)
+     * @param medecinId Doctor ID
+     * @return List of responses by this doctor
+     * @throws SQLException if database error occurs
+     */
+    public List<Reponse> getByMedecin(int medecinId) throws SQLException {
+        List<Reponse> list = new ArrayList<>();
+        String sql = "SELECT r.*, COALESCE(CONCAT(m.first_name, ' ', m.last_name), 'Anonyme') AS medecin_name " +
+                     "FROM reponse r " +
+                     "LEFT JOIN medecins m ON r.medecin_id = m.id " +
+                     "WHERE r.medecin_id = ? " +
+                     "ORDER BY r.created_at DESC";
+        PreparedStatement ps = conn.prepareStatement(sql);
+        ps.setInt(1, medecinId);
+        ResultSet rs = ps.executeQuery();
+        while (rs.next()) {
+            list.add(mapResultSet(rs));
+        }
+        return list;
+    }
+
     @Override
     public Reponse getById(int id) throws SQLException {
         String sql = "SELECT r.*, COALESCE(CONCAT(m.first_name, ' ', m.last_name), 'Anonyme') AS medecin_name " +

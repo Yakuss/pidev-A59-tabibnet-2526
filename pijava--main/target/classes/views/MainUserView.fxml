@@ -37,8 +37,12 @@
 
             <!-- Nav links -->
             <HBox alignment="CENTER" spacing="4">
-                <Button fx:id="btnForum" text="Forum" onAction="#showForum" styleClass="nav-button-user"/>
-                <Button fx:id="btnProfile" text="Mon Profil" onAction="#showProfile" styleClass="nav-button-user"/>
+                <Button fx:id="btnHome" text="🏠  Accueil" onAction="#showHome" styleClass="nav-button-user"/>
+                <Button fx:id="btnAnnuaire" text="📖  Annuaire" onAction="#showAnnuaire" styleClass="nav-button-user"/>
+                <Button fx:id="btnMedecins" text="🩺  Médecins" onAction="#showMedecins" styleClass="nav-button-user"/>
+                <Button fx:id="btnAppointments" text="📅  Mes Rendez-vous" onAction="#showAppointments" styleClass="nav-button-user"/>
+                <Button fx:id="btnForum" text="💬  Forum" onAction="#showForum" styleClass="nav-button-user"/>
+                <Button fx:id="btnProfile" text="👤  Mon Profil" onAction="#showProfile" styleClass="nav-button-user"/>
             </HBox>
 
             <Separator orientation="VERTICAL" prefHeight="24"
