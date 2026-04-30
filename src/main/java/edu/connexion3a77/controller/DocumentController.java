@@ -15,15 +15,24 @@ import java.sql.SQLException;
 
 public class DocumentController {
 
-    @FXML private Label titleLabel;
-    @FXML private Label badgeLabel;
-    @FXML private Label statusLabel;
-    @FXML private HBox actionBox;
-    @FXML private AnchorPane formCard;
-    @FXML private TextField nomField;
-    @FXML private TextField typeField;
-    @FXML private TextField tailleField;
-    @FXML private TextArea descriptionArea;
+    @FXML
+    private Label titleLabel;
+    @FXML
+    private Label badgeLabel;
+    @FXML
+    private Label statusLabel;
+    @FXML
+    private HBox actionBox;
+    @FXML
+    private AnchorPane formCard;
+    @FXML
+    private TextField nomField;
+    @FXML
+    private TextField typeField;
+    @FXML
+    private TextField tailleField;
+    @FXML
+    private TextArea descriptionArea;
 
     private Document currentDocument = null;
     private java.util.List<edu.connexion3a77.entities.Rapport> rapportsToLink;
@@ -37,7 +46,8 @@ public class DocumentController {
     public void initialize() {
     }
 
-    public void setItemsToLink(java.util.List<edu.connexion3a77.entities.Rapport> rapports, java.util.List<edu.connexion3a77.entities.Ordonnance> ords) {
+    public void setItemsToLink(java.util.List<edu.connexion3a77.entities.Rapport> rapports,
+            java.util.List<edu.connexion3a77.entities.Ordonnance> ords) {
         this.rapportsToLink = new java.util.ArrayList<>(rapports);
         this.ordonnancesToLink = new java.util.ArrayList<>(ords);
     }
@@ -49,7 +59,7 @@ public class DocumentController {
             typeField.setText(d.getType());
             tailleField.setText(d.getTaille());
             descriptionArea.setText(d.getDescription());
-            
+
             if (readOnly) {
                 titleLabel.setText("Détails du document");
                 badgeLabel.setText("CONSULTATION DOCUMENT");
@@ -114,7 +124,8 @@ public class DocumentController {
                 d.setNbOrdonnances(linkedOrdonnances);
                 documentService.update(d);
 
-                System.out.println("Finalisation: " + linkedRapports + " rapports et " + linkedOrdonnances + " ordonnances liés.");
+                System.out.println(
+                        "Finalisation: " + linkedRapports + " rapports et " + linkedOrdonnances + " ordonnances liés.");
             } else {
                 // Mise à jour
                 documentService.update(d);
@@ -122,7 +133,7 @@ public class DocumentController {
             }
 
             closeWindow();
-            
+
         } catch (SQLException e) {
             e.printStackTrace();
             showAlert("Erreur Base de Données", "Impossible d'enregistrer le document.\nErreur : " + e.getMessage());

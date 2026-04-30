@@ -5,6 +5,7 @@ import edu.connexion3a77.entities.Rapport;
 import edu.connexion3a77.services.AiApiService;
 import edu.connexion3a77.services.OrdonnanceService;
 import edu.connexion3a77.services.RapportService;
+import edu.connexion3a77.services.VoiceRecognitionService;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -64,6 +65,8 @@ public class AiAssistantController {
     @FXML
     private Button sendButton;
     @FXML
+    private Button micButton;
+    @FXML
     private Label modeBadge;
 
     @FXML
@@ -80,14 +83,16 @@ public class AiAssistantController {
     private final OrdonnanceService ordonnanceService = new OrdonnanceService();
 
     // Clé API Gemini configurée
-    private final AiApiService aiApiService = new AiApiService("AIzaSyA1XTtfiQ42WAsk-poVNezyuYQNJ1WCOw0");
+    private final AiApiService aiApiService = new AiApiService("AIzaSyDq_F5_WE1UgJu3lhg0bTk9fxAp_taqW1M");
+    private final VoiceRecognitionService voiceService = new VoiceRecognitionService();
+    private boolean isListening = false;
 
     // ==================== ÉTAT DU DOCUMENT ====================
     private File uploadedFile;
     private String extractedPdfText = "";
     private String dbContextText = "";
 
-    // ==================== STRUCTURES DE DONNÉES ====================
+    // ==================== STRUCTURES DE DONNÉES ====================zzz
 
     /**
      * Représente les informations du document extraites du PDF
@@ -276,6 +281,53 @@ public class AiAssistantController {
                 sendButton.setText("🔍 Envoyer la question");
             });
         }).start();
+    }
+
+    @FXML
+    public void handleMicClick() {
+        if (!isListening) {
+            isListening = true;
+            micButton.setStyle("-fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #ef4444, #dc2626); -fx-text-fill: white; -fx-font-size: 24; -fx-background-radius: 10; -fx-cursor: hand;");
+            
+            voiceService.startListening(new VoiceRecognitionService.TranscriptionListener() {
+                @Override
+                public void onTranscription(String text) {
+                    Platform.runLater(() -> {
+                        String current = questionTextArea.getText();
+                        questionTextArea.setText(current + (current.isEmpty() ? "" : " ") + text);
+                    });
+                }
+
+                @Override
+                public void onError(String error) {
+                    Platform.runLater(() -> {
+                        isListening = false;
+                        resetMicButton();
+                        questionTextArea.setText("Erreur vocale: " + error);
+                    });
+                }
+
+                @Override
+                public void onStatus(String status) {
+                    Platform.runLater(() -> {
+                        confidenceLabel.setText(status);
+                        confidenceIndicator.setFill(javafx.scene.paint.Color.web("#3b82f6"));
+                        responseBox.setVisible(true);
+                        responseBox.setManaged(true);
+                    });
+                }
+            });
+        } else {
+            isListening = false;
+            voiceService.stopListening();
+            resetMicButton();
+        }
+    }
+
+    private void resetMicButton() {
+        Platform.runLater(() -> {
+            micButton.setStyle("-fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #10b981, #059669); -fx-text-fill: white; -fx-font-size: 24; -fx-background-radius: 10; -fx-cursor: hand;");
+        });
     }
 
     // ==================== DRAG & DROP ====================
