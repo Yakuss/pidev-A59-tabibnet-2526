@@ -108,6 +108,40 @@ public class ReponseService implements IService<Reponse> {
     }
 
     /**
+     * Like a response (increment likes)
+     */
+    public int likeReponse(int reponseId) throws SQLException {
+        String sql = "UPDATE reponse SET likes = likes + 1 WHERE id = ?";
+        PreparedStatement ps = conn.prepareStatement(sql);
+        ps.setInt(1, reponseId);
+        ps.executeUpdate();
+        return getReponseL(reponseId);
+    }
+
+    /**
+     * Dislike a response (decrement likes, min 0)
+     */
+    public int dislikeReponse(int reponseId) throws SQLException {
+        String sql = "UPDATE reponse SET likes = GREATEST(likes - 1, 0) WHERE id = ?";
+        PreparedStatement ps = conn.prepareStatement(sql);
+        ps.setInt(1, reponseId);
+        ps.executeUpdate();
+        return getReponseL(reponseId);
+    }
+
+    /**
+     * Get current likes count for a response
+     */
+    public int getReponseL(int reponseId) throws SQLException {
+        String sql = "SELECT likes FROM reponse WHERE id = ?";
+        PreparedStatement ps = conn.prepareStatement(sql);
+        ps.setInt(1, reponseId);
+        ResultSet rs = ps.executeQuery();
+        if (rs.next()) return rs.getInt("likes");
+        return 0;
+    }
+
+    /**
      * Get all responses by a specific doctor (for gamification)
      * @param medecinId Doctor ID
      * @return List of responses by this doctor

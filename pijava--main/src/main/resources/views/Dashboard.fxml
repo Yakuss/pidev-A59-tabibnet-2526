@@ -108,6 +108,14 @@
                     <graphic><Label text="▸" styleClass="nav-icon"/></graphic>
                 </Button>
 
+                <Button fx:id="btnForum"
+                        text="Forum - Questions"
+                        styleClass="nav-button"
+                        onAction="#showForum"
+                        maxWidth="Infinity">
+                    <graphic><Label text="▸" styleClass="nav-icon"/></graphic>
+                </Button>
+
                 <Separator styleClass="nav-separator" style="-fx-padding: 6 0;"/>
 
                 <Label text="SYSTÈME" styleClass="nav-section-label"/>

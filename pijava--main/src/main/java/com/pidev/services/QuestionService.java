@@ -16,24 +16,62 @@ public class QuestionService implements IService<Question> {
 
     private final Connection conn = DataSource.getInstance().getConnection();
 
+    public QuestionService() {
+        ensureImageColumnExists();
+    }
+
+    /**
+     * Auto-add image_name column if it doesn't exist in the question table
+     */
+    private void ensureImageColumnExists() {
+        try {
+            DatabaseMetaData meta = conn.getMetaData();
+            ResultSet rs = meta.getColumns(null, null, "question", "image_name");
+            if (!rs.next()) {
+                System.out.println("⚠️ Column 'image_name' missing in 'question' table. Adding it now...");
+                try (Statement st = conn.createStatement()) {
+                    st.executeUpdate("ALTER TABLE question ADD COLUMN image_name VARCHAR(255) NULL");
+                    System.out.println("✅ Column 'image_name' added successfully!");
+                }
+            }
+        } catch (Exception e) {
+            System.err.println("❌ Failed to verify/add image_name column: " + e.getMessage());
+        }
+    }
+
     @Override
     public void add(Question question) throws SQLException {
-        String sql = "INSERT INTO question (titre, description, created_at, specialite_id, patient_id, image_name) " +
-                     "VALUES (?, ?, ?, ?, ?, ?)";
-        PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-        ps.setString(1, question.getTitre());
-        ps.setString(2, question.getDescription());
-        ps.setTimestamp(3, Timestamp.valueOf(LocalDateTime.now()));
-        ps.setInt(4, question.getSpecialiteId());
-        ps.setInt(5, question.getPatientId());
-        ps.setString(6, question.getImageName()); // Save image name
-        ps.executeUpdate();
+        String sql;
+        PreparedStatement ps;
 
+        if (question.getImageName() != null && !question.getImageName().isEmpty()) {
+            sql = "INSERT INTO question (titre, description, created_at, specialite_id, patient_id, image_name) " +
+                  "VALUES (?, ?, ?, ?, ?, ?)";
+            ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            ps.setString(1, question.getTitre());
+            ps.setString(2, question.getDescription());
+            ps.setTimestamp(3, Timestamp.valueOf(LocalDateTime.now()));
+            ps.setInt(4, question.getSpecialiteId());
+            ps.setInt(5, question.getPatientId());
+            ps.setString(6, question.getImageName());
+        } else {
+            // No image - don't include image_name column at all
+            sql = "INSERT INTO question (titre, description, created_at, specialite_id, patient_id) " +
+                  "VALUES (?, ?, ?, ?, ?)";
+            ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            ps.setString(1, question.getTitre());
+            ps.setString(2, question.getDescription());
+            ps.setTimestamp(3, Timestamp.valueOf(LocalDateTime.now()));
+            ps.setInt(4, question.getSpecialiteId());
+            ps.setInt(5, question.getPatientId());
+        }
+
+        ps.executeUpdate();
         ResultSet keys = ps.getGeneratedKeys();
         if (keys.next()) {
             question.setId(keys.getInt(1));
         }
-        System.out.println("✅ Question ajoutée !");
+        System.out.println("✅ Question ajoutée !" + (question.getImageName() != null ? " (avec image)" : ""));
     }
 
     @Override
@@ -150,6 +188,40 @@ public class QuestionService implements IService<Question> {
         Statement st = conn.createStatement();
         ResultSet rs = st.executeQuery(sql);
         if (rs.next()) return rs.getInt(1);
+        return 0;
+    }
+
+    /**
+     * Like a question (increment likes)
+     */
+    public int likeQuestion(int questionId) throws SQLException {
+        String sql = "UPDATE question SET likes = likes + 1 WHERE id = ?";
+        PreparedStatement ps = conn.prepareStatement(sql);
+        ps.setInt(1, questionId);
+        ps.executeUpdate();
+        return getLikes(questionId);
+    }
+
+    /**
+     * Dislike a question (decrement likes, min 0)
+     */
+    public int dislikeQuestion(int questionId) throws SQLException {
+        String sql = "UPDATE question SET likes = GREATEST(likes - 1, 0) WHERE id = ?";
+        PreparedStatement ps = conn.prepareStatement(sql);
+        ps.setInt(1, questionId);
+        ps.executeUpdate();
+        return getLikes(questionId);
+    }
+
+    /**
+     * Get current likes count for a question
+     */
+    public int getLikes(int questionId) throws SQLException {
+        String sql = "SELECT likes FROM question WHERE id = ?";
+        PreparedStatement ps = conn.prepareStatement(sql);
+        ps.setInt(1, questionId);
+        ResultSet rs = ps.executeQuery();
+        if (rs.next()) return rs.getInt("likes");
         return 0;
     }
 

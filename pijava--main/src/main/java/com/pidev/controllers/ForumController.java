@@ -49,6 +49,9 @@ public class ForumController {
     private int selectedSpecialiteId = -1; // -1 = All
     private Button activeFilterBtn = null;
 
+    // Track votes per session: "Q_<id>" or "R_<id>" → "like" | "dislike" | null
+    private final java.util.Map<String, String> userVotes = new java.util.HashMap<>();
+
     private static final DateTimeFormatter DATE_FMT = DateTimeFormatter.ofPattern("dd MMM yyyy · HH:mm");
 
     // Color palette for category badges — matches new design system
@@ -466,7 +469,13 @@ public class ForumController {
         btnEdit.setOnMouseExited(e2  -> btnEdit.setStyle(editBase));
         btnEdit.setOnAction(e -> openEditDialog(q));
 
-        footer.getChildren().addAll(avatarPane, authorLabel, footerSpacer, answerChip, btnVoice, btnTranslate, btnEdit);
+        // ── Like / Dislike buttons for question ──
+        HBox likeBox = buildLikeDislikeBox(q.getLikes(), "Q_" + q.getId(),
+            () -> new Thread(() -> { try { questionService.likeQuestion(q.getId()); } catch (Exception ex) { ex.printStackTrace(); } }).start(),
+            () -> new Thread(() -> { try { questionService.dislikeQuestion(q.getId()); } catch (Exception ex) { ex.printStackTrace(); } }).start()
+        );
+
+        footer.getChildren().addAll(avatarPane, authorLabel, footerSpacer, likeBox, answerChip, btnVoice, btnTranslate, btnEdit);
 
         card.getChildren().addAll(topRow, body, divider, footer);
 
@@ -483,31 +492,152 @@ public class ForumController {
         return BADGE_COLORS[specialiteId % BADGE_COLORS.length];
     }
 
+    // ── Bad words list ────────────────────────────────────────────────────
+    private static final java.util.Set<String> BAD_WORDS = java.util.Set.of(
+        "fuck", "shit", "bitch", "ass", "damn", "crap", "bastard",
+        "putain", "merde", "connard", "salope", "con", "enculé", "bordel",
+        "idiot", "imbécile", "crétin", "abruti", "stupide",
+        "كلب", "حمار", "غبي", "احمق", "لعنة", "زبالة"
+    );
+
     /**
-     * Resolve image file from multiple possible paths
+     * Returns the first bad word found in text, or null if clean
+     */
+    private String findBadWord(String text) {
+        if (text == null) return null;
+        String lower = text.toLowerCase();
+        for (String word : BAD_WORDS) {
+            if (lower.contains(word.toLowerCase())) return word;
+        }
+        return null;
+    }
+
+    /**
+     * Build a like/dislike HBox — one vote per user per item.
+     * voteKey: "Q_<questionId>" or "R_<reponseId>"
+     */
+    private HBox buildLikeDislikeBox(int initialLikes, String voteKey,
+                                      Runnable onLike, Runnable onDislike) {
+        HBox box = new HBox(4);
+        box.setAlignment(Pos.CENTER_LEFT);
+
+        Label likeCount = new Label(String.valueOf(initialLikes));
+        likeCount.setStyle("-fx-text-fill: #22c55e; -fx-font-size: 12px; -fx-font-weight: 700; -fx-min-width: 22;");
+
+        // ── 👍 Like button ──
+        Button btnLike = new Button("👍");
+        Button btnDislike = new Button("👎");
+
+        String likeNormal   = "-fx-background-color: rgba(34,197,94,0.1); -fx-text-fill: #22c55e; -fx-font-size: 13px; -fx-padding: 3 8; -fx-background-radius: 6; -fx-border-color: rgba(34,197,94,0.3); -fx-border-width: 1; -fx-border-radius: 6; -fx-cursor: hand;";
+        String likeActive   = "-fx-background-color: #22c55e; -fx-text-fill: white; -fx-font-size: 13px; -fx-padding: 3 8; -fx-background-radius: 6; -fx-border-color: #22c55e; -fx-border-width: 1; -fx-border-radius: 6; -fx-cursor: hand;";
+        String dislikeNormal= "-fx-background-color: rgba(244,63,94,0.1); -fx-text-fill: #f43f5e; -fx-font-size: 13px; -fx-padding: 3 8; -fx-background-radius: 6; -fx-border-color: rgba(244,63,94,0.3); -fx-border-width: 1; -fx-border-radius: 6; -fx-cursor: hand;";
+        String dislikeActive= "-fx-background-color: #f43f5e; -fx-text-fill: white; -fx-font-size: 13px; -fx-padding: 3 8; -fx-background-radius: 6; -fx-border-color: #f43f5e; -fx-border-width: 1; -fx-border-radius: 6; -fx-cursor: hand;";
+
+        // Restore state if already voted this session
+        String currentVote = userVotes.getOrDefault(voteKey, null);
+        btnLike.setStyle("like".equals(currentVote) ? likeActive : likeNormal);
+        btnDislike.setStyle("dislike".equals(currentVote) ? dislikeActive : dislikeNormal);
+
+        btnLike.setOnMouseEntered(e -> { if (!"like".equals(userVotes.get(voteKey))) btnLike.setStyle(likeActive.replace("#22c55e; -fx-text-fill: white", "rgba(34,197,94,0.25); -fx-text-fill: #22c55e")); });
+        btnLike.setOnMouseExited(e  -> { if (!"like".equals(userVotes.get(voteKey))) btnLike.setStyle(likeNormal); });
+        btnDislike.setOnMouseEntered(e -> { if (!"dislike".equals(userVotes.get(voteKey))) btnDislike.setStyle(dislikeActive.replace("#f43f5e; -fx-text-fill: white", "rgba(244,63,94,0.25); -fx-text-fill: #f43f5e")); });
+        btnDislike.setOnMouseExited(e  -> { if (!"dislike".equals(userVotes.get(voteKey))) btnDislike.setStyle(dislikeNormal); });
+
+        btnLike.setOnAction(e -> {
+            e.consume();
+            String prev = userVotes.getOrDefault(voteKey, null);
+            if ("like".equals(prev)) {
+                // Toggle off
+                userVotes.remove(voteKey);
+                btnLike.setStyle(likeNormal);
+                int cur = Math.max(0, Integer.parseInt(likeCount.getText()) - 1);
+                likeCount.setText(String.valueOf(cur));
+                new Thread(() -> { try { questionService.dislikeQuestion(Integer.parseInt(voteKey.substring(2))); } catch (Exception ignored) {} }).start();
+            } else {
+                // If was dislike, undo dislike first
+                if ("dislike".equals(prev)) {
+                    btnDislike.setStyle(dislikeNormal);
+                    int cur = Integer.parseInt(likeCount.getText()) + 1;
+                    likeCount.setText(String.valueOf(cur));
+                }
+                userVotes.put(voteKey, "like");
+                btnLike.setStyle(likeActive);
+                int cur = Integer.parseInt(likeCount.getText()) + 1;
+                likeCount.setText(String.valueOf(cur));
+                onLike.run();
+            }
+        });
+
+        btnDislike.setOnAction(e -> {
+            e.consume();
+            String prev = userVotes.getOrDefault(voteKey, null);
+            if ("dislike".equals(prev)) {
+                // Toggle off
+                userVotes.remove(voteKey);
+                btnDislike.setStyle(dislikeNormal);
+                int cur = Integer.parseInt(likeCount.getText()) + 1;
+                likeCount.setText(String.valueOf(cur));
+                new Thread(() -> { try { questionService.likeQuestion(Integer.parseInt(voteKey.substring(2))); } catch (Exception ignored) {} }).start();
+            } else {
+                // If was like, undo like first
+                if ("like".equals(prev)) {
+                    btnLike.setStyle(likeNormal);
+                    int cur = Math.max(0, Integer.parseInt(likeCount.getText()) - 1);
+                    likeCount.setText(String.valueOf(cur));
+                }
+                userVotes.put(voteKey, "dislike");
+                btnDislike.setStyle(dislikeActive);
+                int cur = Math.max(0, Integer.parseInt(likeCount.getText()) - 1);
+                likeCount.setText(String.valueOf(cur));
+                onDislike.run();
+            }
+        });
+
+        box.getChildren().addAll(btnLike, likeCount, btnDislike);
+        return box;
+    }
+
+    /**
+     * Returns the bibliotheque directory for forum images, creating it if needed.
+     */
+    private File getBibliothequeDir() {
+        // Try multiple locations
+        String[] candidates = {
+            System.getProperty("user.dir") + "/bibliotheque/forum_images",
+            System.getProperty("user.dir") + "/pijava--main/bibliotheque/forum_images",
+        };
+        for (String path : candidates) {
+            File dir = new File(path);
+            if (dir.exists()) return dir;
+        }
+        // Create in working dir
+        File dir = new File(candidates[0]);
+        dir.mkdirs();
+        System.out.println("✅ Bibliotheque created: " + dir.getAbsolutePath());
+        return dir;
+    }
+
+    /**
+     * Resolve image file from bibliotheque and legacy upload paths
      */
     private File resolveImageFile(String imageName) {
         String[] possiblePaths = {
-            "uploads/forum_images/" + imageName,
-            "pijava--main/uploads/forum_images/" + imageName,
+            System.getProperty("user.dir") + "/bibliotheque/forum_images/" + imageName,
+            System.getProperty("user.dir") + "/pijava--main/bibliotheque/forum_images/" + imageName,
             System.getProperty("user.dir") + "/uploads/forum_images/" + imageName,
             System.getProperty("user.dir") + "/pijava--main/uploads/forum_images/" + imageName,
-            "../uploads/forum_images/" + imageName,
+            "bibliotheque/forum_images/" + imageName,
+            "uploads/forum_images/" + imageName,
         };
 
         for (String path : possiblePaths) {
             File f = new File(path);
             if (f.exists()) {
-                System.out.println("✅ Image found at: " + f.getAbsolutePath());
+                System.out.println("✅ Image found: " + f.getAbsolutePath());
                 return f;
             }
         }
-
-        // Log all tried paths for debugging
-        System.out.println("⚠️ Image '" + imageName + "' not found. Tried:");
-        for (String path : possiblePaths) {
-            System.out.println("   - " + new File(path).getAbsolutePath());
-        }
+        System.out.println("⚠️ Image not found: " + imageName);
         return null;
     }
 
@@ -704,39 +834,34 @@ public class ForumController {
         dialog.setResultConverter(btn -> {
             if (btn == ButtonType.OK) {
                 if (tfTitre.getText().trim().isEmpty()) return null;
+
+                // ── Bad word check ──────────────────────────────────────
+                String fullText = tfTitre.getText() + " " + taDesc.getText();
+                String badWord = findBadWord(fullText);
+                if (badWord != null) {
+                    showAlert(Alert.AlertType.WARNING, "Contenu inapproprié",
+                        "Votre question contient un mot inapproprié: \"" + badWord + "\"\n\n" +
+                        "Veuillez reformuler votre question de manière respectueuse.");
+                    return null;
+                }
                 
-                // Save image if selected
+                // Save image if selected (optional - image is NOT required)
                 String imageName = null;
                 if (selectedImage[0] != null) {
                     try {
-                        // Use absolute path based on working directory
-                        String uploadDirPath = System.getProperty("user.dir") + "/uploads/forum_images";
-                        // Also try pijava--main subfolder
-                        File uploadDir = new File(uploadDirPath);
-                        if (!uploadDir.exists()) {
-                            uploadDirPath = System.getProperty("user.dir") + "/pijava--main/uploads/forum_images";
-                            uploadDir = new File(uploadDirPath);
-                        }
-                        if (!uploadDir.exists()) {
-                            uploadDir.mkdirs();
-                            System.out.println("✅ Created directory: " + uploadDir.getAbsolutePath());
-                        }
-                        
+                        File bibliotheque = getBibliothequeDir();
                         String timestamp = String.valueOf(System.currentTimeMillis());
-                        String extension = selectedImage[0].getName()
-                            .substring(selectedImage[0].getName().lastIndexOf("."));
-                        imageName = "question_" + timestamp + extension;
-                        
-                        java.io.File destFile = new java.io.File(uploadDir, imageName);
-                        java.nio.file.Files.copy(selectedImage[0].toPath(), destFile.toPath(), 
-                                   java.nio.file.StandardCopyOption.REPLACE_EXISTING);
-                        
-                        System.out.println("✅ Image saved: " + imageName);
-                        
+                        String ext = selectedImage[0].getName();
+                        ext = ext.contains(".") ? ext.substring(ext.lastIndexOf(".")) : ".jpg";
+                        imageName = "question_" + timestamp + ext;
+                        File destFile = new File(bibliotheque, imageName);
+                        java.nio.file.Files.copy(selectedImage[0].toPath(), destFile.toPath(),
+                                java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+                        System.out.println("✅ Image saved to bibliotheque: " + destFile.getAbsolutePath());
                     } catch (Exception ex) {
-                        showAlert(Alert.AlertType.ERROR, "Erreur", 
-                            "Échec de la sauvegarde de l'image: " + ex.getMessage());
-                        ex.printStackTrace();
+                        showAlert(Alert.AlertType.WARNING, "Attention",
+                            "Image non sauvegardée: " + ex.getMessage() + "\nLa question sera publiée sans image.");
+                        imageName = null; // Continue without image
                     }
                 }
                 
@@ -904,8 +1029,8 @@ public class ForumController {
         VBox imageContainer = null;
         if (q.getImageName() != null && !q.getImageName().isEmpty()) {
             try {
-                File imageFile = new File("uploads/forum_images/" + q.getImageName());
-                if (imageFile.exists()) {
+                File imageFile = resolveImageFile(q.getImageName());
+                if (imageFile != null && imageFile.exists()) {
                     Label imageLabel = new Label("📸 Image médicale:");
                     imageLabel.setStyle("-fx-text-fill: #94a3b8; -fx-font-size: 14px; -fx-font-weight: 600;");
                     
@@ -913,28 +1038,27 @@ public class ForumController {
                     ImageView imageView = new ImageView(image);
                     imageView.setFitWidth(580);
                     imageView.setPreserveRatio(true);
-                    imageView.setStyle(
-                        "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 12, 0, 0, 4);"
-                    );
+                    imageView.setSmooth(true);
+                    imageView.setStyle("-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 12, 0, 0, 4);");
                     imageView.setCursor(javafx.scene.Cursor.HAND);
-                    
+
                     imageContainer = new VBox(10);
+                    imageContainer.setStyle("-fx-background-color: #141826; -fx-background-radius: 8; -fx-padding: 10;");
                     imageContainer.getChildren().addAll(imageLabel, imageView);
                     VBox.setMargin(imageContainer, new Insets(10, 0, 10, 0));
                     
-                    // Click to view full size
                     imageView.setOnMouseClicked(evt -> {
                         Stage imageStage = new Stage();
-                        imageStage.setTitle("Image - " + q.getTitre());
-                        
+                        imageStage.setTitle("📸 " + q.getTitre());
                         ImageView fullImageView = new ImageView(image);
                         fullImageView.setPreserveRatio(true);
                         fullImageView.setFitWidth(900);
-                        
+                        fullImageView.setSmooth(true);
                         ScrollPane scrollPane = new ScrollPane(fullImageView);
-                        scrollPane.setStyle("-fx-background: #0e1220;");
-                        
+                        scrollPane.setStyle("-fx-background: #0e1220; -fx-background-color: #0e1220;");
+                        scrollPane.setFitToWidth(true);
                         Scene scene = new Scene(scrollPane, 950, 700);
+                        scene.setFill(javafx.scene.paint.Color.web("#0e1220"));
                         imageStage.setScene(scene);
                         imageStage.show();
                     });
@@ -1287,6 +1411,19 @@ public class ForumController {
             }).start();
         });
         
+        // ── Like / Dislike row for response ──
+        HBox reponseActions = new HBox(10);
+        reponseActions.setAlignment(Pos.CENTER_LEFT);
+        reponseActions.setPadding(new Insets(4, 0, 0, 0));
+
+        HBox likeBox = buildLikeDislikeBox(r.getLikes(), "R_" + r.getId(),
+            () -> new Thread(() -> { try { reponseService.likeReponse(r.getId()); } catch (Exception ex) { ex.printStackTrace(); } }).start(),
+            () -> new Thread(() -> { try { reponseService.dislikeReponse(r.getId()); } catch (Exception ex) { ex.printStackTrace(); } }).start()
+        );
+
+        reponseActions.getChildren().add(likeBox);
+        bubble.getChildren().add(reponseActions);
+
         return bubble;
     }
 

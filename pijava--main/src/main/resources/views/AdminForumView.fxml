@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.pidev.controllers.AdminForumController"
+            stylesheets="@../styles/style.css"
+            style="-fx-background-color: #080b14;">
+
+    <top>
+        <VBox spacing="16" style="-fx-padding: 24 32 16 32; -fx-background-color: #080b14;">
+
+            <!-- Header -->
+            <HBox alignment="CENTER_LEFT" spacing="16">
+                <VBox HBox.hgrow="ALWAYS" spacing="4">
+                    <Label text="💬 Modération du Forum" styleClass="page-title"/>
+                    <Label text="Gérez les questions des patients — supprimez le contenu inapproprié"
+                           styleClass="page-subtitle"/>
+                </VBox>
+                <Button text="🔄 Actualiser" onAction="#handleRefresh"
+                        styleClass="btn-secondary" prefHeight="38"/>
+            </HBox>
+
+            <!-- Stats bar -->
+            <HBox spacing="16" alignment="CENTER_LEFT"
+                  style="-fx-padding: 14; -fx-background-color: #141826; -fx-background-radius: 10; -fx-border-color: #252d42; -fx-border-width: 1; -fx-border-radius: 10;">
+                <Label text="📊 Total:" style="-fx-text-fill: #94a3b8; -fx-font-size: 12px; -fx-font-weight: 600;"/>
+                <Label fx:id="lblTotal" text="0 questions"
+                       style="-fx-text-fill: #818cf8; -fx-font-size: 12px; -fx-font-weight: 700;"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Label text="🚫 Mots grossiers:" style="-fx-text-fill: #94a3b8; -fx-font-size: 12px;"/>
+                <Label fx:id="lblBadWords" text="0 signalées"
+                       style="-fx-text-fill: #f43f5e; -fx-font-size: 12px; -fx-font-weight: 700;"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <TextField fx:id="searchField" promptText="🔍 Rechercher..."
+                           prefWidth="220" prefHeight="34"
+                           style="-fx-background-color: #0e1220; -fx-text-fill: #f1f5f9; -fx-border-color: #252d42; -fx-border-radius: 6; -fx-background-radius: 6; -fx-padding: 0 10;"/>
+                <ComboBox fx:id="filterCombo" prefHeight="34" prefWidth="180"
+                          style="-fx-background-color: #0e1220; -fx-border-color: #252d42; -fx-border-radius: 6;"/>
+            </HBox>
+
+        </VBox>
+    </top>
+
+    <center>
+        <ScrollPane fitToWidth="true"
+                    style="-fx-background: transparent; -fx-background-color: transparent; -fx-border-color: transparent;">
+            <VBox fx:id="questionsContainer" spacing="12"
+                  style="-fx-padding: 0 32 24 32; -fx-background-color: #080b14;"/>
+        </ScrollPane>
+    </center>
+
+</BorderPane>

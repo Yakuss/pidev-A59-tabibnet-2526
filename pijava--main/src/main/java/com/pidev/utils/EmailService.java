@@ -68,11 +68,19 @@ public class EmailService {
      */
     public void send(String toEmail, String subject, String htmlBody) throws MessagingException {
         Properties props = new Properties();
-        props.put("mail.smtp.auth",            "true");
-        props.put("mail.smtp.starttls.enable", "true");
-        props.put("mail.smtp.host",            "smtp.gmail.com");
-        props.put("mail.smtp.port",            "587");
-        props.put("mail.smtp.ssl.trust",       "smtp.gmail.com");
+
+        // ── Try STARTTLS on port 587 first, fallback to SSL on 465 ──────────
+        props.put("mail.smtp.auth",                "true");
+        props.put("mail.smtp.starttls.enable",     "true");
+        props.put("mail.smtp.starttls.required",   "true");
+        props.put("mail.smtp.host",                "smtp.gmail.com");
+        props.put("mail.smtp.port",                "587");
+        props.put("mail.smtp.ssl.trust",           "smtp.gmail.com");
+        props.put("mail.smtp.ssl.protocols",       "TLSv1.2 TLSv1.3");
+        props.put("mail.smtp.connectiontimeout",   "10000");  // 10s connect
+        props.put("mail.smtp.timeout",             "10000");  // 10s read
+        props.put("mail.smtp.writetimeout",        "10000");  // 10s write
+        props.put("mail.debug",                    "false");
 
         Session session = Session.getInstance(props, new Authenticator() {
             @Override
@@ -81,6 +89,34 @@ public class EmailService {
             }
         });
 
+        try {
+            sendWithSession(session, toEmail, subject, htmlBody);
+        } catch (MessagingException e) {
+            // Fallback: try SSL on port 465
+            System.err.println("⚠️ STARTTLS failed, trying SSL port 465: " + e.getMessage());
+            Properties sslProps = new Properties();
+            sslProps.put("mail.smtp.auth",                "true");
+            sslProps.put("mail.smtp.ssl.enable",          "true");
+            sslProps.put("mail.smtp.host",                "smtp.gmail.com");
+            sslProps.put("mail.smtp.port",                "465");
+            sslProps.put("mail.smtp.ssl.trust",           "smtp.gmail.com");
+            sslProps.put("mail.smtp.ssl.protocols",       "TLSv1.2 TLSv1.3");
+            sslProps.put("mail.smtp.connectiontimeout",   "10000");
+            sslProps.put("mail.smtp.timeout",             "10000");
+            sslProps.put("mail.smtp.writetimeout",        "10000");
+
+            Session sslSession = Session.getInstance(sslProps, new Authenticator() {
+                @Override
+                protected PasswordAuthentication getPasswordAuthentication() {
+                    return new PasswordAuthentication(SENDER_EMAIL, SENDER_APP_PASSWORD);
+                }
+            });
+            sendWithSession(sslSession, toEmail, subject, htmlBody);
+        }
+    }
+
+    private void sendWithSession(Session session, String toEmail, String subject, String htmlBody)
+            throws MessagingException {
         try {
             Message message = new MimeMessage(session);
             message.setFrom(new InternetAddress(SENDER_EMAIL, "PiDev Medical", "UTF-8"));

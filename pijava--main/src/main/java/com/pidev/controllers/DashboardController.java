@@ -20,7 +20,7 @@ import java.io.IOException;
 public class DashboardController {
 
     @FXML private StackPane contentArea;
-    @FXML private Button btnDashboard, btnPatients, btnMedecins, btnAppointments, btnFeedback, btnSpecialites, btnSettings, btnLogout;
+    @FXML private Button btnDashboard, btnPatients, btnMedecins, btnAppointments, btnFeedback, btnForum, btnSpecialites, btnSettings, btnLogout;
     @FXML private Label lblTotalPatients, lblTotalMedecins, lblTotalAppointments, lblTotalFeedbacks;
     @FXML private Label userNameLabel;
     @FXML private VBox dashboardHome;
@@ -95,6 +95,12 @@ public class DashboardController {
     public void showFeedback() {
         setActiveButton(btnFeedback);
         loadView("/views/FeedbackView.fxml");
+    }
+
+    @FXML
+    public void showForum() {
+        setActiveButton(btnForum);
+        loadView("/views/AdminForumView.fxml");
     }
 
     @FXML
