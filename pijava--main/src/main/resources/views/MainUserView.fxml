@@ -41,6 +41,15 @@
                 <Button fx:id="btnAnnuaire" text="📖  Annuaire" onAction="#showAnnuaire" styleClass="nav-button-user"/>
                 <Button fx:id="btnMedecins" text="🩺  Médecins" onAction="#showMedecins" styleClass="nav-button-user"/>
                 <Button fx:id="btnAppointments" text="📅  Mes Rendez-vous" onAction="#showAppointments" styleClass="nav-button-user"/>
+                
+                <MenuButton fx:id="menuDossierMedical" text="📂  Dossier Médical" styleClass="nav-button-user">
+                    <items>
+                        <MenuItem text="📄  Documents" onAction="#showDocuments"/>
+                        <MenuItem text="💊  Ordonnances &amp; Rapports" onAction="#showOrdonnances"/>
+                        <MenuItem text="🤖  Assistance AI" onAction="#showAssistanceAI"/>
+                    </items>
+                </MenuButton>
+
                 <Button fx:id="btnForum" text="💬  Forum" onAction="#showForum" styleClass="nav-button-user"/>
                 <Button fx:id="btnProfile" text="👤  Mon Profil" onAction="#showProfile" styleClass="nav-button-user"/>
             </HBox>

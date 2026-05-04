@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+<?import java.lang.String?>
+
+<ScrollPane fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED"
+            prefHeight="700.0" prefWidth="1200.0"
+            style="-fx-background-color: #f8fafc;"
+            xmlns="http://javafx.com/javafx/19"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.pidev.controllers.DossierMedicalController">
+    
+    <stylesheets>
+        <String fx:value="@/styles/table-header-gray.css"/>
+    </stylesheets>
+
+    <content>
+        <VBox alignment="TOP_CENTER" spacing="0.0" style="-fx-background-color: #f8fafc;">
+            <padding>
+                <Insets bottom="32.0" left="32.0" right="32.0" top="32.0" />
+            </padding>
+
+            <!-- ═══════════════════════════════════════════════════════════════ -->
+            <!-- CONTAINER PRINCIPAL (max-width: 1600px comme .dashboard-container)-->
+            <!-- ═══════════════════════════════════════════════════════════════ -->
+            <VBox maxWidth="1600.0" spacing="0.0" style="-fx-background-color: white; -fx-background-radius: 16; -fx-border-radius: 16; -fx-border-color: #e2e8f0; -fx-border-width: 1;">
+                <effect>
+                    <DropShadow color="#0000001a" height="40.0" radius="20.0" width="40.0" />
+                </effect>
+
+                <!-- ═══════════════════════════════════════════════════════════════ -->
+                <!-- HEADER: linear-gradient(135deg, #0d9488, #0f766e)               -->
+                <!-- ═══════════════════════════════════════════════════════════════ -->
+                <AnchorPane prefHeight="120.0" style="-fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #0d9488, #0f766e); -fx-background-radius: 16 16 0 0;">
+                    <children>
+                        <!-- Cercle décoratif -->
+                        <Circle fill="#ffffff14" layoutX="1100.0" layoutY="-30.0" radius="150.0" stroke="transparent" />
+                        <Circle fill="#ffffff0d" layoutX="1050.0" layoutY="40.0" radius="100.0" stroke="transparent" />
+
+                        <!-- Header Content -->
+                        <HBox alignment="CENTER_LEFT" layoutX="40.0" layoutY="30.0" spacing="20.0">
+                            <children>
+                                <!-- Icon Wrapper -->
+                                <AnchorPane prefHeight="56.0" prefWidth="56.0" style="-fx-background-color: #ffffff33; -fx-background-radius: 12; -fx-border-color: #ffffff4d; -fx-border-radius: 12; -fx-border-width: 1;">
+                                    <children>
+                                        <Label alignment="CENTER" layoutX="0.0" layoutY="0.0" prefHeight="56.0" prefWidth="56.0" text="📁" textFill="white">
+                                            <font>
+                                                <Font size="28.0" />
+                                            </font>
+                                        </Label>
+                                    </children>
+                                    <effect>
+                                        <DropShadow color="#00000040" height="10.0" offsetY="4.0" radius="4.5" width="10.0" />
+                                    </effect>
+                                </AnchorPane>
+
+                                <!-- Text -->
+                                <VBox spacing="5.0">
+                                    <children>
+                                        <Label text="Dossier Médical" textFill="white">
+                                            <font>
+                                                <Font name="System Bold" size="28.0" />
+                                            </font>
+                                        </Label>
+                                        <Label text="Gestion centralisée des documents patients" textFill="#ffffffe6">
+                                            <font>
+                                                <Font size="15.0" />
+                                            </font>
+                                        </Label>
+                                    </children>
+                                </VBox>
+                            </children>
+                        </HBox>
+
+                        <!-- Stats Badge -->
+                        <HBox alignment="CENTER" layoutX="1100.0" layoutY="35.0" spacing="12.0" style="-fx-background-color: #ffffff26; -fx-background-radius: 9999; -fx-padding: 12 24; -fx-border-color: #ffffff33; -fx-border-radius: 9999; -fx-border-width: 1;">
+                            <children>
+                                <Label fx:id="statsNumberLabel" text="12" textFill="white">
+                                    <font>
+                                        <Font name="System Bold" size="24.0" />
+                                    </font>
+                                </Label>
+                                <Label fx:id="statsLabelLabel" text="documents" textFill="#ffffffe6">
+                                    <font>
+                                        <Font name="System Bold" size="14.0" />
+                                    </font>
+                                </Label>
+                            </children>
+                        </HBox>
+                    </children>
+                </AnchorPane>
+
+                <!-- ═══════════════════════════════════════════════════════════════ -->
+                <!-- TABLE SECTION                                                  -->
+                <!-- ═══════════════════════════════════════════════════════════════ -->
+                <VBox spacing="24.0" style="-fx-padding: 32;">
+
+                    <!-- Table Toolbar -->
+                    <HBox alignment="CENTER_LEFT" spacing="20.0" style="-fx-padding: 0 0 24 0; -fx-border-color: transparent transparent #e2e8f0 transparent; -fx-border-width: 0 0 1 0;">
+                        <children>
+                            <!-- Search Box -->
+                            <HBox alignment="CENTER_LEFT" spacing="10.0" style="-fx-background-color: #f8fafc; -fx-background-radius: 8; -fx-border-color: #cbd5e1; -fx-border-radius: 8; -fx-border-width: 1; -fx-padding: 0 16;">
+                                <children>
+                                    <Label text="🔍" textFill="#94a3b8" />
+                                    <TextField fx:id="searchField" prefHeight="44.0" prefWidth="320.0" promptText="Rechercher un document..." style="-fx-background-color: transparent; -fx-border-color: transparent; -fx-font-size: 15;">
+                                        <font>
+                                            <Font size="15.0" />
+                                        </font>
+                                    </TextField>
+                                </children>
+                            </HBox>
+
+                            <HBox spacing="12.0" HBox.hgrow="ALWAYS" alignment="CENTER_RIGHT">
+                                <children>
+                                    <!-- Bouton Filtrer -->
+                                    <Button prefHeight="44.0" prefWidth="120.0" style="-fx-background-color: transparent; -fx-border-color: #cbd5e1; -fx-border-radius: 8; -fx-border-width: 1; -fx-text-fill: #475569; -fx-font-weight: bold; -fx-font-size: 14; -fx-cursor: hand;" text="🔧 Filtrer">
+                                        <font>
+                                            <Font name="System Bold" size="14.0" />
+                                        </font>
+                                    </Button>
+
+                                    <!-- Bouton Nouveau document -->
+                                    <Button fx:id="nouveauDocButton" onAction="#handleNouveauDocument" prefHeight="44.0" prefWidth="200.0" style="-fx-background-color: #0d9488; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8; -fx-cursor: hand; -fx-font-size: 14;" text="➕ Nouveau document">
+                                        <font>
+                                            <Font name="System Bold" size="14.0" />
+                                        </font>
+                                        <effect>
+                                            <DropShadow color="#0d948833" height="10.0" offsetY="4.0" radius="4.5" width="10.0" />
+                                        </effect>
+                                    </Button>
+                                </children>
+                            </HBox>
+                        </children>
+                    </HBox>
+
+                    <!-- Data Table Container -->
+                    <VBox style="-fx-border-color: #e2e8f0; -fx-border-radius: 12; -fx-border-width: 1; -fx-background-radius: 12; -fx-background-color: white;">
+                        <effect>
+                            <DropShadow color="#0000000a" height="10.0" radius="4.5" width="10.0" />
+                        </effect>
+
+
+                        <!-- TableView -->
+                        <TableView fx:id="documentsTable" prefHeight="500.0" style="-fx-background-color: transparent;" styleClass="gray-header-table">
+                            <columns>
+                                <TableColumn fx:id="colId" prefWidth="60.0" text="ID" />
+                                <TableColumn fx:id="colInfos" prefWidth="200.0" text="Informations" />
+                                <TableColumn fx:id="colType" prefWidth="100.0" text="Type" />
+
+                                <TableColumn fx:id="colCreated" prefWidth="120.0" text="Date création" />
+                                <TableColumn fx:id="colUpdated" prefWidth="120.0" text="Dernière modif." />
+                                <TableColumn fx:id="colRapports" prefWidth="150.0" text="Rapports" />
+                                <TableColumn fx:id="colOrdonnances" prefWidth="150.0" text="Ordonnances" />
+                                <TableColumn fx:id="colActions" prefWidth="250.0" text="Actions" />
+                                <TableColumn fx:id="colExport" prefWidth="80.0" text="Export" />
+                            </columns>
+                        </TableView>
+                    </VBox>
+
+                    <!-- Pagination -->
+                    <HBox alignment="CENTER" spacing="16.0">
+                        <children>
+                            <Label fx:id="paginationMetaLabel" text="Page 1 / 2 • Total: 12 documents" textFill="#64748b">
+                                <font>
+                                    <Font size="14.0" />
+                                </font>
+                            </Label>
+
+                            <HBox spacing="12.0">
+                                <children>
+                                    <Button prefHeight="36.0" prefWidth="120.0" style="-fx-background-color: transparent; -fx-border-color: #cbd5e1; -fx-border-radius: 8; -fx-border-width: 1; -fx-text-fill: #475569; -fx-font-weight: bold; -fx-font-size: 13; -fx-cursor: hand;" text="← Précédent" />
+                                    <Label text="Page 1" textFill="#334155">
+                                        <font>
+                                            <Font name="System Bold" size="14.0" />
+                                        </font>
+                                    </Label>
+                                    <Button prefHeight="36.0" prefWidth="120.0" style="-fx-background-color: transparent; -fx-border-color: #cbd5e1; -fx-border-radius: 8; -fx-border-width: 1; -fx-text-fill: #475569; -fx-font-weight: bold; -fx-font-size: 13; -fx-cursor: hand;" text="Suivant →" />
+                                </children>
+                            </HBox>
+                        </children>
+                    </HBox>
+
+                </VBox>
+
+                <!-- FOOTER -->
+                <HBox alignment="CENTER" prefHeight="50.0" spacing="8.0" style="-fx-background-color: #f8fafc; -fx-background-radius: 0 0 16 16; -fx-border-color: #e2e8f0 transparent transparent transparent; -fx-border-width: 1 0 0 0;">
+                    <children>
+                        <Circle fill="#10b981" radius="4.0" stroke="transparent" />
+                        <Label text="Dernière mise à jour : 22 avril 2026" textFill="#94a3b8">
+                            <font>
+                                <Font size="13.0" />
+                            </font>
+                        </Label>
+                    </children>
+                </HBox>
+
+            </VBox>
+        </VBox>
+    </content>
+</ScrollPane>

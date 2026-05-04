@@ -1,0 +1,2 @@
+INSERT INTO medecins (email, password, roles, first_name, last_name, specialty, governorate, is_active) VALUES ('medecin2@test.com', '$2a$10$abcdefghijklmnopqrstu910e0084', '["ROLE_MEDECIN"]', 'Doc', 'Test', 'Dermatologue', 'Tunis', 1);
+INSERT INTO patients (email, password, roles, first_name, last_name, is_active) VALUES ('patient2@test.com', '$2a$10$abcdefghijklmnopqrstu910e0084', '["ROLE_PATIENT"]', 'Pat', 'Test', 1);

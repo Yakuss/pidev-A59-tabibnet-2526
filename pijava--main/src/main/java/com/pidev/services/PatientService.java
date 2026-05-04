@@ -17,47 +17,45 @@ public class PatientService implements IService<Patient> {
 
     @Override
     public void add(Patient patient) throws SQLException {
-        String sql = "INSERT INTO patients (email, password, first_name, last_name, age, gender, is_active, roles, " +
+        String sql = "INSERT INTO patients (email, password, first_name, last_name, gender, is_active, roles, " +
                      "phone_number, address, date_of_birth, has_insurance, insurance_number) " +
-                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         PreparedStatement ps = conn.prepareStatement(sql);
         ps.setString(1, patient.getEmail());
         ps.setString(2, patient.getPassword());
         ps.setString(3, patient.getFirstName());
         ps.setString(4, patient.getLastName());
-        ps.setInt(5, patient.getAge());
-        ps.setString(6, patient.getGender());
-        ps.setBoolean(7, patient.isActive());
-        ps.setString(8, patient.getRoles() != null ? patient.getRoles() : "[\"ROLE_PATIENT\"]");
-        ps.setString(9, patient.getPhoneNumber());
-        ps.setString(10, patient.getAddress());
-        ps.setTimestamp(11, patient.getDateOfBirth() != null ?
+        ps.setString(5, patient.getGender());
+        ps.setBoolean(6, patient.isActive());
+        ps.setString(7, patient.getRoles() != null ? patient.getRoles() : "[\"ROLE_PATIENT\"]");
+        ps.setString(8, patient.getPhoneNumber());
+        ps.setString(9, patient.getAddress());
+        ps.setTimestamp(10, patient.getDateOfBirth() != null ?
                 Timestamp.valueOf(patient.getDateOfBirth()) : null);
-        ps.setBoolean(12, patient.isHasInsurance());
-        ps.setString(13, patient.getInsuranceNumber());
+        ps.setBoolean(11, patient.isHasInsurance());
+        ps.setString(12, patient.getInsuranceNumber());
         ps.executeUpdate();
         System.out.println("✅ Patient added to 'patients'!");
     }
 
     @Override
     public void update(Patient patient) throws SQLException {
-        String sql = "UPDATE patients SET email=?, first_name=?, last_name=?, age=?, gender=?, is_active=?, " +
+        String sql = "UPDATE patients SET email=?, first_name=?, last_name=?, gender=?, is_active=?, " +
                      "phone_number=?, address=?, date_of_birth=?, has_insurance=?, insurance_number=? " +
                      "WHERE id=?";
         PreparedStatement ps = conn.prepareStatement(sql);
         ps.setString(1, patient.getEmail());
         ps.setString(2, patient.getFirstName());
         ps.setString(3, patient.getLastName());
-        ps.setInt(4, patient.getAge());
-        ps.setString(5, patient.getGender());
-        ps.setBoolean(6, patient.isActive());
-        ps.setString(7, patient.getPhoneNumber());
-        ps.setString(8, patient.getAddress());
-        ps.setTimestamp(9, patient.getDateOfBirth() != null ?
+        ps.setString(4, patient.getGender());
+        ps.setBoolean(5, patient.isActive());
+        ps.setString(6, patient.getPhoneNumber());
+        ps.setString(7, patient.getAddress());
+        ps.setTimestamp(8, patient.getDateOfBirth() != null ?
                 Timestamp.valueOf(patient.getDateOfBirth()) : null);
-        ps.setBoolean(10, patient.isHasInsurance());
-        ps.setString(11, patient.getInsuranceNumber());
-        ps.setInt(12, patient.getId());
+        ps.setBoolean(9, patient.isHasInsurance());
+        ps.setString(10, patient.getInsuranceNumber());
+        ps.setInt(11, patient.getId());
         ps.executeUpdate();
         System.out.println("✅ Patient updated in 'patients'!");
     }
@@ -111,16 +109,18 @@ public class PatientService implements IService<Patient> {
         p.setPassword(rs.getString("password"));
         p.setFirstName(rs.getString("first_name"));
         p.setLastName(rs.getString("last_name"));
-        p.setAge(rs.getInt("age"));
-        p.setGender(rs.getString("gender"));
+        try { p.setAge(rs.getInt("age")); } catch (SQLException e) { p.setAge(0); }
+        try { p.setGender(rs.getString("gender")); } catch (SQLException e) { p.setGender(null); }
         p.setActive(rs.getBoolean("is_active"));
         p.setRoles(rs.getString("roles"));
-        p.setPhoneNumber(rs.getString("phone_number"));
-        p.setAddress(rs.getString("address"));
-        Timestamp dob = rs.getTimestamp("date_of_birth");
-        if (dob != null) p.setDateOfBirth(dob.toLocalDateTime());
-        p.setHasInsurance(rs.getBoolean("has_insurance"));
-        p.setInsuranceNumber(rs.getString("insurance_number"));
+        try { p.setPhoneNumber(rs.getString("phone_number")); } catch (SQLException e) { p.setPhoneNumber(null); }
+        try { p.setAddress(rs.getString("address")); } catch (SQLException e) { p.setAddress(null); }
+        try {
+            Timestamp dob = rs.getTimestamp("date_of_birth");
+            if (dob != null) p.setDateOfBirth(dob.toLocalDateTime());
+        } catch (SQLException e) { /* ignore */ }
+        try { p.setHasInsurance(rs.getBoolean("has_insurance")); } catch (SQLException e) { p.setHasInsurance(false); }
+        try { p.setInsuranceNumber(rs.getString("insurance_number")); } catch (SQLException e) { p.setInsuranceNumber(null); }
         return p;
     }
 

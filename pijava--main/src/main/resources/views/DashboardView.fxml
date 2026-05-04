@@ -1,0 +1,343 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.text.Font?>
+<?import java.lang.String?>
+
+<!--
+    Dashboard Médical - FXML Controller
+    Gestion des rapports et ordonnances patients
+    Contrôleur: com.pidev.controllers.DashboardController
+-->
+<ScrollPane fx:controller="com.pidev.controllers.DashboardController"
+            fitToWidth="true"
+            hbarPolicy="NEVER"
+            style="-fx-background-color: #f8fafc;"
+            vbarPolicy="AS_NEEDED"
+            xmlns="http://javafx.com/javafx/19"
+            xmlns:fx="http://javafx.com/fxml/1">
+    
+    <stylesheets>
+        <String fx:value="@/styles/table-header-gray.css"/>
+    </stylesheets>
+
+    <content>
+        <VBox spacing="30.0"
+              style="-fx-background-color: #f8fafc; -fx-padding: 40;">
+
+            <!-- ==================== HEADER CARD ==================== -->
+            <AnchorPane prefHeight="140.0"
+                        style="-fx-background-color: linear-gradient(to right, #2563eb, #1d4ed8);
+                               -fx-background-radius: 12;">
+                <effect>
+                    <DropShadow color="#00000026" height="15.0" radius="7.5" width="15.0"/>
+                </effect>
+
+                <children>
+                    <Label layoutX="30.0" layoutY="25.0"
+                           text="Dossier Médical"
+                           textFill="white">
+                        <font>
+                            <Font name="System Bold" size="32.0"/>
+                        </font>
+                    </Label>
+
+                    <Label layoutX="30.0" layoutY="65.0"
+                           text="Gestion des rapports et ordonnances patient"
+                           textFill="#bfdbfe">
+                        <font>
+                            <Font size="14.0"/>
+                        </font>
+                    </Label>
+
+                    <HBox layoutX="1050.0" layoutY="30.0"
+                          spacing="8.0"
+                          alignment="CENTER"
+                          style="-fx-background-color: rgba(255,255,255,0.15);
+                                 -fx-background-radius: 8;
+                                 -fx-padding: 10 16;">
+                        <children>
+                            <Label text="👤" textFill="white"/>
+                            <Label fx:id="patientInfoLabel" text="Rendez-vous #12345" textFill="white">
+                                <font>
+                                    <Font name="System Bold" size="14.0"/>
+                                </font>
+                            </Label>
+                        </children>
+                    </HBox>
+
+                    <HBox layoutX="30.0" layoutY="95.0" spacing="12.0">
+                        <children>
+                            <Button mnemonicParsing="false"
+                                    onAction="#openAjouterRapport"
+                                    prefHeight="40.0"
+                                    prefWidth="180.0"
+                                    style="-fx-background-color: white;
+                                           -fx-text-fill: #2563eb;
+                                           -fx-font-weight: bold;
+                                           -fx-background-radius: 8;
+                                           -fx-cursor: hand;"
+                                    text="+ Nouveau Rapport">
+                                <font>
+                                    <Font size="14.0"/>
+                                </font>
+                            </Button>
+
+                            <Button mnemonicParsing="false"
+                                    onAction="#openAjouterOrdonnance"
+                                    prefHeight="40.0"
+                                    prefWidth="200.0"
+                                    style="-fx-background-color: #059669;
+                                           -fx-text-fill: white;
+                                           -fx-font-weight: bold;
+                                           -fx-background-radius: 8;
+                                           -fx-cursor: hand;"
+                                    text="+ Nouvelle Ordonnance">
+                                <font>
+                                    <Font size="14.0"/>
+                                </font>
+                            </Button>
+                        </children>
+                    </HBox>
+
+                </children>
+            </AnchorPane>
+
+            <!-- ==================== SECTION RAPPORTS MÉDICAUX ==================== -->
+            <AnchorPane prefHeight="320.0"
+                        style="-fx-background-color: white;
+                               -fx-background-radius: 12;">
+                <effect>
+                    <DropShadow color="#0000001a" height="12.0" radius="6.0" width="12.0"/>
+                </effect>
+
+                <children>
+                    <AnchorPane prefHeight="60.0"
+                                style="-fx-background-color: linear-gradient(to right, #ffffff, #f8fafc);
+                                       -fx-background-radius: 12 12 0 0;
+                                       -fx-border-color: #e2e8f0;
+                                       -fx-border-width: 0 0 1 0;">
+                        <children>
+                            <HBox layoutX="24.0" layoutY="18.0"
+                                  spacing="12.0"
+                                  alignment="CENTER_LEFT">
+                                <children>
+                                    <Rectangle width="4.0" height="24.0"
+                                               fill="#2563eb"
+                                               arcWidth="2.0"
+                                               arcHeight="2.0"/>
+                                    <Label text="Rapports Médicaux" textFill="#1e293b">
+                                        <font>
+                                            <Font name="System Bold" size="20.0"/>
+                                        </font>
+                                    </Label>
+                                </children>
+                            </HBox>
+
+                            <!-- BARRE DE RECHERCHE DYNAMIQUE - Rapports -->
+                            <TextField fx:id="rapportSearchField"
+                                       layoutX="500.0" layoutY="14.0"
+                                       prefWidth="350.0" prefHeight="32.0"
+                                       promptText="🔍 Rechercher un rapport (motif, diagnostic, observations...)"
+                                       style="-fx-background-color: #f1f5f9;
+                                              -fx-background-radius: 16;
+                                              -fx-border-color: #e2e8f0;
+                                              -fx-border-radius: 16;
+                                              -fx-padding: 6 14;
+                                              -fx-font-size: 13px;
+                                              -fx-text-fill: black;">
+                            </TextField>
+
+                            <!-- LABEL DYNAMIQUE - Nombre de rapports -->
+                            <Label fx:id="rapportCountLabel"
+                                   layoutX="1220.0" layoutY="18.0"
+                                   text="0 rapport"
+                                   style="-fx-background-color: #f1f5f9;
+                                          -fx-background-radius: 999;
+                                          -fx-padding: 6 14;"
+                                   textFill="#64748b">
+                                <font>
+                                    <Font name="System Bold" size="13.0"/>
+                                </font>
+                            </Label>
+                        </children>
+                    </AnchorPane>
+
+                    <TableView fx:id="rapportTable"
+                               layoutX="24.0" layoutY="80.0"
+                               prefHeight="220.0"
+                               prefWidth="1272.0"
+                               styleClass="gray-header-table"
+                               style="-fx-background-color: transparent;">
+                        <columns>
+                            <TableColumn fx:id="rapIdCol" prefWidth="70.0" text="ID"/>
+                            <TableColumn fx:id="rapRaisonCol" prefWidth="180.0" text="Motif"/>
+                            <TableColumn fx:id="rapDiagCol" prefWidth="200.0" text="Diagnostic"/>
+                            <TableColumn fx:id="rapObsCol" prefWidth="180.0" text="Observations"/>
+                            <TableColumn fx:id="rapRecoCol" prefWidth="180.0" text="Recommandations"/>
+                            <TableColumn fx:id="rapTraitCol" prefWidth="180.0" text="Traitements"/>
+                            <TableColumn fx:id="rapDateCol" prefWidth="130.0" text="Date création"/>
+                            <TableColumn fx:id="rapActionsCol" prefWidth="250.0" text="Actions"/>
+                        </columns>
+                    </TableView>
+                </children>
+            </AnchorPane>
+
+            <!-- ==================== SECTION ORDONNANCES ==================== -->
+            <AnchorPane prefHeight="320.0"
+                        style="-fx-background-color: white;
+                               -fx-background-radius: 12;">
+                <effect>
+                    <DropShadow color="#0000001a" height="12.0" radius="6.0" width="12.0"/>
+                </effect>
+
+                <children>
+                    <AnchorPane prefHeight="60.0"
+                                style="-fx-background-color: linear-gradient(to right, #ffffff, #f8fafc);
+                                       -fx-background-radius: 12 12 0 0;
+                                       -fx-border-color: #e2e8f0;
+                                       -fx-border-width: 0 0 1 0;">
+                        <children>
+                            <HBox layoutX="24.0" layoutY="18.0"
+                                  spacing="12.0"
+                                  alignment="CENTER_LEFT">
+                                <children>
+                                    <Rectangle width="4.0" height="24.0"
+                                               fill="#059669"
+                                               arcWidth="2.0"
+                                               arcHeight="2.0"/>
+                                    <Label text="Ordonnances" textFill="#1e293b">
+                                        <font>
+                                            <Font name="System Bold" size="20.0"/>
+                                        </font>
+                                    </Label>
+                                </children>
+                            </HBox>
+
+                            <!-- BARRE DE RECHERCHE DYNAMIQUE - Ordonnances -->
+                            <TextField fx:id="ordonnanceSearchField"
+                                       layoutX="500.0" layoutY="14.0"
+                                       prefWidth="350.0" prefHeight="32.0"
+                                       promptText="🔍 Rechercher une ordonnance (diagnostic, médicament...)"
+                                       style="-fx-background-color: #f1f5f9;
+                                              -fx-background-radius: 16;
+                                              -fx-border-color: #e2e8f0;
+                                              -fx-border-radius: 16;
+                                              -fx-padding: 6 14;
+                                              -fx-font-size: 13px;
+                                              -fx-text-fill: black;">
+                            </TextField>
+
+                            <!-- LABEL DYNAMIQUE - Nombre d'ordonnances -->
+                            <Label fx:id="ordonnanceCountLabel"
+                                   layoutX="1200.0" layoutY="18.0"
+                                   text="0 ordonnance"
+                                   style="-fx-background-color: #f1f5f9;
+                                          -fx-background-radius: 999;
+                                          -fx-padding: 6 14;"
+                                   textFill="#64748b">
+                                <font>
+                                    <Font name="System Bold" size="13.0"/>
+                                </font>
+                            </Label>
+                        </children>
+                    </AnchorPane>
+
+                    <TableView fx:id="ordonnanceTable"
+                               layoutX="24.0" layoutY="80.0"
+                               prefHeight="220.0"
+                               prefWidth="1272.0"
+                               styleClass="gray-header-table"
+                               style="-fx-background-color: transparent;">
+                        <columns>
+                            <TableColumn fx:id="ordIdCol" prefWidth="50.0" text="ID"/>
+                            <TableColumn fx:id="ordDateCol" prefWidth="100.0" text="Date"/>
+                            <TableColumn fx:id="ordDiagCol" prefWidth="160.0" text="Diagnostic"/>
+                            <TableColumn fx:id="ordMedCol" prefWidth="180.0" text="Médicament(s)"/>
+                            <TableColumn fx:id="ordPosoCol" prefWidth="150.0" text="Posologie"/>
+                            <TableColumn fx:id="ordNotesCol" prefWidth="150.0" text="Notes"/>
+                            <TableColumn fx:id="ordInstrCol" prefWidth="150.0" text="Instructions"/>
+                            <TableColumn fx:id="ordActionsCol" prefWidth="250.0" text="Actions"/>
+                        </columns>
+                    </TableView>
+                </children>
+            </AnchorPane>
+
+            <!-- ==================== SECTION RESSOURCES = : AI ASSISTANT ==================== -->
+            <AnchorPane prefHeight="180.0"
+                        style="-fx-background-color: white;
+                               -fx-background-radius: 12;">
+                <effect>
+                    <DropShadow color="#0000001a" height="12.0" radius="6.0" width="12.0"/>
+                </effect>
+
+                <children>
+                    <AnchorPane prefHeight="60.0"
+                                style="-fx-background-color: linear-gradient(to right, #ffffff, #f8fafc);
+                                       -fx-background-radius: 12 12 0 0;
+                                       -fx-border-color: #e2e8f0;
+                                       -fx-border-width: 0 0 1 0;">
+                        <children>
+                            <HBox layoutX="24.0" layoutY="18.0"
+                                  spacing="12.0"
+                                  alignment="CENTER_LEFT">
+                                <children>
+                                    <Rectangle width="4.0" height="24.0"
+                                               fill="#7c3aed"
+                                               arcWidth="2.0"
+                                               arcHeight="2.0"/>
+                                    <Label text="Ressources &amp; IA" textFill="#1e293b">
+                                        <font>
+                                            <Font name="System Bold" size="20.0"/>
+                                        </font>
+                                    </Label>
+                                </children>
+                            </HBox>
+                        </children>
+                    </AnchorPane>
+
+                    <HBox alignment="CENTER" layoutX="24.0" layoutY="80.0" spacing="40.0" AnchorPane.leftAnchor="24.0" AnchorPane.rightAnchor="24.0">
+                        <children>
+                            <VBox alignment="CENTER" spacing="10.0">
+                                <children>
+                                    <Label text="Gestion des Documents" style="-fx-font-weight: bold; -fx-font-size: 18px;" textFill="#1e293b"/>
+                                    <Label text="Ajoutez de nouveaux documents médicaux, analyses ou comptes-rendus au dossier patient." 
+                                           wrapText="true" textFill="#64748b" alignment="CENTER" maxWidth="500.0"/>
+                                </children>
+                            </VBox>
+                            
+                            <Button fx:id="btnCreerDocument"
+                                    mnemonicParsing="false"
+                                    onAction="#openAjouterDocument"
+                                    prefHeight="56.0"
+                                    prefWidth="260.0"
+                                    style="-fx-background-color: linear-gradient(to right, #0d9488, #0f766e);
+                                           -fx-text-fill: white;
+                                           -fx-font-weight: bold;
+                                           -fx-background-radius: 14;
+                                           -fx-cursor: hand;
+                                           -fx-font-size: 16px;"
+                                    text="➕ Créer un document">
+                                <effect>
+                                    <DropShadow color="#0d948840" radius="15" offsetY="6"/>
+                                </effect>
+                            </Button>
+                        </children>
+                    </HBox>
+                </children>
+            </AnchorPane>
+
+        </VBox>
+
+    </content>
+</ScrollPane>

@@ -18,54 +18,52 @@ public class MedecinService implements IService<Medecin> {
 
     @Override
     public void add(Medecin medecin) throws SQLException {
-        String sql = "INSERT INTO medecins (email, password, first_name, last_name, age, gender, is_active, roles, " +
+        String sql = "INSERT INTO medecins (email, password, first_name, last_name, gender, is_active, roles, " +
                      "phone_number, specialty, cin, address, governorate, education, experience, is_verified, " +
                      "ai_average_score) " +
-                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         PreparedStatement ps = conn.prepareStatement(sql);
         ps.setString(1, medecin.getEmail());
         ps.setString(2, medecin.getPassword());
         ps.setString(3, medecin.getFirstName());
         ps.setString(4, medecin.getLastName());
-        ps.setInt(5, medecin.getAge());
-        ps.setString(6, medecin.getGender());
-        ps.setBoolean(7, medecin.isActive());
-        ps.setString(8, medecin.getRoles() != null ? medecin.getRoles() : "[\"ROLE_MEDECIN\"]");
-        ps.setString(9, medecin.getPhoneNumber());
-        ps.setString(10, medecin.getSpecialty() != null ? medecin.getSpecialty().name() : null);
-        ps.setString(11, medecin.getCin());
-        ps.setString(12, medecin.getAddress());
-        ps.setString(13, medecin.getGovernorate() != null ? medecin.getGovernorate().name() : null);
-        ps.setString(14, medecin.getEducation());
-        ps.setString(15, medecin.getExperience());
-        ps.setBoolean(16, medecin.isVerified());
-        ps.setObject(17, medecin.getAiAverageScore());
+        ps.setString(5, medecin.getGender());
+        ps.setBoolean(6, medecin.isActive());
+        ps.setString(7, medecin.getRoles() != null ? medecin.getRoles() : "[\"ROLE_MEDECIN\"]");
+        ps.setString(8, medecin.getPhoneNumber());
+        ps.setString(9, medecin.getSpecialty() != null ? medecin.getSpecialty().name() : null);
+        ps.setString(10, medecin.getCin());
+        ps.setString(11, medecin.getAddress());
+        ps.setString(12, medecin.getGovernorate() != null ? medecin.getGovernorate().name() : null);
+        ps.setString(13, medecin.getEducation());
+        ps.setString(14, medecin.getExperience());
+        ps.setBoolean(15, medecin.isVerified());
+        ps.setObject(16, medecin.getAiAverageScore());
         ps.executeUpdate();
         System.out.println("✅ Medecin added to table 'medecins'!");
     }
 
     @Override
     public void update(Medecin medecin) throws SQLException {
-        String sql = "UPDATE medecins SET email=?, first_name=?, last_name=?, age=?, gender=?, is_active=?, " +
+        String sql = "UPDATE medecins SET email=?, first_name=?, last_name=?, gender=?, is_active=?, " +
                      "phone_number=?, specialty=?, cin=?, address=?, governorate=?, education=?, " +
                      "experience=?, is_verified=?, ai_average_score=? WHERE id=?";
         PreparedStatement ps = conn.prepareStatement(sql);
         ps.setString(1, medecin.getEmail());
         ps.setString(2, medecin.getFirstName());
         ps.setString(3, medecin.getLastName());
-        ps.setInt(4, medecin.getAge());
-        ps.setString(5, medecin.getGender());
-        ps.setBoolean(6, medecin.isActive());
-        ps.setString(7, medecin.getPhoneNumber());
-        ps.setString(8, medecin.getSpecialty() != null ? medecin.getSpecialty().name() : null);
-        ps.setString(9, medecin.getCin());
-        ps.setString(10, medecin.getAddress());
-        ps.setString(11, medecin.getGovernorate() != null ? medecin.getGovernorate().name() : null);
-        ps.setString(12, medecin.getEducation());
-        ps.setString(13, medecin.getExperience());
-        ps.setBoolean(14, medecin.isVerified());
-        ps.setObject(15, medecin.getAiAverageScore());
-        ps.setInt(16, medecin.getId());
+        ps.setString(4, medecin.getGender());
+        ps.setBoolean(5, medecin.isActive());
+        ps.setString(6, medecin.getPhoneNumber());
+        ps.setString(7, medecin.getSpecialty() != null ? medecin.getSpecialty().name() : null);
+        ps.setString(8, medecin.getCin());
+        ps.setString(9, medecin.getAddress());
+        ps.setString(10, medecin.getGovernorate() != null ? medecin.getGovernorate().name() : null);
+        ps.setString(11, medecin.getEducation());
+        ps.setString(12, medecin.getExperience());
+        ps.setBoolean(13, medecin.isVerified());
+        ps.setObject(14, medecin.getAiAverageScore());
+        ps.setInt(15, medecin.getId());
         ps.executeUpdate();
         System.out.println("✅ Medecin updated in 'medecins'!");
     }
@@ -119,11 +117,11 @@ public class MedecinService implements IService<Medecin> {
         m.setPassword(rs.getString("password"));
         m.setFirstName(rs.getString("first_name"));
         m.setLastName(rs.getString("last_name"));
-        m.setAge(rs.getInt("age"));
-        m.setGender(rs.getString("gender"));
+        try { m.setAge(rs.getInt("age")); } catch (SQLException e) { m.setAge(0); }
+        try { m.setGender(rs.getString("gender")); } catch (SQLException e) { m.setGender(null); }
         m.setActive(rs.getBoolean("is_active"));
         m.setRoles(rs.getString("roles"));
-        m.setPhoneNumber(rs.getString("phone_number"));
+        try { m.setPhoneNumber(rs.getString("phone_number")); } catch (SQLException e) { m.setPhoneNumber(null); }
         // Parse specialty — stored as enum name (e.g. "CARDIOLOGIE") or display name
         String specialtyRaw = rs.getString("specialty");
         if (specialtyRaw != null) {
@@ -132,8 +130,8 @@ public class MedecinService implements IService<Medecin> {
             if (spec == null) spec = Specialty.fromDisplayName(specialtyRaw);
             m.setSpecialty(spec);
         }
-        m.setCin(rs.getString("cin"));
-        m.setAddress(rs.getString("address"));
+        try { m.setCin(rs.getString("cin")); } catch (SQLException e) { m.setCin(null); }
+        try { m.setAddress(rs.getString("address")); } catch (SQLException e) { m.setAddress(null); }
         // Parse governorate — stored as enum name (e.g. "TUNIS") or display name
         String govRaw = rs.getString("governorate");
         if (govRaw != null) {
@@ -142,17 +140,17 @@ public class MedecinService implements IService<Medecin> {
             if (gov == null) gov = Governorate.fromDisplayName(govRaw);
             m.setGovernorate(gov);
         }
-        m.setEducation(rs.getString("education"));
-        m.setExperience(rs.getString("experience"));
-        m.setVerified(rs.getBoolean("is_verified"));
-        m.setAiAverageScore(rs.getObject("ai_average_score") != null ?
-                rs.getDouble("ai_average_score") : null);
+        try { m.setEducation(rs.getString("education")); } catch (SQLException e) { m.setEducation(null); }
+        try { m.setExperience(rs.getString("experience")); } catch (SQLException e) { m.setExperience(null); }
+        try { m.setVerified(rs.getBoolean("is_verified")); } catch (SQLException e) { m.setVerified(false); }
+        try { m.setAiAverageScore(rs.getObject("ai_average_score") != null ?
+                rs.getDouble("ai_average_score") : null); } catch (SQLException e) { m.setAiAverageScore(null); }
         
         // Parse rating fields
-        m.setAverageRating(rs.getObject("averageRating") != null ?
-                rs.getDouble("averageRating") : 0.0);
-        m.setTotalReviews(rs.getObject("totalReviews") != null ?
-                rs.getInt("totalReviews") : 0);
+        try { m.setAverageRating(rs.getObject("averageRating") != null ?
+                rs.getDouble("averageRating") : 0.0); } catch (SQLException e) { m.setAverageRating(0.0); }
+        try { m.setTotalReviews(rs.getObject("totalReviews") != null ?
+                rs.getInt("totalReviews") : 0); } catch (SQLException e) { m.setTotalReviews(0); }
         
         return m;
     }

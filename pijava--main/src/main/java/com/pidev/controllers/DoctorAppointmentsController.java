@@ -323,6 +323,28 @@ public class DoctorAppointmentsController {
             actionButtons.getChildren().add(cancelButton);
         }
 
+        // Add Dossier Medical button for all (or only completed/pending)
+        Button dossierButton = new Button("📂 Dossier Médical");
+        dossierButton.setStyle(
+            "-fx-background-color: #3b82f6;" +
+            "-fx-text-fill: white;" +
+            "-fx-font-size: 12px;" +
+            "-fx-font-weight: 600;" +
+            "-fx-padding: 6 12;" +
+            "-fx-background-radius: 6;" +
+            "-fx-cursor: hand;"
+        );
+        dossierButton.setOnAction(e -> {
+            UserSession.getInstance().setSelectedPatientId(rdv.getPatientId());
+            UserSession.getInstance().setSelectedAppointmentId(rdv.getId());
+            UserSession.getInstance().setSelectedMedecinId(rdv.getMedecinId());
+            
+            if (MainUserController.getInstance() != null) {
+                MainUserController.getInstance().showOrdonnances();
+            }
+        });
+        actionButtons.getChildren().add(dossierButton);
+
         if (!actionButtons.getChildren().isEmpty()) {
             card.getChildren().addAll(header, actionButtons);
         } else {

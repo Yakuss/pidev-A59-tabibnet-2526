@@ -567,6 +567,48 @@ VBox.content-area {
     -fx-border-width: 0;
 }
 
+/* ── MenuButton & MenuItem ─────────────────────────────────── */
+.menu-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: -pd-text-secondary;
+}
+
+.menu-button .label {
+    -fx-text-fill: -pd-text-secondary;
+    -fx-font-size: 13px;
+    -fx-font-weight: 500;
+}
+
+.menu-button:hover .label {
+    -fx-text-fill: -pd-text-primary;
+}
+
+.context-menu {
+    -fx-background-color: -pd-surface-2;
+    -fx-border-color: -pd-border;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-padding: 5;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.4), 10, 0, 0, 5);
+}
+
+.menu-item {
+    -fx-padding: 8 16;
+}
+
+.menu-item .label {
+    -fx-text-fill: -pd-text-secondary;
+    -fx-font-size: 13px;
+}
+
+.menu-item:focused, .menu-item:hover {
+    -fx-background-color: -pd-surface-3;
+}
+
+.menu-item:focused .label, .menu-item:hover .label {
+    -fx-text-fill: -pd-text-primary;
+}
+
 /* ── Dialog Pane ────────────────────────────────────────────── */
 .dialog-pane {
     -fx-background-color: -pd-surface-1;

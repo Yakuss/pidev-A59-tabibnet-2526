@@ -1,0 +1,240 @@
+/* symfony_premium.css - Replicating the Symfony Medical Dossier UI */
+
+.medical-dashboard {
+    -fx-background-color: #f8fafc; /* --gray-50 */
+    -fx-padding: 32;
+}
+
+.dashboard-container {
+    -fx-background-color: white;
+    -fx-background-radius: 16;
+    -fx-border-radius: 16;
+    -fx-border-color: #e2e8f0;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 25, 0, 0, 20);
+}
+
+/* Header Premium */
+.dashboard-header {
+    -fx-background-color: linear-gradient(to bottom right, #0d9488, #0f766e);
+    -fx-padding: 32 40;
+    -fx-background-radius: 16 16 0 0;
+}
+
+.header-icon-wrapper {
+    -fx-background-color: rgba(255,255,255,0.2);
+    -fx-background-radius: 12;
+    -fx-padding: 10;
+    -fx-alignment: center;
+}
+
+.header-title {
+    -fx-text-fill: white;
+    -fx-font-size: 28;
+    -fx-font-weight: bold;
+}
+
+.header-subtitle {
+    -fx-text-fill: rgba(255,255,255,0.9);
+    -fx-font-size: 15;
+}
+
+.stats-badge {
+    -fx-background-color: rgba(255,255,255,0.15);
+    -fx-background-radius: 24;
+    -fx-padding: 12 24;
+    -fx-alignment: center;
+}
+
+/* Section Cards */
+.section-card {
+    -fx-background-color: white;
+    -fx-background-radius: 12;
+    -fx-border-radius: 12;
+    -fx-border-color: #e2e8f0;
+    -fx-padding: 0;
+    -fx-margin: 0 0 32 0;
+}
+
+.section-header {
+    -fx-background-color: linear-gradient(to right, white, #f8fafc);
+    -fx-padding: 24 32;
+    -fx-border-color: transparent transparent #e2e8f0 transparent;
+    -fx-border-width: 0 0 1 0;
+}
+
+.section-title {
+    -fx-font-size: 20;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1e293b;
+}
+
+/* Tables */
+.data-table {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
+.data-table .column-header {
+    -fx-background-color: #f1f5f9;
+    -fx-text-fill: #475569;
+    -fx-font-weight: bold;
+    -fx-font-size: 11;
+    -fx-padding: 16 12;
+}
+
+.data-table .table-row-cell:hover {
+    -fx-background-color: #f8fafc;
+}
+
+/* Badges */
+.badge {
+    -fx-padding: 6 14;
+    -fx-background-radius: 24;
+    -fx-font-weight: bold;
+    -fx-font-size: 12;
+}
+
+.badge-document {
+    -fx-background-color: rgba(59, 130, 246, 0.1);
+    -fx-text-fill: #3b82f6;
+}
+
+/* Buttons */
+.btn-primary {
+    -fx-background-color: #0d9488;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 10 20;
+    -fx-background-radius: 8;
+    -fx-cursor: hand;
+}
+
+.btn-primary:hover {
+    -fx-background-color: #0f766e;
+}
+
+.btn-success {
+    -fx-background-color: #10b981;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 10 20;
+    -fx-background-radius: 8;
+    -fx-cursor: hand;
+}
+
+.btn-outline {
+    -fx-background-color: transparent;
+    -fx-border-color: #cbd5e1;
+    -fx-text-fill: #475569;
+    -fx-padding: 10 20;
+    -fx-background-radius: 8;
+    -fx-cursor: hand;
+}
+
+/* Association Mini-Cards */
+.association-card {
+    -fx-background-color: white;
+    -fx-border-color: #e2e8f0;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-padding: 10;
+    -fx-margin: 5 0;
+}
+
+.association-type {
+    -fx-font-size: 10;
+    -fx-font-weight: bold;
+    -fx-text-fill: #64748b;
+}
+
+.association-id {
+    -fx-background-color: rgba(13, 148, 136, 0.1);
+    -fx-text-fill: #0d9488;
+    -fx-padding: 2 4;
+    -fx-background-radius: 4;
+    -fx-font-size: 10;
+}
+
+/* Detail View Styles (Show) */
+.detail-container {
+    -fx-background-color: #fafaf9; /* --bg-warm */
+    -fx-padding: 60 40;
+}
+
+.detail-card {
+    -fx-background-color: white;
+    -fx-background-radius: 24;
+    -fx-border-radius: 24;
+    -fx-border-color: #e7e5e4;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 30, 0, 0, 20);
+}
+
+.detail-header {
+    -fx-background-color: linear-gradient(to bottom right, #0f766e, #0d9488, #064e3b);
+    -fx-padding: 40;
+    -fx-background-radius: 24 24 0 0;
+    -fx-alignment: center;
+}
+
+.hero-icon {
+    -fx-background-color: rgba(255,255,255,0.15);
+    -fx-background-radius: 16;
+    -fx-padding: 20;
+    -fx-font-size: 40;
+    -fx-border-color: rgba(255,255,255,0.2);
+}
+
+.info-card {
+    -fx-background-color: linear-gradient(to bottom right, #f0fdf4, white);
+    -fx-border-color: #a7f3d0;
+    -fx-border-width: 2;
+    -fx-background-radius: 12;
+    -fx-padding: 24;
+}
+
+.data-item-card {
+    -fx-background-color: white;
+    -fx-border-color: #e7e5e4;
+    -fx-border-width: 2;
+    -fx-background-radius: 12;
+    -fx-padding: 20;
+}
+
+.data-item-card:hover {
+    -fx-border-color: #14b8a6;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 4);
+}
+
+.item-label-small {
+    -fx-text-fill: #a8a29e;
+    -fx-font-size: 11;
+    -fx-font-weight: bold;
+}
+
+.item-value-box {
+    -fx-background-color: #f8fafc;
+    -fx-padding: 12 16;
+    -fx-background-radius: 8;
+    -fx-border-color: transparent transparent transparent #14b8a6;
+    -fx-border-width: 0 0 0 4;
+}
+
+/* Form Styles (Add/Edit) */
+.form-field-label {
+    -fx-text-fill: #1c1917;
+    -fx-font-weight: bold;
+    -fx-font-size: 14;
+}
+
+.form-field-input {
+    -fx-background-color: white;
+    -fx-border-color: #e7e5e4;
+    -fx-border-width: 2;
+    -fx-background-radius: 12;
+    -fx-padding: 12 16;
+}
+
+.form-field-input:focused {
+    -fx-border-color: #14b8a6;
+    -fx-effect: dropshadow(three-pass-box, rgba(20, 184, 166, 0.1), 4, 0, 0, 0);
+}

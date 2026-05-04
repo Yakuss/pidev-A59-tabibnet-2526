@@ -119,4 +119,42 @@ public class AppointmentService implements IService<Appointment> {
         } catch (SQLException ignored) {}
         return a;
     }
+
+    public List<Appointment> getAppointmentsByPatientAndDoctor(Integer patientId, Integer doctorId) throws SQLException {
+        List<Appointment> list = new ArrayList<>();
+        String sql = "SELECT a.*, " +
+                     "COALESCE(CONCAT(p.first_name, ' ', p.last_name), 'Patient Inconnu') AS patient_name, " +
+                     "COALESCE(CONCAT(d.first_name, ' ', d.last_name), 'Médecin Inconnu') AS doctor_name " +
+                     "FROM appointment a " +
+                     "LEFT JOIN patients p ON a.patient_id = p.id " +
+                     "LEFT JOIN medecins d ON a.doctor_id = d.id " +
+                     "WHERE a.patient_id=? AND a.doctor_id=? " +
+                     "ORDER BY a.date DESC";
+        PreparedStatement ps = conn.prepareStatement(sql);
+        ps.setInt(1, patientId);
+        ps.setInt(2, doctorId);
+        ResultSet rs = ps.executeQuery();
+        while (rs.next()) {
+            list.add(mapResultSet(rs));
+        }
+        return list;
+    }
+    public List<Appointment> getAppointmentsByDoctor(Integer doctorId) throws SQLException {
+        List<Appointment> list = new ArrayList<>();
+        String sql = "SELECT a.*, " +
+                     "COALESCE(CONCAT(p.first_name, ' ', p.last_name), 'Patient Inconnu') AS patient_name, " +
+                     "COALESCE(CONCAT(d.first_name, ' ', d.last_name), 'Médecin Inconnu') AS doctor_name " +
+                     "FROM appointment a " +
+                     "LEFT JOIN patients p ON a.patient_id = p.id " +
+                     "LEFT JOIN medecins d ON a.doctor_id = d.id " +
+                     "WHERE a.doctor_id=? " +
+                     "ORDER BY a.date DESC";
+        PreparedStatement ps = conn.prepareStatement(sql);
+        ps.setInt(1, doctorId);
+        ResultSet rs = ps.executeQuery();
+        while (rs.next()) {
+            list.add(mapResultSet(rs));
+        }
+        return list;
+    }
 }
