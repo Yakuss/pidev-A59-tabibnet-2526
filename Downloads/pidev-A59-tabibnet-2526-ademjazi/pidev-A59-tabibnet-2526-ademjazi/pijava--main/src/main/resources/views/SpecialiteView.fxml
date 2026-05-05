@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.cell.PropertyValueFactory?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.pidev.controllers.SpecialiteController"
+      spacing="20"
+      styleClass="content-area"
+      stylesheets="@../styles/style.css">
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!-- HEADER -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <HBox alignment="CENTER_LEFT" spacing="16">
+        <VBox HBox.hgrow="ALWAYS" spacing="4">
+            <Label text="🏥 Gestion des Spécialités" styleClass="page-title"/>
+            <Label text="Ajouter, modifier ou supprimer les spécialités médicales"
+                   styleClass="page-subtitle"/>
+        </VBox>
+        <!-- Stats badge -->
+        <HBox spacing="8" alignment="CENTER"
+              style="-fx-background-color: rgba(139,92,246,0.12); -fx-background-radius: 20;
+                     -fx-padding: 8 18; -fx-border-color: rgba(139,92,246,0.3);
+                     -fx-border-radius: 20; -fx-border-width: 1;">
+            <Label text="📊" style="-fx-font-size: 16px;"/>
+            <Label fx:id="lblCount" text="0 spécialité(s)"
+                   style="-fx-text-fill: #a78bfa; -fx-font-size: 13px; -fx-font-weight: 700;"/>
+        </HBox>
+    </HBox>
+
+    <!-- Status bar -->
+    <HBox alignment="CENTER_LEFT" spacing="8"
+          style="-fx-background-color: rgba(34,197,94,0.07); -fx-background-radius: 8;
+                 -fx-padding: 8 16; -fx-border-color: rgba(34,197,94,0.2);
+                 -fx-border-radius: 8; -fx-border-width: 1;">
+        <Label fx:id="lblStatus" text="✅ Module Spécialités chargé"
+               style="-fx-text-fill: #22c55e; -fx-font-size: 12px; -fx-font-weight: 700;"/>
+    </HBox>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!-- MAIN CONTENT -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <HBox spacing="20" VBox.vgrow="ALWAYS">
+
+        <!-- ══════════════════════════════════════════════════════════ -->
+        <!-- LEFT: LIST + SEARCH -->
+        <!-- ══════════════════════════════════════════════════════════ -->
+        <VBox HBox.hgrow="ALWAYS" styleClass="card" spacing="14">
+
+            <HBox alignment="CENTER_LEFT" spacing="12">
+                <Label text="🏥 Liste des Spécialités"
+                       style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #f1f5f9;"/>
+                <Region HBox.hgrow="ALWAYS"/>
+            </HBox>
+
+            <!-- Search bar -->
+            <HBox spacing="10" alignment="CENTER_LEFT"
+                  style="-fx-padding: 12; -fx-background-color: #141826;
+                         -fx-background-radius: 8; -fx-border-color: #252d42;
+                         -fx-border-width: 1; -fx-border-radius: 8;">
+                <Label text="🔍 Recherche" style="-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #22c55e;"/>
+                <TextField fx:id="searchField"
+                           promptText="Rechercher par nom ou description..."
+                           styleClass="text-field"
+                           prefHeight="36"
+                           HBox.hgrow="ALWAYS"/>
+            </HBox>
+
+            <!-- Cards list -->
+            <ListView fx:id="listSpecialites" VBox.vgrow="ALWAYS"
+                      style="-fx-background-color: transparent; -fx-border-color: transparent;">
+                <placeholder>
+                    <VBox alignment="CENTER" spacing="14" style="-fx-padding: 60;">
+                        <Label text="🏥" style="-fx-font-size: 56px;"/>
+                        <Label text="Aucune spécialité trouvée"
+                               style="-fx-text-fill: #6b7280; -fx-font-size: 16px; -fx-font-weight: 600;"/>
+                        <Label text="Ajoutez votre première spécialité médicale !"
+                               style="-fx-text-fill: #9ca3af; -fx-font-size: 13px;"/>
+                    </VBox>
+                </placeholder>
+            </ListView>
+        </VBox>
+
+        <!-- ══════════════════════════════════════════════════════════ -->
+        <!-- RIGHT: FORM -->
+        <!-- ══════════════════════════════════════════════════════════ -->
+        <ScrollPane fitToWidth="true" prefWidth="380" minWidth="360"
+                    style="-fx-background-color: transparent; -fx-border-color: transparent;">
+            <VBox styleClass="card" spacing="14" style="-fx-min-width: 340;">
+
+                <Label fx:id="formTitle" text="➕ Ajouter une Spécialité"
+                       style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #22c55e;"/>
+                <Separator style="-fx-background-color: #252d42;"/>
+
+                <!-- Nom -->
+                <Label text="Nom de la spécialité *" styleClass="form-label"/>
+                <TextField fx:id="tfNom"
+                           promptText="ex: Cardiologie, Dermatologie..."
+                           styleClass="text-field"
+                           prefHeight="40"/>
+
+                <!-- Description -->
+                <Label text="Description" styleClass="form-label"/>
+                <TextArea fx:id="tfDescription"
+                          promptText="Décrivez cette spécialité médicale..."
+                          wrapText="true"
+                          prefRowCount="5"
+                          styleClass="text-field"
+                          style="-fx-pref-height: 120;"/>
+
+                <Separator style="-fx-background-color: #252d42;"/>
+
+                <!-- Buttons -->
+                <Button fx:id="btnAdd" text="➕  Ajouter la spécialité"
+                        onAction="#addSpecialite"
+                        maxWidth="Infinity" prefHeight="44"
+                        styleClass="btn-primary"
+                        style="-fx-font-size: 14px; -fx-font-weight: 700;"/>
+
+                <Button fx:id="btnUpdate" text="📝  Modifier"
+                        onAction="#updateSpecialite"
+                        maxWidth="Infinity" prefHeight="42"
+                        style="-fx-background-color: #f59e0b; -fx-text-fill: white;
+                               -fx-font-weight: 700; -fx-font-size: 13px;
+                               -fx-background-radius: 8; -fx-cursor: hand;"/>
+
+                <Button fx:id="btnDelete" text="🗑️  Supprimer"
+                        onAction="#deleteSpecialite"
+                        maxWidth="Infinity" prefHeight="42"
+                        styleClass="btn-danger"
+                        style="-fx-font-size: 13px; -fx-font-weight: 700;"/>
+
+                <Button fx:id="btnClear" text="🔄  Réinitialiser"
+                        onAction="#clearForm"
+                        maxWidth="Infinity" prefHeight="38"
+                        styleClass="btn-secondary"
+                        style="-fx-font-size: 13px;"/>
+
+                <!-- Info box -->
+                <VBox spacing="6"
+                      style="-fx-background-color: rgba(91,110,245,0.08); -fx-background-radius: 8;
+                             -fx-padding: 12; -fx-border-color: rgba(91,110,245,0.2);
+                             -fx-border-width: 1; -fx-border-radius: 8;">
+                    <Label text="ℹ️ Instructions"
+                           style="-fx-text-fill: #818cf8; -fx-font-size: 12px; -fx-font-weight: 700;"/>
+                    <Label text="• Cliquez sur une carte pour la sélectionner"
+                           style="-fx-text-fill: #94a3b8; -fx-font-size: 11px;" wrapText="true"/>
+                    <Label text="• Remplissez le formulaire puis cliquez Ajouter"
+                           style="-fx-text-fill: #94a3b8; -fx-font-size: 11px;" wrapText="true"/>
+                    <Label text="• Sélectionnez une spécialité pour la modifier/supprimer"
+                           style="-fx-text-fill: #94a3b8; -fx-font-size: 11px;" wrapText="true"/>
+                </VBox>
+
+            </VBox>
+        </ScrollPane>
+    </HBox>
+</VBox>

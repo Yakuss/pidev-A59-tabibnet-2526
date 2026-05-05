@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml" 
+      fx:controller="com.pidev.controllers.FeedbackDialogController"
+      spacing="0" 
+      style="-fx-background-color: #0e1220;"
+      prefWidth="500" prefHeight="450">
+    
+    <!-- Define ToggleGroup outside of layout -->
+    <fx:define>
+        <ToggleGroup fx:id="ratingGroup"/>
+    </fx:define>
+    
+    <!-- Scrollable Content -->
+    <ScrollPane style="-fx-background-color: #0e1220; -fx-padding: 0; -fx-border-color: transparent;" 
+                fitToWidth="true"
+                VBox.vgrow="ALWAYS">
+        <VBox spacing="20" 
+              style="-fx-padding: 25; -fx-background-color: #0e1220;">
+            
+            <!-- Title -->
+            <Label text="Laisser un Avis" 
+                   style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #f1f5f9;"/>
+            
+            <!-- Appointment Info Card -->
+            <VBox spacing="12" 
+                  style="-fx-padding: 18; -fx-background-color: #141826; -fx-background-radius: 12; -fx-border-color: #252d42; -fx-border-width: 1; -fx-border-radius: 12;">
+                <Label text="Rendez-vous" 
+                       style="-fx-font-weight: bold; -fx-font-size: 14px; -fx-text-fill: #94a3b8;"/>
+                <Label fx:id="doctorNameLabel" 
+                       text="Dr. Name" 
+                       style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #f1f5f9;"/>
+                <Label fx:id="appointmentDateLabel" 
+                       text="Date et heure" 
+                       style="-fx-font-size: 13px; -fx-text-fill: #94a3b8;"/>
+            </VBox>
+            
+            <!-- Rating Selection -->
+            <VBox spacing="10">
+                <Label text="⭐ Note (1-5)" 
+                       style="-fx-font-weight: bold; -fx-font-size: 14px; -fx-text-fill: #f1f5f9;"/>
+                <HBox spacing="8" alignment="CENTER_LEFT">
+                    <RadioButton fx:id="rating1" text="⭐" toggleGroup="$ratingGroup" 
+                                 style="-fx-font-size: 16px; -fx-text-fill: #f1f5f9;"/>
+                    <RadioButton fx:id="rating2" text="⭐⭐" toggleGroup="$ratingGroup" 
+                                 style="-fx-font-size: 16px; -fx-text-fill: #f1f5f9;"/>
+                    <RadioButton fx:id="rating3" text="⭐⭐⭐" toggleGroup="$ratingGroup" 
+                                 style="-fx-font-size: 16px; -fx-text-fill: #f1f5f9;"/>
+                    <RadioButton fx:id="rating4" text="⭐⭐⭐⭐" toggleGroup="$ratingGroup" 
+                                 style="-fx-font-size: 16px; -fx-text-fill: #f1f5f9;"/>
+                    <RadioButton fx:id="rating5" text="⭐⭐⭐⭐⭐" toggleGroup="$ratingGroup" 
+                                 style="-fx-font-size: 16px; -fx-text-fill: #f1f5f9;"/>
+                </HBox>
+                <Label fx:id="ratingErrorLabel" 
+                       text="" 
+                       style="-fx-text-fill: #ef4444; -fx-font-size: 12px;"/>
+            </VBox>
+            
+            <!-- Comment -->
+            <VBox spacing="10">
+                <Label text="💬 Commentaire" 
+                       style="-fx-font-weight: bold; -fx-font-size: 14px; -fx-text-fill: #f1f5f9;"/>
+                <TextArea fx:id="commentArea" 
+                          prefHeight="120" 
+                          wrapText="true" 
+                          promptText="Partagez votre expérience avec ce médecin..."
+                          style="-fx-font-size: 13px; -fx-padding: 10; -fx-background-color: #141826; -fx-text-fill: #f1f5f9; -fx-border-color: #252d42; -fx-border-width: 1; -fx-border-radius: 8; -fx-control-inner-background: #141826;"/>
+                <Label fx:id="commentErrorLabel" 
+                       text="" 
+                       style="-fx-text-fill: #ef4444; -fx-font-size: 12px;"/>
+            </VBox>
+            
+            <!-- Spacer -->
+            <Region prefHeight="20"/>
+        </VBox>
+    </ScrollPane>
+    
+    <!-- Buttons (Fixed at Bottom) -->
+    <HBox spacing="12" alignment="CENTER_RIGHT"
+          style="-fx-padding: 20; -fx-background-color: #0e1220; -fx-border-color: #252d42; -fx-border-width: 1 0 0 0;">
+        <Button text="Annuler" 
+                onAction="#handleCancel" 
+                style="-fx-padding: 12 30; -fx-font-size: 13px; -fx-font-weight: 600; -fx-background-color: #1e293b; -fx-text-fill: #f1f5f9; -fx-background-radius: 8; -fx-cursor: hand; -fx-border-color: #252d42; -fx-border-width: 1; -fx-border-radius: 8;"/>
+        <Button text="✓ Soumettre" 
+                onAction="#handleSubmit" 
+                style="-fx-padding: 12 30; -fx-font-size: 13px; -fx-font-weight: 600; -fx-background-color: #22c55e; -fx-text-fill: white; -fx-background-radius: 8; -fx-cursor: hand; -fx-border-width: 0;"/>
+    </HBox>
+</VBox>
