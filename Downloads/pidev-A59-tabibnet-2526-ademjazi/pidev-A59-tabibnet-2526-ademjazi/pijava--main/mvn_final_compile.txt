@@ -1,0 +1,20 @@
+﻿[INFO] Scanning for projects...
+[INFO] 
+[INFO] --------------------------< com.pidev:pidev >---------------------------
+[INFO] Building pidev 1.0-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[WARNING] 6 problems were encountered while building the effective model for org.openjfx:javafx-controls:jar:17.0.11
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ pidev ---
+[INFO] Copying 8 resources from src\main\resources to target\classes
+[INFO] 
+[INFO] --- compiler:3.12.1:compile (default-compile) @ pidev ---
+[INFO] Recompiling the module because of added or removed source files.
+[INFO] Compiling 31 source files with javac [debug target 17 module-path] to target\classes
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  1.526 s
+[INFO] Finished at: 2026-04-06T22:55:10+01:00
+[INFO] ------------------------------------------------------------------------
