@@ -1,9 +1,9 @@
 package com.pidev.controllers;
 
-import com.pidev.models.Appointment;
+import com.pidev.models.RendezVous;
 import com.pidev.models.Ordonnance;
 import com.pidev.services.OrdonnanceService;
-import com.pidev.services.AppointmentService;
+import com.pidev.services.RendezVousService;
 import com.pidev.utils.UserSession;
 import com.pidev.utils.AppointmentSessionManager;
 import javafx.collections.FXCollections;
@@ -35,10 +35,10 @@ public class OrdonnanceController implements Initializable {
     @FXML
     private TextArea instructionsTA;
     @FXML
-    private ComboBox<Appointment> rendezVousCB;
+    private ComboBox<RendezVous> rendezVousCB;
 
     private OrdonnanceService ordonnanceService = new OrdonnanceService();
-    private AppointmentService appointmentService = new AppointmentService();
+    private RendezVousService appointmentService = new RendezVousService();
     private Ordonnance currentOrdonnance = null;
 
     @FXML
@@ -47,7 +47,7 @@ public class OrdonnanceController implements Initializable {
         loadAppointments();
         
         // Auto-select appointment from session if available
-        Appointment sessionAppointment = AppointmentSessionManager.getInstance().getSelectedAppointment();
+        RendezVous sessionAppointment = AppointmentSessionManager.getInstance().getSelectedAppointment();
         if (sessionAppointment != null) {
             System.out.println("OrdonnanceController: Auto-selecting appointment from session: " + sessionAppointment.getId());
             rendezVousCB.setValue(sessionAppointment);
@@ -60,7 +60,7 @@ public class OrdonnanceController implements Initializable {
             Integer medecinId = UserSession.getInstance().getSelectedMedecinId();
             System.out.println("Ordonnance: Loading appointments for Patient=" + patientId + ", Medecin=" + medecinId);
             if (medecinId != null) {
-                List<Appointment> list;
+                List<RendezVous> list;
                 if (patientId != null && patientId > 0) {
                     list = appointmentService.getAppointmentsByPatientAndDoctor(patientId, medecinId);
                 } else {
@@ -89,7 +89,7 @@ public class OrdonnanceController implements Initializable {
         instructionsTA.setText(o.getInstructions());
         
         if (o.getAppointmentId() != null && o.getAppointmentId() > 0) {
-            for (Appointment a : rendezVousCB.getItems()) {
+            for (RendezVous a : rendezVousCB.getItems()) {
                 if (a.getId() == o.getAppointmentId()) {
                     rendezVousCB.setValue(a);
                     break;

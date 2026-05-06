@@ -1,9 +1,9 @@
 package com.pidev.controllers;
 
-import com.pidev.models.Appointment;
+import com.pidev.models.RendezVous;
 import com.pidev.models.Question;
 import com.pidev.models.Specialite;
-import com.pidev.services.AppointmentService;
+import com.pidev.services.RendezVousService;
 import com.pidev.services.PatientService;
 import com.pidev.services.MedecinService;
 import com.pidev.services.QuestionService;
@@ -54,7 +54,7 @@ public class HomeController {
     private final PatientService     patientService     = new PatientService();
     private final MedecinService     medecinService     = new MedecinService();
     private final QuestionService    questionService    = new QuestionService();
-    private final AppointmentService appointmentService = new AppointmentService();
+    private final RendezVousService appointmentService = new RendezVousService();
     private final SpecialiteService  specialiteService  = new SpecialiteService();
 
     private static final DateTimeFormatter DATE_FMT =
@@ -116,7 +116,7 @@ public class HomeController {
         }
 
         try {
-            List<Appointment> appointments = appointmentService.getAll();
+            List<RendezVous> appointments = appointmentService.getAll();
             lblStatAppointments.setText(String.valueOf(appointments.size()));
             lblAppointmentCount.setText(appointments.size() + " rendez-vous");
         } catch (Exception e) {
@@ -216,15 +216,17 @@ public class HomeController {
         nextAppointmentBox.getChildren().clear();
         try {
             BaseUser user = UserSession.getInstance().getUser();
-            List<Appointment> all = appointmentService.getAll();
+            List<RendezVous> all = appointmentService.getAll();
 
             // Find the first upcoming appointment for this user
-            Appointment next = null;
+            RendezVous next = null;
             if (user != null) {
                 next = all.stream()
                         .filter(a -> a.getPatientId() == user.getId())
-                        .filter(a -> "pending".equalsIgnoreCase(a.getStatus())
-                                  || "confirmed".equalsIgnoreCase(a.getStatus()))
+                        .filter(a -> "pending".equalsIgnoreCase(a.getStatut())
+                                  || "confirmed".equalsIgnoreCase(a.getStatut())
+                                  || "En attente".equalsIgnoreCase(a.getStatut())
+                                  || "Confirmé".equalsIgnoreCase(a.getStatut()))
                         .findFirst()
                         .orElse(null);
             }
@@ -248,8 +250,8 @@ public class HomeController {
             }
 
             // Show the appointment details
-            String statusColor = "confirmed".equalsIgnoreCase(next.getStatus()) ? "#22c55e" : "#f59e0b";
-            String statusText  = "confirmed".equalsIgnoreCase(next.getStatus()) ? "Confirmé" : "En attente";
+            String statusColor = ("confirmed".equalsIgnoreCase(next.getStatut()) || "Confirmé".equalsIgnoreCase(next.getStatut())) ? "#22c55e" : "#f59e0b";
+            String statusText  = ("confirmed".equalsIgnoreCase(next.getStatut()) || "Confirmé".equalsIgnoreCase(next.getStatut())) ? "Confirmé" : "En attente";
 
             VBox card = new VBox(10);
             card.setStyle("-fx-background-color: #141826; -fx-background-radius: 10; -fx-padding: 14;");
@@ -264,7 +266,7 @@ public class HomeController {
             statusRow.getChildren().addAll(statusDot, statusLabel);
 
             // Doctor name
-            Label doctorLabel = new Label("🩺  " + (next.getDoctorName() != null ? next.getDoctorName() : "Médecin"));
+            Label doctorLabel = new Label("🩺  " + (next.getMedecin() != null ? next.getMedecin() : "Médecin"));
             doctorLabel.setStyle("-fx-text-fill: #f1f5f9; -fx-font-size: 14px; -fx-font-weight: 700;");
 
             // Department
@@ -278,14 +280,14 @@ public class HomeController {
 
             // Date & time
             if (next.getDate() != null) {
-                Label dateLabel = new Label("📆  " + next.getDate().format(DATE_FMT));
+                Label dateLabel = new Label("📆  " + next.getDate() + " · " + next.getHeure());
                 dateLabel.setStyle("-fx-text-fill: #818cf8; -fx-font-size: 12px; -fx-font-weight: 600;");
                 card.getChildren().add(dateLabel);
             }
 
             // Duration
-            if (next.getDuration() > 0) {
-                Label durLabel = new Label("⏱  " + next.getDuration() + " minutes");
+            if (next.getDurationMinutes() > 0) {
+                Label durLabel = new Label("⏱  " + next.getDurationMinutes() + " minutes");
                 durLabel.setStyle("-fx-text-fill: #475569; -fx-font-size: 11px;");
                 card.getChildren().add(durLabel);
             }

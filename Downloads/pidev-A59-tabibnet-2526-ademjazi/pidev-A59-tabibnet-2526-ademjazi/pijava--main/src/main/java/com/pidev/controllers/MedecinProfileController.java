@@ -33,6 +33,9 @@ public class MedecinProfileController {
 
     public void setMedecin(Medecin medecin) {
         this.currentMedecin = medecin;
+        if (medecin != null) {
+            com.pidev.utils.UserSession.getInstance().setSelectedMedecinId(medecin.getId());
+        }
         populateProfile();
     }
 

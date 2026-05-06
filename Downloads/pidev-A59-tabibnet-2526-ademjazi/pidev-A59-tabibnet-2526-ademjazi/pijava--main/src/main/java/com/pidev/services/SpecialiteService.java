@@ -12,12 +12,14 @@ import java.util.List;
  */
 public class SpecialiteService implements IService<Specialite> {
 
-    private final Connection conn = DataSource.getInstance().getConnection();
+    private Connection getConnection() {
+        return DataSource.getInstance().getConnection();
+    }
 
     @Override
     public void add(Specialite specialite) throws SQLException {
         String sql = "INSERT INTO specialite (nom, description) VALUES (?, ?)";
-        PreparedStatement ps = conn.prepareStatement(sql);
+        PreparedStatement ps = getConnection().prepareStatement(sql);
         ps.setString(1, specialite.getNom());
         ps.setString(2, specialite.getDescription());
         ps.executeUpdate();
@@ -27,7 +29,7 @@ public class SpecialiteService implements IService<Specialite> {
     @Override
     public void update(Specialite specialite) throws SQLException {
         String sql = "UPDATE specialite SET nom=?, description=? WHERE id=?";
-        PreparedStatement ps = conn.prepareStatement(sql);
+        PreparedStatement ps = getConnection().prepareStatement(sql);
         ps.setString(1, specialite.getNom());
         ps.setString(2, specialite.getDescription());
         ps.setInt(3, specialite.getId());
@@ -37,7 +39,7 @@ public class SpecialiteService implements IService<Specialite> {
 
     @Override
     public void delete(int id) throws SQLException {
-        PreparedStatement ps = conn.prepareStatement("DELETE FROM specialite WHERE id=?");
+        PreparedStatement ps = getConnection().prepareStatement("DELETE FROM specialite WHERE id=?");
         ps.setInt(1, id);
         ps.executeUpdate();
         System.out.println("✅ Spécialité supprimée !");
@@ -47,7 +49,7 @@ public class SpecialiteService implements IService<Specialite> {
     public List<Specialite> getAll() throws SQLException {
         List<Specialite> list = new ArrayList<>();
         String sql = "SELECT * FROM specialite ORDER BY id DESC";
-        Statement st = conn.createStatement();
+        Statement st = getConnection().createStatement();
         ResultSet rs = st.executeQuery(sql);
         while (rs.next()) {
             list.add(mapResultSet(rs));
@@ -58,7 +60,7 @@ public class SpecialiteService implements IService<Specialite> {
     @Override
     public Specialite getById(int id) throws SQLException {
         String sql = "SELECT * FROM specialite WHERE id=?";
-        PreparedStatement ps = conn.prepareStatement(sql);
+        PreparedStatement ps = getConnection().prepareStatement(sql);
         ps.setInt(1, id);
         ResultSet rs = ps.executeQuery();
         if (rs.next()) {

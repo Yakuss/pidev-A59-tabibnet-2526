@@ -48,6 +48,12 @@ public class DataSource {
         } catch (SQLException e) {
             System.err.println("❌ Reconnection failed: " + e.getMessage());
         }
+        
+        if (connection == null) {
+            throw new RuntimeException("Impossible de se connecter à la base de données. " +
+                    "Assurez-vous que MySQL est démarré sur le port 3306 et que la base 'pidev' existe.");
+        }
+        
         return connection;
     }
 }

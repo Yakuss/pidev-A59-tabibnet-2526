@@ -9,10 +9,12 @@ import java.util.List;
 
 public class RapportService implements IService<Rapport> {
 
-    private final Connection conn = DataSource.getInstance().getConnection();
+    private Connection getConnection() {
+        return DataSource.getInstance().getConnection();
+    }
 
     private void checkSchema() {
-        try (Statement st = conn.createStatement()) {
+        try (Statement st = getConnection().createStatement()) {
             st.execute("ALTER TABLE rapport ADD COLUMN document_id INT DEFAULT NULL");
         } catch (SQLException e) {
             // Ignore if exists
@@ -23,7 +25,7 @@ public class RapportService implements IService<Rapport> {
     public void add(Rapport rapport) throws SQLException {
         checkSchema();
         String requete = "INSERT INTO rapport (consultation_reason, diagnosis, observations, recommendations, treatments, created_at, updated_at, patient_id, medecin_id, appointment_id, document_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        try (PreparedStatement pst = conn.prepareStatement(requete)) {
+        try (PreparedStatement pst = getConnection().prepareStatement(requete)) {
             pst.setString(1, rapport.getConsultationReason());
             pst.setString(2, rapport.getDiagnosis());
             pst.setString(3, rapport.getObservations());
@@ -42,7 +44,7 @@ public class RapportService implements IService<Rapport> {
     @Override
     public void update(Rapport rapport) throws SQLException {
         String requete = "UPDATE rapport SET consultation_reason = ?, diagnosis = ?, observations = ?, recommendations = ?, treatments = ?, updated_at = ?, appointment_id = ?, document_id = ? WHERE id = ?";
-        try (PreparedStatement pst = conn.prepareStatement(requete)) {
+        try (PreparedStatement pst = getConnection().prepareStatement(requete)) {
             pst.setString(1, rapport.getConsultationReason());
             pst.setString(2, rapport.getDiagnosis());
             pst.setString(3, rapport.getObservations());
@@ -59,7 +61,7 @@ public class RapportService implements IService<Rapport> {
     @Override
     public void delete(int id) throws SQLException {
         String requete = "DELETE FROM rapport WHERE id = ?";
-        try (PreparedStatement pst = conn.prepareStatement(requete)) {
+        try (PreparedStatement pst = getConnection().prepareStatement(requete)) {
             pst.setInt(1, id);
             pst.executeUpdate();
         }
@@ -68,7 +70,7 @@ public class RapportService implements IService<Rapport> {
     @Override
     public Rapport getById(int id) throws SQLException {
         String requete = "SELECT * FROM rapport WHERE id = ?";
-        try (PreparedStatement pst = conn.prepareStatement(requete)) {
+        try (PreparedStatement pst = getConnection().prepareStatement(requete)) {
             pst.setInt(1, id);
             try (ResultSet rs = pst.executeQuery()) {
                 if (rs.next()) return mapResultSetToRapport(rs);
@@ -83,7 +85,7 @@ public class RapportService implements IService<Rapport> {
     public List<Rapport> getAll() throws SQLException {
         List<Rapport> list = new ArrayList<>();
         String requete = "SELECT * FROM rapport ORDER BY created_at DESC";
-        try (Statement st = conn.createStatement();
+        try (Statement st = getConnection().createStatement();
              ResultSet rs = st.executeQuery(requete)) {
             while (rs.next()) {
                 list.add(mapResultSetToRapport(rs));
@@ -97,7 +99,7 @@ public class RapportService implements IService<Rapport> {
     public List<Rapport> findByDocumentId(int documentId) throws SQLException {
         List<Rapport> list = new ArrayList<>();
         String requete = "SELECT * FROM rapport WHERE document_id = ?";
-        try (PreparedStatement pst = conn.prepareStatement(requete)) {
+        try (PreparedStatement pst = getConnection().prepareStatement(requete)) {
             pst.setInt(1, documentId);
             try (ResultSet rs = pst.executeQuery()) {
                 while (rs.next()) list.add(mapResultSetToRapport(rs));
@@ -111,7 +113,7 @@ public class RapportService implements IService<Rapport> {
 
     public void linkOrphanedItems(int documentId) throws SQLException {
         String requete = "UPDATE rapport SET document_id = ? WHERE document_id IS NULL";
-        try (PreparedStatement pst = conn.prepareStatement(requete)) {
+        try (PreparedStatement pst = getConnection().prepareStatement(requete)) {
             pst.setInt(1, documentId);
             pst.executeUpdate();
         }
@@ -120,7 +122,7 @@ public class RapportService implements IService<Rapport> {
     public List<Rapport> findOrphans() throws SQLException {
         List<Rapport> list = new ArrayList<>();
         String requete = "SELECT * FROM rapport WHERE document_id IS NULL";
-        try (Statement st = conn.createStatement();
+        try (Statement st = getConnection().createStatement();
              ResultSet rs = st.executeQuery(requete)) {
             while (rs.next()) list.add(mapResultSetToRapport(rs));
         }
@@ -153,7 +155,7 @@ public class RapportService implements IService<Rapport> {
     public List<Rapport> findByPatientAndMedecin(int patientId, int medecinId) throws SQLException {
         List<Rapport> list = new ArrayList<>();
         String requete = "SELECT * FROM rapport WHERE patient_id = ? AND medecin_id = ?";
-        try (PreparedStatement pst = conn.prepareStatement(requete)) {
+        try (PreparedStatement pst = getConnection().prepareStatement(requete)) {
             pst.setInt(1, patientId);
             pst.setInt(2, medecinId);
             try (ResultSet rs = pst.executeQuery()) {
@@ -178,7 +180,7 @@ public class RapportService implements IService<Rapport> {
     public List<Rapport> getByPatient(int patientId) throws SQLException {
         List<Rapport> list = new ArrayList<>();
         String requete = "SELECT * FROM rapport WHERE patient_id = ?";
-        try (PreparedStatement pst = conn.prepareStatement(requete)) {
+        try (PreparedStatement pst = getConnection().prepareStatement(requete)) {
             pst.setInt(1, patientId);
             try (ResultSet rs = pst.executeQuery()) {
                 while (rs.next()) list.add(mapResultSetToRapport(rs));
@@ -190,7 +192,7 @@ public class RapportService implements IService<Rapport> {
     private List<Rapport> findByPatientMedecinAndAppointment(int patientId, int medecinId, int appointmentId) throws SQLException {
         List<Rapport> list = new ArrayList<>();
         String requete = "SELECT * FROM rapport WHERE patient_id = ? AND medecin_id = ? AND appointment_id = ?";
-        try (PreparedStatement pst = conn.prepareStatement(requete)) {
+        try (PreparedStatement pst = getConnection().prepareStatement(requete)) {
             pst.setInt(1, patientId);
             pst.setInt(2, medecinId);
             pst.setInt(3, appointmentId);

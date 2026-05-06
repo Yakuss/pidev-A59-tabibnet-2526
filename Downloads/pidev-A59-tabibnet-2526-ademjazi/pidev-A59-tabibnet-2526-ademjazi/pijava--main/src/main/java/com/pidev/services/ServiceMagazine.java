@@ -13,12 +13,14 @@ import java.util.List;
  */
 public class ServiceMagazine {
 
-    private final Connection cnx = DataSource.getInstance().getConnection();
+    private Connection getConnection() {
+        return DataSource.getInstance().getConnection();
+    }
 
     // ====================== CREATE ======================
     public void ajouter(Magazine magazine) throws SQLException {
         String sql = "INSERT INTO magazine (title, description, image, date_create, statut, pdf_file) VALUES (?,?,?,?,?,?)";
-        try (PreparedStatement ps = cnx.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+        try (PreparedStatement ps = getConnection().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, magazine.getTitre());
             ps.setString(2, magazine.getDescription());
             ps.setString(3, magazine.getImage());
@@ -38,7 +40,7 @@ public class ServiceMagazine {
     public List<Magazine> afficherTout() throws SQLException {
         List<Magazine> list = new ArrayList<>();
         String sql = "SELECT id, title, description, image, date_create, statut, pdf_file FROM magazine ORDER BY date_create DESC";
-        try (Statement st = cnx.createStatement(); ResultSet rs = st.executeQuery(sql)) {
+        try (Statement st = getConnection().createStatement(); ResultSet rs = st.executeQuery(sql)) {
             while (rs.next()) list.add(mapRow(rs));
         }
         return list;
@@ -47,7 +49,7 @@ public class ServiceMagazine {
     // ====================== READ BY ID ======================
     public Magazine getById(int id) throws SQLException {
         String sql = "SELECT id, title, description, image, date_create, statut, pdf_file FROM magazine WHERE id=?";
-        try (PreparedStatement ps = cnx.prepareStatement(sql)) {
+        try (PreparedStatement ps = getConnection().prepareStatement(sql)) {
             ps.setInt(1, id);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) return mapRow(rs);
@@ -59,7 +61,7 @@ public class ServiceMagazine {
     // ====================== UPDATE ======================
     public void modifier(Magazine magazine) throws SQLException {
         String sql = "UPDATE magazine SET title=?, description=?, image=?, statut=?, pdf_file=? WHERE id=?";
-        try (PreparedStatement ps = cnx.prepareStatement(sql)) {
+        try (PreparedStatement ps = getConnection().prepareStatement(sql)) {
             ps.setString(1, magazine.getTitre());
             ps.setString(2, magazine.getDescription());
             ps.setString(3, magazine.getImage());
@@ -72,7 +74,7 @@ public class ServiceMagazine {
 
     // ====================== DELETE ======================
     public void supprimer(int id) throws SQLException {
-        try (PreparedStatement ps = cnx.prepareStatement("DELETE FROM magazine WHERE id=?")) {
+        try (PreparedStatement ps = getConnection().prepareStatement("DELETE FROM magazine WHERE id=?")) {
             ps.setInt(1, id);
             ps.executeUpdate();
         }

@@ -61,8 +61,19 @@ public class ApiServer {
                 String heure = p.get("heure");
 
                 if (nom != null && date != null && heure != null && medecin != null) {
-                    rdvService.ajouter(new RendezVous(0, nom, medecin, date, heure, "En attente"));
-                    sendRes(exchange, 200, "{\"success\":true,\"message\":\"Rendez-vous cree avec succes\"}");
+                    RendezVous rdv = new RendezVous();
+                    rdv.setNomPatient(nom);
+                    rdv.setMedecin(medecin);
+                    rdv.setDate(date);
+                    rdv.setHeure(heure);
+                    rdv.setStatut("En attente");
+                    try {
+                        rdvService.ajouter(rdv);
+                        sendRes(exchange, 200, "{\"success\":true,\"message\":\"Rendez-vous cree avec succes\"}");
+                    } catch (java.sql.SQLException e) {
+                        e.printStackTrace();
+                        sendRes(exchange, 500, "{\"success\":false,\"error\":\"Erreur SQL\"}");
+                    }
                 } else {
                     sendRes(exchange, 400, "{\"success\":false,\"error\":\"Donnees manquantes\"}");
                 }
@@ -111,8 +122,13 @@ public class ApiServer {
                 if (id > 0) {
                     RendezVous r = rdvService.findById(id);
                     if(r != null) {
-                        rdvService.supprimer(r);
-                        sendRes(exchange, 200, "{\"success\":true,\"message\":\"Rendez-vous annulé et supprimé de la BD\"}");
+                        try {
+                            rdvService.supprimer(r);
+                            sendRes(exchange, 200, "{\"success\":true,\"message\":\"Rendez-vous annulé et supprimé de la BD\"}");
+                        } catch (java.sql.SQLException e) {
+                            e.printStackTrace();
+                            sendRes(exchange, 500, "{\"success\":false,\"error\":\"Erreur SQL\"}");
+                        }
                     } else {
                         sendRes(exchange, 404, "{\"success\":false,\"error\":\"RDV introuvable\"}");
                     }
@@ -142,8 +158,14 @@ public class ApiServer {
                 if (id > 0 && statut != null) {
                     RendezVous r = rdvService.findById(id);
                     if(r != null) {
-                        rdvService.modifier(r, r.getNomPatient(), r.getMedecin(), r.getDate(), r.getHeure(), statut);
-                        sendRes(exchange, 200, "{\"success\":true,\"message\":\"Statut mis à jour !\"}");
+                        r.setStatut(statut);
+                        try {
+                            rdvService.modifier(r);
+                            sendRes(exchange, 200, "{\"success\":true,\"message\":\"Statut mis à jour !\"}");
+                        } catch (java.sql.SQLException e) {
+                            e.printStackTrace();
+                            sendRes(exchange, 500, "{\"success\":false,\"error\":\"Erreur SQL\"}");
+                        }
                     } else {
                         sendRes(exchange, 404, "{\"success\":false,\"error\":\"RDV introuvable\"}");
                     }

@@ -13,14 +13,16 @@ import java.util.List;
  */
 public class PatientService implements IService<Patient> {
 
-    private final Connection conn = DataSource.getInstance().getConnection();
+    private Connection getConnection() {
+        return DataSource.getInstance().getConnection();
+    }
 
     @Override
     public void add(Patient patient) throws SQLException {
         String sql = "INSERT INTO patients (email, password, first_name, last_name, age, gender, is_active, roles, " +
                      "phone_number, address, date_of_birth, has_insurance, insurance_number) " +
                      "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        PreparedStatement ps = conn.prepareStatement(sql);
+        PreparedStatement ps = getConnection().prepareStatement(sql);
         ps.setString(1, patient.getEmail());
         ps.setString(2, patient.getPassword());
         ps.setString(3, patient.getFirstName());
@@ -44,7 +46,7 @@ public class PatientService implements IService<Patient> {
         String sql = "UPDATE patients SET email=?, first_name=?, last_name=?, age=?, gender=?, is_active=?, " +
                      "phone_number=?, address=?, date_of_birth=?, has_insurance=?, insurance_number=? " +
                      "WHERE id=?";
-        PreparedStatement ps = conn.prepareStatement(sql);
+        PreparedStatement ps = getConnection().prepareStatement(sql);
         ps.setString(1, patient.getEmail());
         ps.setString(2, patient.getFirstName());
         ps.setString(3, patient.getLastName());
@@ -64,7 +66,7 @@ public class PatientService implements IService<Patient> {
 
     /** Updates only the password column for a given patient id. */
     public void updatePassword(int id, String hashedPassword) throws SQLException {
-        PreparedStatement ps = conn.prepareStatement(
+        PreparedStatement ps = getConnection().prepareStatement(
                 "UPDATE patients SET password=? WHERE id=?");
         ps.setString(1, hashedPassword);
         ps.setInt(2, id);
@@ -74,7 +76,7 @@ public class PatientService implements IService<Patient> {
 
     @Override
     public void delete(int id) throws SQLException {
-        PreparedStatement ps = conn.prepareStatement("DELETE FROM patients WHERE id=?");
+        PreparedStatement ps = getConnection().prepareStatement("DELETE FROM patients WHERE id=?");
         ps.setInt(1, id);
         ps.executeUpdate();
         System.out.println("✅ Patient deleted from 'patients'!");
@@ -84,7 +86,7 @@ public class PatientService implements IService<Patient> {
     public List<Patient> getAll() throws SQLException {
         List<Patient> patients = new ArrayList<>();
         String sql = "SELECT * FROM patients ORDER BY id DESC";
-        Statement st = conn.createStatement();
+        Statement st = getConnection().createStatement();
         ResultSet rs = st.executeQuery(sql);
         while (rs.next()) {
             patients.add(mapResultSet(rs));
@@ -95,7 +97,7 @@ public class PatientService implements IService<Patient> {
     @Override
     public Patient getById(int id) throws SQLException {
         String sql = "SELECT * FROM patients WHERE id=?";
-        PreparedStatement ps = conn.prepareStatement(sql);
+        PreparedStatement ps = getConnection().prepareStatement(sql);
         ps.setInt(1, id);
         ResultSet rs = ps.executeQuery();
         if (rs.next()) {
@@ -147,7 +149,7 @@ public class PatientService implements IService<Patient> {
      */
     public void toggleActiveStatus(int patientId) throws SQLException {
         String sql = "UPDATE patients SET is_active = NOT is_active WHERE id = ?";
-        PreparedStatement ps = conn.prepareStatement(sql);
+        PreparedStatement ps = getConnection().prepareStatement(sql);
         ps.setInt(1, patientId);
         int rowsAffected = ps.executeUpdate();
         if (rowsAffected > 0) {
@@ -162,7 +164,7 @@ public class PatientService implements IService<Patient> {
      */
     public void setActiveStatus(int patientId, boolean isActive) throws SQLException {
         String sql = "UPDATE patients SET is_active = ? WHERE id = ?";
-        PreparedStatement ps = conn.prepareStatement(sql);
+        PreparedStatement ps = getConnection().prepareStatement(sql);
         ps.setBoolean(1, isActive);
         ps.setInt(2, patientId);
         int rowsAffected = ps.executeUpdate();
@@ -181,7 +183,7 @@ public class PatientService implements IService<Patient> {
                      "SUM(CASE WHEN is_active = 1 THEN 1 ELSE 0 END) as active_count, " +
                      "SUM(CASE WHEN is_active = 0 THEN 1 ELSE 0 END) as inactive_count " +
                      "FROM patients";
-        PreparedStatement ps = conn.prepareStatement(sql);
+        PreparedStatement ps = getConnection().prepareStatement(sql);
         ResultSet rs = ps.executeQuery();
         if (rs.next()) {
             return new int[]{rs.getInt("active_count"), rs.getInt("inactive_count")};

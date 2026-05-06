@@ -540,23 +540,24 @@ public class MedecinDirectoryController {
     }
 
     private void handleBookAppointment(Medecin medecin) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/AppointmentBookingView.fxml"));
-            VBox bookingView = loader.load();
-            
-            AppointmentBookingController bookingController = loader.getController();
-            bookingController.setDoctor(medecin);
-            
-            Stage stage = new Stage();
-            stage.setTitle("Prendre un Rendez-vous");
-            stage.setScene(new javafx.scene.Scene(bookingView, 550, 600));
-            stage.setResizable(false);
-            stage.showAndWait();
-            
-        } catch (Exception e) {
-            e.printStackTrace();
-            showAlert(Alert.AlertType.ERROR, "❌ Erreur", 
-                "Impossible d'ouvrir le formulaire de rendez-vous:\n" + e.getMessage());
+        // Set selected medecin in session for the calendar to pick up
+        com.pidev.utils.UserSession.getInstance().setSelectedMedecinId(medecin.getId());
+        
+        // Navigate to the intelligence calendar view
+        if (MainUserController.getInstance() != null) {
+            MainUserController.getInstance().loadViewInContent("/views/PatientCalendarView.fxml");
+        } else {
+            // Fallback for standalone testing
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/PatientCalendarView.fxml"));
+                VBox calendarView = loader.load();
+                Stage stage = new Stage();
+                stage.setTitle("Calendrier Intelligence - Dr. " + medecin.getFullName());
+                stage.setScene(new javafx.scene.Scene(calendarView, 1100, 800));
+                stage.show();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 

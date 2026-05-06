@@ -9,10 +9,12 @@ import java.util.List;
 
 public class DocumentService implements IService<Document> {
 
-    private final Connection conn = DataSource.getInstance().getConnection();
+    private Connection getConnection() {
+        return DataSource.getInstance().getConnection();
+    }
 
     private void checkSchema() {
-        try (Statement st = conn.createStatement()) {
+        try (Statement st = getConnection().createStatement()) {
             // Création de la table si elle n'existe pas
             st.execute("CREATE TABLE IF NOT EXISTS documents (" +
                     "id INT AUTO_INCREMENT PRIMARY KEY" +
@@ -40,7 +42,7 @@ public class DocumentService implements IService<Document> {
         };
 
         for (String sql : columns) {
-            try (Statement st = conn.createStatement()) {
+            try (Statement st = getConnection().createStatement()) {
                 st.execute(sql);
             } catch (SQLException e) {
                 // Ignore si déjà présent
@@ -52,7 +54,7 @@ public class DocumentService implements IService<Document> {
     public void add(Document document) throws SQLException {
         checkSchema();
         String requete = "INSERT INTO documents (nom_fichier, chemin_fichier, type, taille, description, date_creation, date_modification, nb_rapports, nb_ordonnances, medecin_id, patient_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        try (PreparedStatement pst = conn.prepareStatement(requete, Statement.RETURN_GENERATED_KEYS)) {
+        try (PreparedStatement pst = getConnection().prepareStatement(requete, Statement.RETURN_GENERATED_KEYS)) {
             pst.setString(1, document.getNomFichier());
             pst.setString(2, document.getCheminFichier() != null ? document.getCheminFichier() : "");
             pst.setString(3, document.getType());
@@ -77,7 +79,7 @@ public class DocumentService implements IService<Document> {
     @Override
     public void update(Document document) throws SQLException {
         String requete = "UPDATE documents SET nom_fichier = ?, type = ?, taille = ?, description = ?, date_modification = ?, nb_rapports = ?, nb_ordonnances = ?, medecin_id = ?, patient_id = ? WHERE id = ?";
-        try (PreparedStatement pst = conn.prepareStatement(requete)) {
+        try (PreparedStatement pst = getConnection().prepareStatement(requete)) {
             pst.setString(1, document.getNomFichier());
             pst.setString(2, document.getType());
             pst.setString(3, document.getTaille());
@@ -95,7 +97,7 @@ public class DocumentService implements IService<Document> {
     @Override
     public void delete(int id) throws SQLException {
         String requete = "DELETE FROM documents WHERE id = ?";
-        try (PreparedStatement pst = conn.prepareStatement(requete)) {
+        try (PreparedStatement pst = getConnection().prepareStatement(requete)) {
             pst.setInt(1, id);
             pst.executeUpdate();
         }
@@ -104,7 +106,7 @@ public class DocumentService implements IService<Document> {
     @Override
     public Document getById(int id) throws SQLException {
         String requete = "SELECT * FROM documents WHERE id = ?";
-        try (PreparedStatement pst = conn.prepareStatement(requete)) {
+        try (PreparedStatement pst = getConnection().prepareStatement(requete)) {
             pst.setInt(1, id);
             try (ResultSet rs = pst.executeQuery()) {
                 if (rs.next()) {
@@ -124,7 +126,7 @@ public class DocumentService implements IService<Document> {
     public List<Document> getAll() throws SQLException {
         List<Document> list = new ArrayList<>();
         String requete = "SELECT * FROM documents ORDER BY date_creation DESC";
-        try (Statement st = conn.createStatement();
+        try (Statement st = getConnection().createStatement();
              ResultSet rs = st.executeQuery(requete)) {
             while (rs.next()) {
                 list.add(mapResultSetToDocument(rs));
@@ -158,7 +160,7 @@ public class DocumentService implements IService<Document> {
     public Document findByPatientAndMedecin(int patientId, int medecinId) throws SQLException {
         String requete = "SELECT * FROM documents WHERE patient_id = ? AND medecin_id = ? OR (nom_fichier LIKE ?)";
         // Fallback or specific search
-        try (PreparedStatement pst = conn.prepareStatement("SELECT * FROM documents WHERE id IN (SELECT document_id FROM rapport WHERE patient_id=? AND medecin_id=? UNION SELECT document_id FROM ordonnances WHERE patient_id=? AND medecin_id=?) LIMIT 1")) {
+        try (PreparedStatement pst = getConnection().prepareStatement("SELECT * FROM documents WHERE id IN (SELECT document_id FROM rapport WHERE patient_id=? AND medecin_id=? UNION SELECT document_id FROM ordonnances WHERE patient_id=? AND medecin_id=?) LIMIT 1")) {
              pst.setInt(1, patientId);
              pst.setInt(2, medecinId);
              pst.setInt(3, patientId);
@@ -178,7 +180,7 @@ public class DocumentService implements IService<Document> {
                         "OR d.id IN (SELECT DISTINCT document_id FROM rapport WHERE patient_id = ? AND document_id IS NOT NULL) " +
                         "OR d.id IN (SELECT DISTINCT document_id FROM ordonnances WHERE patient_id = ? AND document_id IS NOT NULL) " +
                         "ORDER BY d.date_creation DESC";
-        try (PreparedStatement pst = conn.prepareStatement(requete)) {
+        try (PreparedStatement pst = getConnection().prepareStatement(requete)) {
             pst.setInt(1, patientId);
             pst.setInt(2, patientId);
             pst.setInt(3, patientId);
@@ -203,7 +205,7 @@ public class DocumentService implements IService<Document> {
      */
     public boolean documentExists(int patientId, int medecinId) throws SQLException {
         String requete = "SELECT COUNT(*) as count FROM documents WHERE patient_id = ? AND medecin_id = ?";
-        try (PreparedStatement pst = conn.prepareStatement(requete)) {
+        try (PreparedStatement pst = getConnection().prepareStatement(requete)) {
             pst.setInt(1, patientId);
             pst.setInt(2, medecinId);
             try (ResultSet rs = pst.executeQuery()) {

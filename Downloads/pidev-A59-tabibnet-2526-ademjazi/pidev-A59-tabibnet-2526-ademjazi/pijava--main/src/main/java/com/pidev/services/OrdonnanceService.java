@@ -9,10 +9,12 @@ import java.util.List;
 
 public class OrdonnanceService implements IService<Ordonnance> {
 
-    private final Connection conn = DataSource.getInstance().getConnection();
+    private Connection getConnection() {
+        return DataSource.getInstance().getConnection();
+    }
 
     private void checkSchema() {
-        try (Statement st = conn.createStatement()) {
+        try (Statement st = getConnection().createStatement()) {
             st.execute("ALTER TABLE ordonnances ADD COLUMN document_id INT DEFAULT NULL");
         } catch (SQLException e) {
             // Ignore if exists
@@ -23,7 +25,7 @@ public class OrdonnanceService implements IService<Ordonnance> {
     public void add(Ordonnance ordonnance) throws SQLException {
         checkSchema();
         String requete = "INSERT INTO ordonnances (date_ordonnance, diagnosis, medicament, posologie, notes, instructions, created_at, updated_at, patient_id, medecin_id, appointment_id, document_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        try (PreparedStatement pst = conn.prepareStatement(requete)) {
+        try (PreparedStatement pst = getConnection().prepareStatement(requete)) {
             pst.setTimestamp(1, ordonnance.getDateOrdonnance() != null ? Timestamp.valueOf(ordonnance.getDateOrdonnance()) : new Timestamp(System.currentTimeMillis()));
             pst.setString(2, ordonnance.getDiagnosis());
             pst.setString(3, ordonnance.getMedicament());
@@ -44,7 +46,7 @@ public class OrdonnanceService implements IService<Ordonnance> {
     @Override
     public void update(Ordonnance ordonnance) throws SQLException {
         String requete = "UPDATE ordonnances SET date_ordonnance = ?, diagnosis = ?, medicament = ?, posologie = ?, notes = ?, instructions = ?, updated_at = ?, appointment_id = ?, document_id = ? WHERE id = ?";
-        try (PreparedStatement pst = conn.prepareStatement(requete)) {
+        try (PreparedStatement pst = getConnection().prepareStatement(requete)) {
             pst.setTimestamp(1, ordonnance.getDateOrdonnance() != null ? Timestamp.valueOf(ordonnance.getDateOrdonnance()) : new Timestamp(System.currentTimeMillis()));
             pst.setString(2, ordonnance.getDiagnosis());
             pst.setString(3, ordonnance.getMedicament());
@@ -62,7 +64,7 @@ public class OrdonnanceService implements IService<Ordonnance> {
     @Override
     public void delete(int id) throws SQLException {
         String requete = "DELETE FROM ordonnances WHERE id = ?";
-        try (PreparedStatement pst = conn.prepareStatement(requete)) {
+        try (PreparedStatement pst = getConnection().prepareStatement(requete)) {
             pst.setInt(1, id);
             pst.executeUpdate();
         }
@@ -71,7 +73,7 @@ public class OrdonnanceService implements IService<Ordonnance> {
     @Override
     public Ordonnance getById(int id) throws SQLException {
         String requete = "SELECT * FROM ordonnances WHERE id = ?";
-        try (PreparedStatement pst = conn.prepareStatement(requete)) {
+        try (PreparedStatement pst = getConnection().prepareStatement(requete)) {
             pst.setInt(1, id);
             try (ResultSet rs = pst.executeQuery()) {
                 if (rs.next()) return mapResultSetToOrdonnance(rs);
@@ -86,7 +88,7 @@ public class OrdonnanceService implements IService<Ordonnance> {
     public List<Ordonnance> getAll() throws SQLException {
         List<Ordonnance> list = new ArrayList<>();
         String requete = "SELECT * FROM ordonnances ORDER BY created_at DESC";
-        try (Statement st = conn.createStatement();
+        try (Statement st = getConnection().createStatement();
              ResultSet rs = st.executeQuery(requete)) {
             while (rs.next()) {
                 list.add(mapResultSetToOrdonnance(rs));
@@ -100,7 +102,7 @@ public class OrdonnanceService implements IService<Ordonnance> {
     public List<Ordonnance> findByDocumentId(int documentId) throws SQLException {
         List<Ordonnance> list = new ArrayList<>();
         String requete = "SELECT * FROM ordonnances WHERE document_id = ?";
-        try (PreparedStatement pst = conn.prepareStatement(requete)) {
+        try (PreparedStatement pst = getConnection().prepareStatement(requete)) {
             pst.setInt(1, documentId);
             try (ResultSet rs = pst.executeQuery()) {
                 while (rs.next()) list.add(mapResultSetToOrdonnance(rs));
@@ -114,7 +116,7 @@ public class OrdonnanceService implements IService<Ordonnance> {
 
     public void linkOrphanedItems(int documentId) throws SQLException {
         String requete = "UPDATE ordonnances SET document_id = ? WHERE document_id IS NULL";
-        try (PreparedStatement pst = conn.prepareStatement(requete)) {
+        try (PreparedStatement pst = getConnection().prepareStatement(requete)) {
             pst.setInt(1, documentId);
             pst.executeUpdate();
         }
@@ -123,7 +125,7 @@ public class OrdonnanceService implements IService<Ordonnance> {
     public List<Ordonnance> findOrphans() throws SQLException {
         List<Ordonnance> list = new ArrayList<>();
         String requete = "SELECT * FROM ordonnances WHERE document_id IS NULL";
-        try (Statement st = conn.createStatement();
+        try (Statement st = getConnection().createStatement();
              ResultSet rs = st.executeQuery(requete)) {
             while (rs.next()) list.add(mapResultSetToOrdonnance(rs));
         }
@@ -158,7 +160,7 @@ public class OrdonnanceService implements IService<Ordonnance> {
     public List<Ordonnance> findByPatientAndMedecin(int patientId, int medecinId) throws SQLException {
         List<Ordonnance> list = new ArrayList<>();
         String requete = "SELECT * FROM ordonnances WHERE patient_id = ? AND medecin_id = ?";
-        try (PreparedStatement pst = conn.prepareStatement(requete)) {
+        try (PreparedStatement pst = getConnection().prepareStatement(requete)) {
             pst.setInt(1, patientId);
             pst.setInt(2, medecinId);
             try (ResultSet rs = pst.executeQuery()) {
@@ -183,7 +185,7 @@ public class OrdonnanceService implements IService<Ordonnance> {
     public List<Ordonnance> getByPatient(int patientId) throws SQLException {
         List<Ordonnance> list = new ArrayList<>();
         String requete = "SELECT * FROM ordonnances WHERE patient_id = ?";
-        try (PreparedStatement pst = conn.prepareStatement(requete)) {
+        try (PreparedStatement pst = getConnection().prepareStatement(requete)) {
             pst.setInt(1, patientId);
             try (ResultSet rs = pst.executeQuery()) {
                 while (rs.next()) list.add(mapResultSetToOrdonnance(rs));
@@ -195,7 +197,7 @@ public class OrdonnanceService implements IService<Ordonnance> {
     private List<Ordonnance> findByPatientMedecinAndAppointment(int patientId, int medecinId, int appointmentId) throws SQLException {
         List<Ordonnance> list = new ArrayList<>();
         String requete = "SELECT * FROM ordonnances WHERE patient_id = ? AND medecin_id = ? AND appointment_id = ?";
-        try (PreparedStatement pst = conn.prepareStatement(requete)) {
+        try (PreparedStatement pst = getConnection().prepareStatement(requete)) {
             pst.setInt(1, patientId);
             pst.setInt(2, medecinId);
             pst.setInt(3, appointmentId);

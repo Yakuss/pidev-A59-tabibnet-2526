@@ -15,14 +15,16 @@ import java.util.List;
  */
 public class ServiceArticle {
 
-    private final Connection cnx = DataSource.getInstance().getConnection();
+    private Connection getConnection() {
+        return DataSource.getInstance().getConnection();
+    }
     public static final int PAGE_SIZE = 10;
 
     // ====================== CREATE ======================
     public void ajouter(Article article) throws SQLException {
         String sql = "INSERT INTO article (title, resume, auteur, date_pub, summary, statut, image, views, magazine_id, public_cible, pdf_file) " +
                      "VALUES (?,?,?,?,?,?,?,?,?,?,?)";
-        try (PreparedStatement ps = cnx.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+        try (PreparedStatement ps = getConnection().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, article.getTitre());
             ps.setString(2, article.getResume());
             ps.setString(3, article.getAuteur());
@@ -86,7 +88,7 @@ public class ServiceArticle {
         params.add(PAGE_SIZE); params.add(offset);
 
         List<Article> articles = new ArrayList<>();
-        try (PreparedStatement ps = cnx.prepareStatement(sql.toString())) {
+        try (PreparedStatement ps = getConnection().prepareStatement(sql.toString())) {
             for (int i = 0; i < params.size(); i++) ps.setObject(i + 1, params.get(i));
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) articles.add(mapRow(rs));
@@ -113,7 +115,7 @@ public class ServiceArticle {
             params.add(magazineId);
         }
 
-        try (PreparedStatement ps = cnx.prepareStatement(sql.toString())) {
+        try (PreparedStatement ps = getConnection().prepareStatement(sql.toString())) {
             for (int i = 0; i < params.size(); i++) ps.setObject(i + 1, params.get(i));
             try (ResultSet rs = ps.executeQuery()) {
                 return rs.next() ? rs.getInt(1) : 0;
@@ -125,7 +127,7 @@ public class ServiceArticle {
     public void modifier(Article article) throws SQLException {
         String sql = "UPDATE article SET title=?, resume=?, auteur=?, date_pub=?, summary=?, " +
                      "statut=?, image=?, views=?, magazine_id=?, public_cible=?, pdf_file=? WHERE id=?";
-        try (PreparedStatement ps = cnx.prepareStatement(sql)) {
+        try (PreparedStatement ps = getConnection().prepareStatement(sql)) {
             ps.setString(1, article.getTitre());
             ps.setString(2, article.getResume());
             ps.setString(3, article.getAuteur());
@@ -145,7 +147,7 @@ public class ServiceArticle {
 
     // ====================== DELETE ======================
     public void supprimer(int id) throws SQLException {
-        try (PreparedStatement ps = cnx.prepareStatement("DELETE FROM article WHERE id=?")) {
+        try (PreparedStatement ps = getConnection().prepareStatement("DELETE FROM article WHERE id=?")) {
             ps.setInt(1, id);
             ps.executeUpdate();
         }
@@ -153,7 +155,7 @@ public class ServiceArticle {
 
     // ====================== VUES ======================
     public void incrementerVue(int id) throws SQLException {
-        try (PreparedStatement ps = cnx.prepareStatement("UPDATE article SET views = views + 1 WHERE id=?")) {
+        try (PreparedStatement ps = getConnection().prepareStatement("UPDATE article SET views = views + 1 WHERE id=?")) {
             ps.setInt(1, id);
             ps.executeUpdate();
         }

@@ -818,3 +818,90 @@ VBox.content-area {
     -fx-focus-color: -pd-primary-light;
     -fx-faint-focus-color: -pd-primary-glow;
 }
+
+/* ── Calendar Module Styles ────────────────────────────────── */
+.day-column {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent -pd-border transparent transparent;
+    -fx-border-width: 0 1 0 0;
+}
+
+.today-column {
+    -fx-background-color: rgba(91,110,245,0.05);
+}
+
+.day-header {
+    -fx-padding: 12 10;
+    -fx-border-color: transparent transparent -pd-border transparent;
+    -fx-border-width: 0 0 1 0;
+}
+
+.slot-label {
+    -fx-background-color: -pd-surface-2;
+    -fx-text-fill: -pd-text-secondary;
+    -fx-font-size: 11px;
+    -fx-padding: 8 12;
+    -fx-background-radius: 6;
+    -fx-border-color: -pd-border;
+    -fx-border-radius: 6;
+    -fx-alignment: CENTER;
+}
+
+.slot-label:hover {
+    -fx-background-color: -pd-surface-3;
+    -fx-text-fill: -pd-text-primary;
+    -fx-border-color: -pd-primary;
+}
+
+.risk-badge {
+    -fx-text-fill: -pd-danger;
+    -fx-font-weight: 800;
+    -fx-font-size: 14px;
+}
+
+.holiday-badge {
+    -fx-font-size: 14px;
+}
+
+/* AI Intelligence Panel */
+.ai-panel {
+    -fx-background-color: rgba(91,110,245,0.1);
+    -fx-border-color: -pd-primary;
+    -fx-border-radius: 12;
+    -fx-background-radius: 12;
+    -fx-padding: 24;
+    -fx-spacing: 12;
+}
+
+.ai-panel-title {
+    -fx-font-size: 18px;
+    -fx-font-weight: 700;
+    -fx-text-fill: -pd-text-primary;
+}
+
+.ai-panel-text {
+    -fx-text-fill: -pd-text-secondary;
+    -fx-font-size: 14px;
+    -fx-line-spacing: 1.4;
+}
+
+.ai-panel-slot {
+    -fx-text-fill: -pd-primary-light;
+    -fx-font-size: 16px;
+    -fx-font-weight: 800;
+    -fx-underline: true;
+}
+
+.ai-panel-prob {
+    -fx-text-fill: -pd-success;
+    -fx-font-weight: 700;
+    -fx-font-size: 13px;
+}
+
+.patient-history-panel {
+    -fx-background-color: -pd-surface-2;
+    -fx-background-radius: 10;
+    -fx-padding: 15;
+    -fx-border-color: -pd-border;
+    -fx-border-radius: 10;
+}

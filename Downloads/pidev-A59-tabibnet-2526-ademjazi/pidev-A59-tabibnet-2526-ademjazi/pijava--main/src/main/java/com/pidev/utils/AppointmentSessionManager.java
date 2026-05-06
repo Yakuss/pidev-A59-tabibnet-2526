@@ -1,15 +1,14 @@
 package com.pidev.utils;
 
-import com.pidev.models.Appointment;
+import com.pidev.models.RendezVous;
 
 /**
- * Global session manager to store selected appointment information
+ * Global session manager to store selected rendezvous information
  * across different pages and menus.
- * Maintains persistent red highlighting when returning to the appointments page.
  */
 public class AppointmentSessionManager {
     private static AppointmentSessionManager instance;
-    private Appointment selectedAppointment;
+    private RendezVous selectedAppointment;
 
     private AppointmentSessionManager() {
     }
@@ -21,19 +20,19 @@ public class AppointmentSessionManager {
         return instance;
     }
 
-    public void setSelectedAppointment(Appointment appointment) {
+    public void setSelectedAppointment(RendezVous appointment) {
         this.selectedAppointment = appointment;
         if (appointment != null) {
             System.out.println("✅ Rendez-vous stocké en session:");
             System.out.println("   ID: " + appointment.getId());
             System.out.println("   Date: " + appointment.getDate());
-            System.out.println("   Patient: " + appointment.getPatientName());
-            System.out.println("   Médecin: " + appointment.getDoctorName());
+            System.out.println("   Patient: " + appointment.getNomPatient());
+            System.out.println("   Médecin: " + appointment.getMedecin());
             System.out.println("   Département: " + appointment.getDepartment());
         }
     }
 
-    public Appointment getSelectedAppointment() {
+    public RendezVous getSelectedAppointment() {
         return selectedAppointment;
     }
 
@@ -52,14 +51,14 @@ public class AppointmentSessionManager {
     }
 
     public String getSelectedPatientName() {
-        return selectedAppointment != null ? selectedAppointment.getPatientName() : null;
+        return selectedAppointment != null ? selectedAppointment.getNomPatient() : null;
     }
 
     public String getSelectedDoctorName() {
-        return selectedAppointment != null ? selectedAppointment.getDoctorName() : null;
+        return selectedAppointment != null ? selectedAppointment.getMedecin() : null;
     }
 
-    public java.time.LocalDateTime getSelectedDate() {
+    public String getSelectedDate() {
         return selectedAppointment != null ? selectedAppointment.getDate() : null;
     }
 
@@ -68,7 +67,7 @@ public class AppointmentSessionManager {
     }
 
     public Integer getSelectedDoctorId() {
-        return selectedAppointment != null ? selectedAppointment.getDoctorId() : null;
+        return selectedAppointment != null ? selectedAppointment.getMedecinId() : null;
     }
 
     public String getSelectedDepartment() {

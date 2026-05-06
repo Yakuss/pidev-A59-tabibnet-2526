@@ -14,10 +14,15 @@ import java.util.List;
  */
 public class QuestionService implements IService<Question> {
 
-    private final Connection conn = DataSource.getInstance().getConnection();
+    private Connection getConnection() {
+        return DataSource.getInstance().getConnection();
+    }
 
     public QuestionService() {
-        ensureImageColumnExists();
+        // Initialization logic is called on demand or once
+        try {
+            ensureImageColumnExists();
+        } catch (Exception ignored) {}
     }
 
     /**
@@ -25,11 +30,11 @@ public class QuestionService implements IService<Question> {
      */
     private void ensureImageColumnExists() {
         try {
-            DatabaseMetaData meta = conn.getMetaData();
+            DatabaseMetaData meta = getConnection().getMetaData();
             ResultSet rs = meta.getColumns(null, null, "question", "image_name");
             if (!rs.next()) {
                 System.out.println("⚠️ Column 'image_name' missing in 'question' table. Adding it now...");
-                try (Statement st = conn.createStatement()) {
+                try (Statement st = getConnection().createStatement()) {
                     st.executeUpdate("ALTER TABLE question ADD COLUMN image_name VARCHAR(255) NULL");
                     System.out.println("✅ Column 'image_name' added successfully!");
                 }
@@ -47,7 +52,7 @@ public class QuestionService implements IService<Question> {
         if (question.getImageName() != null && !question.getImageName().isEmpty()) {
             sql = "INSERT INTO question (titre, description, created_at, specialite_id, patient_id, image_name) " +
                   "VALUES (?, ?, ?, ?, ?, ?)";
-            ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            ps = getConnection().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, question.getTitre());
             ps.setString(2, question.getDescription());
             ps.setTimestamp(3, Timestamp.valueOf(LocalDateTime.now()));
@@ -58,7 +63,7 @@ public class QuestionService implements IService<Question> {
             // No image - don't include image_name column at all
             sql = "INSERT INTO question (titre, description, created_at, specialite_id, patient_id) " +
                   "VALUES (?, ?, ?, ?, ?)";
-            ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            ps = getConnection().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, question.getTitre());
             ps.setString(2, question.getDescription());
             ps.setTimestamp(3, Timestamp.valueOf(LocalDateTime.now()));
@@ -77,7 +82,7 @@ public class QuestionService implements IService<Question> {
     @Override
     public void update(Question question) throws SQLException {
         String sql = "UPDATE question SET titre=?, description=?, specialite_id=? WHERE id=?";
-        PreparedStatement ps = conn.prepareStatement(sql);
+        PreparedStatement ps = getConnection().prepareStatement(sql);
         ps.setString(1, question.getTitre());
         ps.setString(2, question.getDescription());
         ps.setInt(3, question.getSpecialiteId());
@@ -89,11 +94,11 @@ public class QuestionService implements IService<Question> {
     @Override
     public void delete(int id) throws SQLException {
         // First delete all associated responses
-        PreparedStatement psReponses = conn.prepareStatement("DELETE FROM reponse WHERE question_id=?");
+        PreparedStatement psReponses = getConnection().prepareStatement("DELETE FROM reponse WHERE question_id=?");
         psReponses.setInt(1, id);
         psReponses.executeUpdate();
 
-        PreparedStatement ps = conn.prepareStatement("DELETE FROM question WHERE id=?");
+        PreparedStatement ps = getConnection().prepareStatement("DELETE FROM question WHERE id=?");
         ps.setInt(1, id);
         ps.executeUpdate();
         System.out.println("✅ Question supprimée !");
@@ -110,7 +115,7 @@ public class QuestionService implements IService<Question> {
                      "LEFT JOIN patients p ON q.patient_id = p.id " +
                      "LEFT JOIN specialite s ON q.specialite_id = s.id " +
                      "ORDER BY q.created_at DESC";
-        Statement st = conn.createStatement();
+        Statement st = getConnection().createStatement();
         ResultSet rs = st.executeQuery(sql);
         while (rs.next()) {
             list.add(mapResultSet(rs));
@@ -129,7 +134,7 @@ public class QuestionService implements IService<Question> {
                      "LEFT JOIN specialite s ON q.specialite_id = s.id " +
                      "WHERE q.specialite_id = ? " +
                      "ORDER BY q.created_at DESC";
-        PreparedStatement ps = conn.prepareStatement(sql);
+        PreparedStatement ps = getConnection().prepareStatement(sql);
         ps.setInt(1, specialiteId);
         ResultSet rs = ps.executeQuery();
         while (rs.next()) {
@@ -155,7 +160,7 @@ public class QuestionService implements IService<Question> {
                      "LEFT JOIN specialite s ON q.specialite_id = s.id " +
                      "WHERE q.patient_id = ? " +
                      "ORDER BY q.created_at DESC";
-        PreparedStatement ps = conn.prepareStatement(sql);
+        PreparedStatement ps = getConnection().prepareStatement(sql);
         ps.setInt(1, patientId);
         ResultSet rs = ps.executeQuery();
         while (rs.next()) {
@@ -174,7 +179,7 @@ public class QuestionService implements IService<Question> {
                      "LEFT JOIN patients p ON q.patient_id = p.id " +
                      "LEFT JOIN specialite s ON q.specialite_id = s.id " +
                      "WHERE q.id = ?";
-        PreparedStatement ps = conn.prepareStatement(sql);
+        PreparedStatement ps = getConnection().prepareStatement(sql);
         ps.setInt(1, id);
         ResultSet rs = ps.executeQuery();
         if (rs.next()) {
@@ -185,7 +190,7 @@ public class QuestionService implements IService<Question> {
 
     public int getTotalAnswers() throws SQLException {
         String sql = "SELECT COUNT(*) FROM reponse";
-        Statement st = conn.createStatement();
+        Statement st = getConnection().createStatement();
         ResultSet rs = st.executeQuery(sql);
         if (rs.next()) return rs.getInt(1);
         return 0;
@@ -196,7 +201,7 @@ public class QuestionService implements IService<Question> {
      */
     public int likeQuestion(int questionId) throws SQLException {
         String sql = "UPDATE question SET likes = likes + 1 WHERE id = ?";
-        PreparedStatement ps = conn.prepareStatement(sql);
+        PreparedStatement ps = getConnection().prepareStatement(sql);
         ps.setInt(1, questionId);
         ps.executeUpdate();
         return getLikes(questionId);
@@ -207,7 +212,7 @@ public class QuestionService implements IService<Question> {
      */
     public int dislikeQuestion(int questionId) throws SQLException {
         String sql = "UPDATE question SET likes = GREATEST(likes - 1, 0) WHERE id = ?";
-        PreparedStatement ps = conn.prepareStatement(sql);
+        PreparedStatement ps = getConnection().prepareStatement(sql);
         ps.setInt(1, questionId);
         ps.executeUpdate();
         return getLikes(questionId);
@@ -218,7 +223,7 @@ public class QuestionService implements IService<Question> {
      */
     public int getLikes(int questionId) throws SQLException {
         String sql = "SELECT likes FROM question WHERE id = ?";
-        PreparedStatement ps = conn.prepareStatement(sql);
+        PreparedStatement ps = getConnection().prepareStatement(sql);
         ps.setInt(1, questionId);
         ResultSet rs = ps.executeQuery();
         if (rs.next()) return rs.getInt("likes");

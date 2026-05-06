@@ -41,6 +41,7 @@
                 <Button fx:id="btnAnnuaire" text="📖  Annuaire" onAction="#showAnnuaire" styleClass="nav-button-user"/>
                 <Button fx:id="btnMedecins" text="🩺  Médecins" onAction="#showMedecins" styleClass="nav-button-user"/>
                 <Button fx:id="btnAppointments" text="📅  Mes Rendez-vous" onAction="#showAppointments" styleClass="nav-button-user"/>
+                <Button fx:id="btnCalendrier" text="🗓️  Calendrier" onAction="#showCalendrier" styleClass="nav-button-user"/>
                 
                 <MenuButton fx:id="menuDossierMedical" text="📂  Dossier Médical" styleClass="nav-button-user">
                     <items>

@@ -6,7 +6,7 @@
 <?import javafx.scene.control.cell.PropertyValueFactory?>
 <?import java.lang.String?>
 
-<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="com.pidev.controllers.AppointmentController"
+<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="com.pidev.controllers.RendezVousController"
       spacing="20" styleClass="content-area" stylesheets="@../styles/style.css">
 
     <!-- Header -->

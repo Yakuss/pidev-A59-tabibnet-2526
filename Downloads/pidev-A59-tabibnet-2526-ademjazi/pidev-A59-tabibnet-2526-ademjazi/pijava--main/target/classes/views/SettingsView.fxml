@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="700.0" prefWidth="760.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.pidev.controllers.SettingsController" style="-fx-background-color: transparent;">
+   <children>
+      <VBox spacing="30.0" AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="40.0" AnchorPane.rightAnchor="40.0" AnchorPane.topAnchor="40.0">
+         <children>
+            <VBox>
+               <Label text="Configuration du Planning" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #f1f5f9;" />
+               <Label text="Gérez vos heures de travail, pauses et durée des consultations." style="-fx-text-fill: #94a3b8; -fx-font-size: 14px;" />
+            </VBox>
+
+            <VBox style="-fx-background-color: #0e1220; -fx-background-radius: 12; -fx-border-color: #252d42; -fx-padding: 30;" spacing="25.0">
+               <children>
+                  <Label text="Heures de Travail" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #818cf8;" />
+                  <GridPane hgap="15.0" vgap="15.0">
+                     <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="200.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="250.0" />
+                     </columnConstraints>
+                     <children>
+                        <Label text="Heure de début (HH:mm):" style="-fx-text-fill: #f1f5f9;" />
+                        <TextField fx:id="startTimeField" styleClass="text-field" GridPane.columnIndex="1" />
+                        <Label text="Heure de fin (HH:mm):" style="-fx-text-fill: #f1f5f9;" GridPane.rowIndex="1" />
+                        <TextField fx:id="endTimeField" styleClass="text-field" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                     </children>
+                  </GridPane>
+
+                  <Separator style="-fx-opacity: 0.1;"/>
+
+                  <Label text="Paramètres du Calendrier" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #818cf8;" />
+                  <GridPane hgap="15.0" vgap="15.0">
+                     <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="200.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="250.0" />
+                     </columnConstraints>
+                     <children>
+                        <Label text="Durée de consultation (mins):" style="-fx-text-fill: #f1f5f9;" />
+                        <TextField fx:id="slotDurationField" styleClass="text-field" GridPane.columnIndex="1" />
+                        <Label text="Début de pause (HH:mm):" style="-fx-text-fill: #f1f5f9;" GridPane.rowIndex="1" />
+                        <TextField fx:id="pauseStartField" styleClass="text-field" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <Label text="Fin de pause (HH:mm):" style="-fx-text-fill: #f1f5f9;" GridPane.rowIndex="2" />
+                        <TextField fx:id="pauseEndField" styleClass="text-field" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                     </children>
+                  </GridPane>
+
+                  <HBox spacing="15.0" alignment="CENTER_LEFT" style="-fx-padding: 10 0 0 0;">
+                     <Button styleClass="btn-primary" mnemonicParsing="false" onAction="#saveSettings" text="Enregistrer les modifications" style="-fx-background-color: #6366f1;"/>
+                     <Label fx:id="statusLabel" text="" style="-fx-font-weight: bold;" />
+                  </HBox>
+               </children>
+            </VBox>
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>

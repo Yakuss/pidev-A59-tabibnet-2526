@@ -16,7 +16,9 @@ import java.sql.*;
  */
 public class AuthService {
 
-    private final Connection conn = DataSource.getInstance().getConnection();
+    private Connection getConnection() {
+        return DataSource.getInstance().getConnection();
+    }
 
     /**
      * Authenticate a user by searching across Admins, Medecins, and Patients tables.
@@ -39,7 +41,7 @@ public class AuthService {
 
     private BaseUser checkTable(String tableName, String email, String password, String defaultRole) throws SQLException {
         String sql = "SELECT * FROM " + tableName + " WHERE email = ?";
-        PreparedStatement ps = conn.prepareStatement(sql);
+        PreparedStatement ps = getConnection().prepareStatement(sql);
         ps.setString(1, email);
         ResultSet rs = ps.executeQuery();
 

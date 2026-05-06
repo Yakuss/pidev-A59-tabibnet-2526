@@ -1,9 +1,9 @@
 package com.pidev.controllers;
 
-import com.pidev.models.Appointment;
+import com.pidev.models.RendezVous;
 import com.pidev.models.Rapport;
 import com.pidev.services.RapportService;
-import com.pidev.services.AppointmentService;
+import com.pidev.services.RendezVousService;
 import com.pidev.utils.UserSession;
 import com.pidev.utils.AppointmentSessionManager;
 import javafx.collections.FXCollections;
@@ -31,10 +31,10 @@ public class RapportController implements Initializable {
     @FXML
     private TextArea treatmentsTA;
     @FXML
-    private ComboBox<Appointment> rendezVousCB;
+    private ComboBox<RendezVous> rendezVousCB;
 
     private RapportService rapportService = new RapportService();
-    private AppointmentService appointmentService = new AppointmentService();
+    private RendezVousService appointmentService = new RendezVousService();
     private Rapport currentRapport = null;
 
     @FXML
@@ -43,7 +43,7 @@ public class RapportController implements Initializable {
         loadAppointments();
         
         // Auto-select appointment from session if available
-        Appointment sessionAppointment = AppointmentSessionManager.getInstance().getSelectedAppointment();
+        RendezVous sessionAppointment = AppointmentSessionManager.getInstance().getSelectedAppointment();
         if (sessionAppointment != null) {
             System.out.println("RapportController: Auto-selecting appointment from session: " + sessionAppointment.getId());
             rendezVousCB.setValue(sessionAppointment);
@@ -56,7 +56,7 @@ public class RapportController implements Initializable {
             Integer medecinId = UserSession.getInstance().getSelectedMedecinId();
             System.out.println("Rapport: Loading appointments for Patient=" + patientId + ", Medecin=" + medecinId);
             if (medecinId != null) {
-                List<Appointment> list;
+                List<RendezVous> list;
                 if (patientId != null && patientId > 0) {
                     list = appointmentService.getAppointmentsByPatientAndDoctor(patientId, medecinId);
                 } else {
@@ -82,7 +82,7 @@ public class RapportController implements Initializable {
         treatmentsTA.setText(getSafeString(r.getTreatments()));
 
         if (r.getAppointmentId() != null && r.getAppointmentId() > 0) {
-            for (Appointment a : rendezVousCB.getItems()) {
+            for (RendezVous a : rendezVousCB.getItems()) {
                 if (a.getId() == r.getAppointmentId()) {
                     rendezVousCB.setValue(a);
                     break;

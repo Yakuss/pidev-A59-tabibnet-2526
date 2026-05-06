@@ -236,7 +236,7 @@ public class DashboardController {
     public void refreshData() {
         try {
             // Check if an appointment is selected in session
-            com.pidev.models.Appointment selectedAppointment = 
+            com.pidev.models.RendezVous selectedAppointment = 
                 com.pidev.utils.AppointmentSessionManager.getInstance().getSelectedAppointment();
             
             Integer patientId = null;
@@ -245,7 +245,7 @@ public class DashboardController {
             if (selectedAppointment != null) {
                 // Use appointment data
                 patientId = selectedAppointment.getPatientId();
-                medecinId = selectedAppointment.getDoctorId();
+                medecinId = selectedAppointment.getMedecinId();
                 System.out.println("📋 Filtrage par rendez-vous sélectionné:");
                 System.out.println("   Patient ID: " + patientId);
                 System.out.println("   Médecin ID: " + medecinId);
@@ -417,13 +417,13 @@ public class DashboardController {
      * Met à jour le label d'information patient dans le header
      * Affiche le nom et prénom du patient au lieu de "Rendez-vous #12345"
      */
-    private void updatePatientInfoLabel(com.pidev.models.Appointment selectedAppointment) {
+    private void updatePatientInfoLabel(com.pidev.models.RendezVous selectedAppointment) {
         if (patientInfoLabel == null) {
             return; // Label non défini dans le FXML
         }
 
         if (selectedAppointment != null) {
-            String patientName = selectedAppointment.getPatientName();
+            String patientName = selectedAppointment.getNomPatient();
             if (patientName != null && !patientName.isEmpty()) {
                 patientInfoLabel.setText(patientName);
                 System.out.println("👤 Affichage du patient: " + patientName);

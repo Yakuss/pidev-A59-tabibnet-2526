@@ -13,13 +13,15 @@ import java.util.List;
  */
 public class ReponseService implements IService<Reponse> {
 
-    private final Connection conn = DataSource.getInstance().getConnection();
+    private Connection getConnection() {
+        return DataSource.getInstance().getConnection();
+    }
 
     @Override
     public void add(Reponse reponse) throws SQLException {
         ensureColumnExists();
         String sql = "INSERT INTO reponse (contenu, created_at, question_id, medecin_id) VALUES (?, ?, ?, ?)";
-        try (PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+        try (PreparedStatement ps = getConnection().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, reponse.getContenu());
             ps.setTimestamp(2, Timestamp.valueOf(LocalDateTime.now()));
             ps.setInt(3, reponse.getQuestionId());
@@ -35,11 +37,11 @@ public class ReponseService implements IService<Reponse> {
 
     private void ensureColumnExists() {
         try {
-            DatabaseMetaData meta = conn.getMetaData();
+            DatabaseMetaData meta = getConnection().getMetaData();
             ResultSet rs = meta.getColumns(null, null, "reponse", "medecin_id");
             if (!rs.next()) {
                 System.out.println("⚠️ Column 'medecin_id' missing in 'reponse' table. Adding it now...");
-                try (Statement st = conn.createStatement()) {
+                try (Statement st = getConnection().createStatement()) {
                     st.executeUpdate("ALTER TABLE reponse ADD COLUMN medecin_id INT NULL");
                     System.out.println("✅ Column 'medecin_id' added successfully!");
                 }
@@ -52,7 +54,7 @@ public class ReponseService implements IService<Reponse> {
     @Override
     public void update(Reponse reponse) throws SQLException {
         String sql = "UPDATE reponse SET contenu=? WHERE id=?";
-        PreparedStatement ps = conn.prepareStatement(sql);
+        PreparedStatement ps = getConnection().prepareStatement(sql);
         ps.setString(1, reponse.getContenu());
         ps.setInt(2, reponse.getId());
         ps.executeUpdate();
@@ -61,7 +63,7 @@ public class ReponseService implements IService<Reponse> {
 
     @Override
     public void delete(int id) throws SQLException {
-        PreparedStatement ps = conn.prepareStatement("DELETE FROM reponse WHERE id=?");
+        PreparedStatement ps = getConnection().prepareStatement("DELETE FROM reponse WHERE id=?");
         ps.setInt(1, id);
         ps.executeUpdate();
         System.out.println("✅ Réponse supprimée !");
@@ -74,7 +76,7 @@ public class ReponseService implements IService<Reponse> {
                      "FROM reponse r " +
                      "LEFT JOIN medecins m ON r.medecin_id = m.id " +
                      "ORDER BY r.created_at DESC";
-        Statement st = conn.createStatement();
+        Statement st = getConnection().createStatement();
         ResultSet rs = st.executeQuery(sql);
         while (rs.next()) {
             list.add(mapResultSet(rs));
@@ -89,7 +91,7 @@ public class ReponseService implements IService<Reponse> {
                      "LEFT JOIN medecins m ON r.medecin_id = m.id " +
                      "WHERE r.question_id = ? " +
                      "ORDER BY r.created_at ASC";
-        PreparedStatement ps = conn.prepareStatement(sql);
+        PreparedStatement ps = getConnection().prepareStatement(sql);
         ps.setInt(1, questionId);
         ResultSet rs = ps.executeQuery();
         while (rs.next()) {
@@ -100,7 +102,7 @@ public class ReponseService implements IService<Reponse> {
 
     public int getCountByQuestion(int questionId) throws SQLException {
         String sql = "SELECT COUNT(*) FROM reponse WHERE question_id=?";
-        PreparedStatement ps = conn.prepareStatement(sql);
+        PreparedStatement ps = getConnection().prepareStatement(sql);
         ps.setInt(1, questionId);
         ResultSet rs = ps.executeQuery();
         if (rs.next()) return rs.getInt(1);
@@ -112,7 +114,7 @@ public class ReponseService implements IService<Reponse> {
      */
     public int likeReponse(int reponseId) throws SQLException {
         String sql = "UPDATE reponse SET likes = likes + 1 WHERE id = ?";
-        PreparedStatement ps = conn.prepareStatement(sql);
+        PreparedStatement ps = getConnection().prepareStatement(sql);
         ps.setInt(1, reponseId);
         ps.executeUpdate();
         return getReponseL(reponseId);
@@ -123,7 +125,7 @@ public class ReponseService implements IService<Reponse> {
      */
     public int dislikeReponse(int reponseId) throws SQLException {
         String sql = "UPDATE reponse SET likes = GREATEST(likes - 1, 0) WHERE id = ?";
-        PreparedStatement ps = conn.prepareStatement(sql);
+        PreparedStatement ps = getConnection().prepareStatement(sql);
         ps.setInt(1, reponseId);
         ps.executeUpdate();
         return getReponseL(reponseId);
@@ -134,7 +136,7 @@ public class ReponseService implements IService<Reponse> {
      */
     public int getReponseL(int reponseId) throws SQLException {
         String sql = "SELECT likes FROM reponse WHERE id = ?";
-        PreparedStatement ps = conn.prepareStatement(sql);
+        PreparedStatement ps = getConnection().prepareStatement(sql);
         ps.setInt(1, reponseId);
         ResultSet rs = ps.executeQuery();
         if (rs.next()) return rs.getInt("likes");
@@ -154,7 +156,7 @@ public class ReponseService implements IService<Reponse> {
                      "LEFT JOIN medecins m ON r.medecin_id = m.id " +
                      "WHERE r.medecin_id = ? " +
                      "ORDER BY r.created_at DESC";
-        PreparedStatement ps = conn.prepareStatement(sql);
+        PreparedStatement ps = getConnection().prepareStatement(sql);
         ps.setInt(1, medecinId);
         ResultSet rs = ps.executeQuery();
         while (rs.next()) {
@@ -169,7 +171,7 @@ public class ReponseService implements IService<Reponse> {
                      "FROM reponse r " +
                      "LEFT JOIN medecins m ON r.medecin_id = m.id " +
                      "WHERE r.id = ?";
-        PreparedStatement ps = conn.prepareStatement(sql);
+        PreparedStatement ps = getConnection().prepareStatement(sql);
         ps.setInt(1, id);
         ResultSet rs = ps.executeQuery();
         if (rs.next()) {

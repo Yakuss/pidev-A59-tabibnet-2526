@@ -20,7 +20,7 @@ public class MainUserController {
     @FXML
     private StackPane contentArea;
     @FXML
-    private Button btnForum, btnProfile, btnHome, btnMedecins, btnAnnuaire, btnAppointments, btnMagazines;
+    private Button btnForum, btnProfile, btnHome, btnMedecins, btnAnnuaire, btnAppointments, btnMagazines, btnCalendrier;
     @FXML
     private MenuButton menuDossierMedical;
 
@@ -39,10 +39,16 @@ public class MainUserController {
 
         // Role-based menu visibility
         com.pidev.models.BaseUser user = com.pidev.utils.UserSession.getInstance().getUser();
+        boolean isDoctor = user != null && user.getRoles() != null && user.getRoles().contains("ROLE_MEDECIN");
+
         if (menuDossierMedical != null) {
-            boolean isDoctor = user != null && user.getRoles() != null && user.getRoles().contains("ROLE_MEDECIN");
             menuDossierMedical.setVisible(isDoctor);
             menuDossierMedical.setManaged(isDoctor);
+        }
+
+        if (btnCalendrier != null) {
+            btnCalendrier.setVisible(isDoctor);
+            btnCalendrier.setManaged(isDoctor);
         }
     }
     
@@ -95,6 +101,20 @@ public class MainUserController {
         if (user != null && user.getRoles() != null && user.getRoles().contains("ROLE_MEDECIN")) {
             // Doctor view
             viewPath = "/views/DoctorAppointmentsView.fxml";
+        }
+
+        loadView(viewPath);
+    }
+
+    @FXML
+    public void showCalendrier() {
+        setActiveButton(btnCalendrier);
+
+        com.pidev.models.BaseUser user = com.pidev.utils.UserSession.getInstance().getUser();
+        String viewPath = "/views/PatientCalendarView.fxml";
+
+        if (user != null && user.getRoles() != null && user.getRoles().contains("ROLE_MEDECIN")) {
+            viewPath = "/views/CalendarView.fxml";
         }
 
         loadView(viewPath);
