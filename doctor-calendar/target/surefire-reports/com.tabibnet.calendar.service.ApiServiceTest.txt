@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.tabibnet.calendar.service.ApiServiceTest
+-------------------------------------------------------------------------------
+Tests run: 24, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.199 s -- in com.tabibnet.calendar.service.ApiServiceTest

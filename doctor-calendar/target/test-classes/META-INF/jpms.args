@@ -1,0 +1,4 @@
+--patch-module
+com.tabibnet.calendar=_
+--add-reads
+com.tabibnet.calendar=ALL-UNNAMED

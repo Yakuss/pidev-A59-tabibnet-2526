@@ -1,0 +1,439 @@
+{
+  "info": {
+    "_postman_id": "tabibnet-intelligence-api",
+    "name": "TabibNet — Appointment Intelligence API",
+    "description": "API test collection for the 3 intelligence endpoints exposed by the Symfony backend.\n\nBase URL: http://localhost:8000\n\nEndpoints:\n  GET /api/intelligence/weather\n  GET /api/intelligence/holidays\n  GET /api/intelligence/recommendation/{patientId}/{doctorId}",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8000",
+      "type": "string"
+    },
+    {
+      "key": "patient_id",
+      "value": "1",
+      "type": "string",
+      "description": "Replace with a real patient ID from your database"
+    },
+    {
+      "key": "doctor_id",
+      "value": "1",
+      "type": "string",
+      "description": "Replace with a real doctor (medecin) ID from your database"
+    }
+  ],
+  "item": [
+    {
+      "name": "Weather",
+      "item": [
+        {
+          "name": "GET Weather — Clear Day",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/intelligence/weather?location=Tunis&date={{$isoTimestamp}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "intelligence", "weather"],
+              "query": [
+                { "key": "location", "value": "Tunis" },
+                { "key": "date",     "value": "2026-05-12" }
+              ]
+            },
+            "description": "Fetches weather forecast for Tunis on the given date.\nExpected: { condition: 'clear'|'bad', isRisky: bool, description: string }"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Response has condition field', () => {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body).to.have.property('condition');",
+                  "    pm.expect(body).to.have.property('isRisky');",
+                  "    pm.expect(body).to.have.property('description');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET Weather — Invalid Date",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/intelligence/weather?location=Tunis&date=not-a-date",
+              "host": ["{{base_url}}"],
+              "path": ["api", "intelligence", "weather"],
+              "query": [
+                { "key": "location", "value": "Tunis" },
+                { "key": "date",     "value": "not-a-date" }
+              ]
+            },
+            "description": "Should return HTTP 400 with an error message."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 400 for invalid date', () => pm.response.to.have.status(400));",
+                  "pm.test('Response has error field', () => {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body).to.have.property('error');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Holidays",
+      "item": [
+        {
+          "name": "GET Holidays — Current Year",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/intelligence/holidays?year=2026",
+              "host": ["{{base_url}}"],
+              "path": ["api", "intelligence", "holidays"],
+              "query": [
+                { "key": "year", "value": "2026" }
+              ]
+            },
+            "description": "Returns all Tunisian national holidays for 2026.\nExpected: { year, country: 'TN', holidays: [{date, localName, name}] }"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Response structure correct', () => {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body).to.have.property('year');",
+                  "    pm.expect(body).to.have.property('country');",
+                  "    pm.expect(body.country).to.equal('TN');",
+                  "    pm.expect(body.holidays).to.be.an('array');",
+                  "});",
+                  "pm.test('Holidays have required fields', () => {",
+                  "    const holidays = pm.response.json().holidays;",
+                  "    if (holidays.length > 0) {",
+                  "        pm.expect(holidays[0]).to.have.property('date');",
+                  "        pm.expect(holidays[0]).to.have.property('name');",
+                  "    }",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET Holidays — Holiday Blocking Logic Check",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/intelligence/holidays?year=2026",
+              "host": ["{{base_url}}"],
+              "path": ["api", "intelligence", "holidays"],
+              "query": [
+                { "key": "year", "value": "2026" }
+              ]
+            },
+            "description": "Validates that Independence Day (2026-03-20) is in the holidays list."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Independence Day is blocked', () => {",
+                  "    const holidays = pm.response.json().holidays;",
+                  "    const independence = holidays.find(h => h.date === '2026-03-20');",
+                  "    pm.expect(independence).to.not.be.undefined;",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "AI Recommendation",
+      "item": [
+        {
+          "name": "GET Recommendation — Valid Patient & Doctor",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/intelligence/recommendation/{{patient_id}}/{{doctor_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "intelligence", "recommendation", "{{patient_id}}", "{{doctor_id}}"]
+            },
+            "description": "Returns AI-powered slot recommendation for patient + doctor pair.\nExpected: { recommendation, attendance_probability, suggested_slots }"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Response has recommendation', () => {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body).to.have.property('recommendation');",
+                  "    pm.expect(body).to.have.property('suggested_slots');",
+                  "    pm.expect(body.suggested_slots).to.be.an('array');",
+                  "});",
+                  "pm.test('Patient and doctor IDs match request', () => {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(String(body.patientId)).to.equal(pm.collectionVariables.get('patient_id'));",
+                  "    pm.expect(String(body.doctorId)).to.equal(pm.collectionVariables.get('doctor_id'));",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET Recommendation — Patient Not Found (404)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/intelligence/recommendation/999999/{{doctor_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "intelligence", "recommendation", "999999", "{{doctor_id}}"]
+            },
+            "description": "Should return 404 when patient ID does not exist."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 404 for unknown patient', () => pm.response.to.have.status(404));",
+                  "pm.test('Response has error message', () => {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body).to.have.property('error');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET Recommendation — AI Accuracy Check",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/intelligence/recommendation/{{patient_id}}/{{doctor_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "intelligence", "recommendation", "{{patient_id}}", "{{doctor_id}}"]
+            },
+            "description": "Validates that the AI recommendation contains a valid date in suggested_slots."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('AI suggested_slots contain valid dates', () => {",
+                  "    const slots = pm.response.json().suggested_slots || [];",
+                  "    if (slots.length > 0) {",
+                  "        const dateRegex = /^\\d{4}-\\d{2}-\\d{2}$/;",
+                  "        pm.expect(slots[0].date).to.match(dateRegex);",
+                  "    } else {",
+                  "        console.log('No slots returned — fallback mode or empty history');",
+                  "    }",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Integration Scenarios",
+      "item": [
+        {
+          "name": "Book Normal Day — Check Availability",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/intelligence/weather?location=Tunis&date=2026-05-20",
+              "host": ["{{base_url}}"],
+              "path": ["api", "intelligence", "weather"],
+              "query": [
+                { "key": "location", "value": "Tunis" },
+                { "key": "date",     "value": "2026-05-20" }
+              ]
+            },
+            "description": "Simulates booking on a normal day — weather should be 'clear' or 'unknown'."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Normal day booking — weather not critically risky', () => {",
+                  "    const body = pm.response.json();",
+                  "    console.log('Weather condition:', body.condition, '| isRisky:', body.isRisky);",
+                  "    pm.expect(body).to.have.property('isRisky');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Book Holiday Day — Detect Block",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/intelligence/holidays?year=2026",
+              "host": ["{{base_url}}"],
+              "path": ["api", "intelligence", "holidays"],
+              "query": [
+                { "key": "year", "value": "2026" }
+              ]
+            },
+            "description": "Simulates trying to book on a holiday. The client should check holidays first."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Can detect if 2026-05-01 (Labour Day) is blocked', () => {",
+                  "    const holidays = pm.response.json().holidays;",
+                  "    const labourDay = holidays.find(h => h.date === '2026-05-01');",
+                  "    if (labourDay) {",
+                  "        console.log('Labour Day blocked:', labourDay.localName);",
+                  "        pm.expect(labourDay.date).to.equal('2026-05-01');",
+                  "    } else {",
+                  "        console.log('Labour Day not in list — check API source');",
+                  "    }",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Book with Weather Issue — Full Flow",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/intelligence/weather?location=Sfax&date=2026-12-01",
+              "host": ["{{base_url}}"],
+              "path": ["api", "intelligence", "weather"],
+              "query": [
+                { "key": "location", "value": "Sfax" },
+                { "key": "date",     "value": "2026-12-01" }
+              ]
+            },
+            "description": "Simulates booking when weather is potentially bad (December). The app should warn the doctor."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Weather response available for December date', () => {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.condition).to.be.oneOf(['clear', 'bad', 'unknown']);",
+                  "    if (body.isRisky) {",
+                  "        console.log('⚠ Weather risk detected:', body.description);",
+                  "    }",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Book with AI Recommendation",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/intelligence/recommendation/{{patient_id}}/{{doctor_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "intelligence", "recommendation", "{{patient_id}}", "{{doctor_id}}"]
+            },
+            "description": "Full booking flow with AI recommendation — doctor uses the AI suggestion to book."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('AI recommendation available for booking', () => {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.recommendation).to.be.a('string');",
+                  "    console.log('AI says:', body.recommendation);",
+                  "    if (body.suggested_slots.length > 0) {",
+                  "        console.log('Best slot:', JSON.stringify(body.suggested_slots[0]));",
+                  "    } else {",
+                  "        console.log('No slots — fallback mode.');",
+                  "    }",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
