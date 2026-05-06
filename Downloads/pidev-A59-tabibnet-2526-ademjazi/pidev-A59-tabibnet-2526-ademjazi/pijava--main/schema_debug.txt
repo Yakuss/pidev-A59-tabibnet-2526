@@ -1,0 +1,63 @@
+=== DATABASE TABLES ===
+  - author
+  - book
+  - doctrine_migration_versions
+  - messenger_messages
+  - contacts
+  - failed_jobs
+  - migrations
+  - password_reset_tokens
+  - personal_access_tokens
+  - users
+  - pma__bookmark
+  - pma__central_columns
+  - pma__column_info
+  - pma__designer_settings
+  - pma__export_templates
+  - pma__favorite
+  - pma__history
+  - pma__navigationhiding
+  - pma__pdf_pages
+  - pma__recent
+  - pma__relation
+  - pma__savedsearches
+  - pma__table_coords
+  - pma__table_info
+  - pma__table_uiprefs
+  - pma__tracking
+  - pma__userconfig
+  - pma__usergroups
+  - pma__users
+  - admins
+  - appointment
+  - article
+  - doctrine_migration_versions
+  - exception_day
+  - magazine
+  - medecins
+  - messenger_messages
+  - patients
+  - question
+  - question_likes_medecins
+  - question_likes_patients
+  - reponse
+  - reponse_likes_medecins
+  - reponse_likes_patients
+  - specialite
+  - working_day
+  - working_hour
+  - livrer
+  - map
+  - message
+  - order_table
+  - payment
+  - societe
+  - user
+
+=== COLUMNS IN 'reponse' TABLE ===
+  - id (INT)
+  - contenu (LONGTEXT)
+  - created_at (DATETIME)
+  - question_id (INT)
+
+Error Message: Unknown column 'user_id' in 'field list'

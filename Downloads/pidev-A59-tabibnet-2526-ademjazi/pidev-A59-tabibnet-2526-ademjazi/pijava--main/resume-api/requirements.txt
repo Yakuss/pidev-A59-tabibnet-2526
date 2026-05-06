@@ -1,0 +1,7 @@
+fastapi==0.115.0
+uvicorn==0.30.6
+pydantic==2.9.2
+sumy==0.11.0
+nltk==3.9.1
+deep-translator==1.11.4
+google-generativeai==0.8.6

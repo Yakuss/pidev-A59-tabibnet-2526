@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+
+<ScrollPane fitToHeight="false" fitToWidth="false" hbarPolicy="AS_NEEDED" maxHeight="-Infinity" prefHeight="540.0" prefWidth="795.0" style="-fx-background-color: #fafaf9;" vbarPolicy="AS_NEEDED" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.pidev.controllers.RapportDetailsController">
+    <content>
+        <AnchorPane prefHeight="1600.0" prefWidth="778.0" style="-fx-background-color: #fafaf9; -fx-padding: 32 24;">
+            <children>
+                <AnchorPane layoutX="14.0" layoutY="33.0" prefHeight="1400.0" prefWidth="752.0" style="-fx-background-color: white; -fx-background-radius: 24;">
+                    <effect>
+                        <DropShadow color="#0000001a" height="40.0" radius="20.0" width="40.0" />
+                    </effect>
+                    <children>
+                        <AnchorPane prefHeight="160.0" prefWidth="752.0" style="-fx-background-color: linear-gradient(to bottom right, #0f766e, #0d9488, #064e3b); -fx-background-radius: 24 24 0 0;">
+                            <children>
+                                <HBox layoutX="30.0" layoutY="25.0" spacing="8.0" style="-fx-background-color: rgba(255,255,255,0.15); -fx-background-radius: 100; -fx-padding: 8 16;">
+                                    <children>
+                                        <Label text="📋" />
+                                        <Label text="DÉTAILS RAPPORT" textFill="rgba(255,255,255,0.9)">
+                                            <font><Font name="System Bold" size="12.0" /></font>
+                                        </Label>
+                                    </children>
+                                </HBox>
+                                <Label layoutX="30.0" layoutY="60.0" text="Consultation Rapport" textFill="white">
+                                    <font><Font name="System Bold" size="28.0" /></font>
+                                </Label>
+                            </children>
+                        </AnchorPane>
+
+                        <VBox layoutY="160.0" prefWidth="752.0" spacing="32.0" style="-fx-padding: 32;">
+                            <children>
+                                <VBox spacing="15.0">
+                                    <children>
+                                        <Label text="Motif de consultation" textFill="#1c1917"><font><Font name="System Bold" size="14.0" /></font></Label>
+                                        <TextField fx:id="motifField" editable="false" prefHeight="44.0" style="-fx-background-color: #f8fafc; -fx-border-color: #e7e5e4; -fx-border-radius: 10;" />
+                                    </children>
+                                </VBox>
+
+                                <VBox spacing="15.0">
+                                    <children>
+                                        <Label text="Diagnostic principal" textFill="#1c1917"><font><Font name="System Bold" size="14.0" /></font></Label>
+                                        <TextField fx:id="diagnosisField" editable="false" prefHeight="44.0" style="-fx-background-color: #f8fafc; -fx-border-color: #e7e5e4; -fx-border-radius: 10;" />
+                                    </children>
+                                </VBox>
+
+                                <VBox spacing="15.0">
+                                    <children>
+                                        <Label text="Observations cliniques" textFill="#1c1917"><font><Font name="System Bold" size="14.0" /></font></Label>
+                                        <TextArea fx:id="observationsArea" editable="false" prefHeight="100.0" style="-fx-background-color: #f8fafc; -fx-border-color: #e7e5e4; -fx-border-radius: 10;" wrapText="true" />
+                                    </children>
+                                </VBox>
+
+                                <VBox spacing="15.0">
+                                    <children>
+                                        <Label text="Recommandations" textFill="#1c1917"><font><Font name="System Bold" size="14.0" /></font></Label>
+                                        <TextArea fx:id="recommandationsArea" editable="false" prefHeight="100.0" style="-fx-background-color: #f8fafc; -fx-border-color: #e7e5e4; -fx-border-radius: 10;" wrapText="true" />
+                                    </children>
+                                </VBox>
+
+                                <VBox spacing="15.0">
+                                    <children>
+                                        <Label text="Traitements" textFill="#1c1917"><font><Font name="System Bold" size="14.0" /></font></Label>
+                                        <TextArea fx:id="traitementsArea" editable="false" prefHeight="100.0" style="-fx-background-color: #f8fafc; -fx-border-color: #e7e5e4; -fx-border-radius: 10;" wrapText="true" />
+                                    </children>
+                                </VBox>
+
+                                <HBox alignment="CENTER_RIGHT" spacing="12.0" style="-fx-padding: 24 0 0 0; -fx-border-color: #e7e5e4 transparent transparent transparent; -fx-border-width: 2 0 0 0;">
+                                    <children>
+                                        <Button mnemonicParsing="false" onAction="#handleClose" prefHeight="44.0" prefWidth="170.0" style="-fx-background-color: #0f766e; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 10;" text="Fermer" />
+                                    </children>
+                                </HBox>
+                            </children>
+                        </VBox>
+                    </children>
+                </AnchorPane>
+            </children>
+        </AnchorPane>
+    </content>
+</ScrollPane>

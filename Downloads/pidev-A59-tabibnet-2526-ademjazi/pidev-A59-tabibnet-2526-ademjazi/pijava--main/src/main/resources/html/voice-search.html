@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recherche Vocale - Annuaire Médical</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 500px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .mic-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 30px 0;
+        }
+
+        .mic-button {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        .mic-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.6);
+        }
+
+        .mic-button.listening {
+            animation: pulse 1.5s infinite;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+                box-shadow: 0 10px 30px rgba(245, 87, 108, 0.4);
+            }
+            50% {
+                transform: scale(1.1);
+                box-shadow: 0 15px 50px rgba(245, 87, 108, 0.8);
+            }
+        }
+
+        .mic-icon {
+            width: 50px;
+            height: 50px;
+            fill: white;
+        }
+
+        .status {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 16px;
+            color: #666;
+            min-height: 24px;
+        }
+
+        .status.listening {
+            color: #f5576c;
+            font-weight: 600;
+        }
+
+        .transcript {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            min-height: 80px;
+            font-size: 16px;
+            color: #333;
+            line-height: 1.6;
+            display: none;
+        }
+
+        .transcript.show {
+            display: block;
+        }
+
+        .transcript-label {
+            font-size: 12px;
+            color: #999;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 14px 24px;
+            border: none;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #e9ecef;
+            color: #666;
+        }
+
+        .btn-secondary:hover {
+            background: #dee2e6;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .error {
+            background: #fee;
+            color: #c33;
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 15px;
+            font-size: 14px;
+            display: none;
+        }
+
+        .error.show {
+            display: block;
+        }
+
+        .language-selector {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .lang-btn {
+            padding: 8px 16px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            background: white;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .lang-btn.active {
+            border-color: #667eea;
+            background: #667eea;
+            color: white;
+        }
+
+        .examples {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .examples h3 {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 12px;
+        }
+
+        .examples ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .examples li {
+            padding: 8px 0;
+            color: #999;
+            font-size: 13px;
+        }
+
+        .examples li:before {
+            content: "💬 ";
+            margin-right: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎤 Recherche Vocale</h1>
+        <p class="subtitle">Parlez pour rechercher un médecin</p>
+
+        <div class="language-selector">
+            <button class="lang-btn active" data-lang="fr-FR">🇫🇷 Français</button>
+            <button class="lang-btn" data-lang="ar-TN">🇹🇳 العربية</button>
+            <button class="lang-btn" data-lang="en-US">🇬🇧 English</button>
+        </div>
+
+        <div class="mic-container">
+            <button class="mic-button" id="micButton">
+                <svg class="mic-icon" viewBox="0 0 24 24">
+                    <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
+                    <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>
+                </svg>
+            </button>
+            <div class="status" id="status">Cliquez sur le microphone pour commencer</div>
+        </div>
+
+        <div class="transcript" id="transcript">
+            <div class="transcript-label">Transcription:</div>
+            <div id="transcriptText"></div>
+        </div>
+
+        <div class="error" id="error"></div>
+
+        <div class="actions">
+            <button class="btn btn-primary" id="searchButton" disabled>🔍 Rechercher</button>
+            <button class="btn btn-secondary" id="clearButton">🔄 Effacer</button>
+        </div>
+
+        <div class="examples">
+            <h3>💡 Exemples de questions:</h3>
+            <ul>
+                <li>Je cherche un cardiologue à Tunis</li>
+                <li>أريد طبيب أسنان في صفاقس</li>
+                <li>I need a pediatrician in Ariana</li>
+                <li>Dermatologue près de chez moi</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // Check browser support
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        
+        if (!SpeechRecognition) {
+            document.getElementById('error').textContent = 
+                '❌ Votre navigateur ne supporte pas la reconnaissance vocale. Utilisez Chrome, Edge ou Safari.';
+            document.getElementById('error').classList.add('show');
+            document.getElementById('micButton').disabled = true;
+        }
+
+        // Initialize
+        let recognition = null;
+        let isListening = false;
+        let currentLanguage = 'fr-FR';
+        let finalTranscript = '';
+
+        const micButton = document.getElementById('micButton');
+        const status = document.getElementById('status');
+        const transcript = document.getElementById('transcript');
+        const transcriptText = document.getElementById('transcriptText');
+        const searchButton = document.getElementById('searchButton');
+        const clearButton = document.getElementById('clearButton');
+        const errorDiv = document.getElementById('error');
+        const langButtons = document.querySelectorAll('.lang-btn');
+
+        // Language selection
+        langButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                langButtons.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentLanguage = btn.dataset.lang;
+                
+                if (isListening) {
+                    stopListening();
+                }
+            });
+        });
+
+        // Initialize recognition
+        function initRecognition() {
+            if (!SpeechRecognition) return;
+
+            recognition = new SpeechRecognition();
+            recognition.continuous = true;
+            recognition.interimResults = true;
+            recognition.lang = currentLanguage;
+
+            recognition.onstart = () => {
+                isListening = true;
+                micButton.classList.add('listening');
+                status.textContent = '🎤 Écoute en cours... Parlez maintenant';
+                status.classList.add('listening');
+                errorDiv.classList.remove('show');
+            };
+
+            recognition.onresult = (event) => {
+                let interimTranscript = '';
+                
+                for (let i = event.resultIndex; i < event.results.length; i++) {
+                    const transcriptPart = event.results[i][0].transcript;
+                    if (event.results[i].isFinal) {
+                        finalTranscript += transcriptPart + ' ';
+                    } else {
+                        interimTranscript += transcriptPart;
+                    }
+                }
+
+                const displayText = finalTranscript + interimTranscript;
+                if (displayText.trim()) {
+                    transcriptText.textContent = displayText;
+                    transcript.classList.add('show');
+                    searchButton.disabled = false;
+                }
+            };
+
+            recognition.onerror = (event) => {
+                console.error('Speech recognition error:', event.error);
+                let errorMessage = '';
+                
+                switch(event.error) {
+                    case 'no-speech':
+                        errorMessage = '❌ Aucune parole détectée. Réessayez.';
+                        break;
+                    case 'audio-capture':
+                        errorMessage = '❌ Microphone non accessible. Vérifiez les permissions.';
+                        break;
+                    case 'not-allowed':
+                        errorMessage = '❌ Permission microphone refusée. Autorisez l\'accès au microphone.';
+                        break;
+                    default:
+                        errorMessage = '❌ Erreur: ' + event.error;
+                }
+                
+                errorDiv.textContent = errorMessage;
+                errorDiv.classList.add('show');
+                stopListening();
+            };
+
+            recognition.onend = () => {
+                stopListening();
+            };
+        }
+
+        // Start listening
+        function startListening() {
+            if (!recognition) {
+                initRecognition();
+            }
+            
+            finalTranscript = '';
+            recognition.lang = currentLanguage;
+            recognition.start();
+        }
+
+        // Stop listening
+        function stopListening() {
+            if (recognition && isListening) {
+                recognition.stop();
+            }
+            
+            isListening = false;
+            micButton.classList.remove('listening');
+            status.textContent = 'Cliquez sur le microphone pour recommencer';
+            status.classList.remove('listening');
+        }
+
+        // Toggle listening
+        micButton.addEventListener('click', () => {
+            if (isListening) {
+                stopListening();
+            } else {
+                startListening();
+            }
+        });
+
+        // Search button
+        searchButton.addEventListener('click', () => {
+            const query = transcriptText.textContent.trim();
+            if (query) {
+                // Send to Java application via JavaScript bridge
+                if (window.javaApp) {
+                    window.javaApp.onSearch(query);
+                } else {
+                    // Fallback: try custom protocol
+                    window.location.href = `annuaire://search?q=${encodeURIComponent(query)}`;
+                }
+                
+                // Alternative: Post message to parent window if embedded
+                if (window.parent !== window) {
+                    window.parent.postMessage({
+                        type: 'voice-search',
+                        query: query,
+                        language: currentLanguage
+                    }, '*');
+                }
+            }
+        });
+
+        // Clear button
+        clearButton.addEventListener('click', () => {
+            finalTranscript = '';
+            transcriptText.textContent = '';
+            transcript.classList.remove('show');
+            searchButton.disabled = true;
+            errorDiv.classList.remove('show');
+            
+            if (isListening) {
+                stopListening();
+            }
+        });
+
+        // Initialize on load
+        if (SpeechRecognition) {
+            initRecognition();
+        }
+    </script>
+</body>
+</html>

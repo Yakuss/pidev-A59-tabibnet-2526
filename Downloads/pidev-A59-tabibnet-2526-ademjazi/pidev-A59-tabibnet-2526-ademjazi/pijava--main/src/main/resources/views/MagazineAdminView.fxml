@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.*?>
+
+<AnchorPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.pidev.controllers.MagazineAdminController"
+            prefWidth="1080" prefHeight="720"
+            style="-fx-background-color:#0d1117;">
+
+    <VBox AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0"
+          AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0"
+          spacing="0">
+
+        <!-- ═══ TOP NAVBAR ═══ -->
+        <HBox style="-fx-background-color:#161b22;-fx-padding:14 24;-fx-border-color:#30363d;-fx-border-width:0 0 1 0;"
+              alignment="CENTER_LEFT" spacing="16">
+            <Label text="Admin Dashboard — Magazine Management"
+                   style="-fx-font-size:16px;-fx-font-weight:bold;-fx-text-fill:#f1f5f9;" HBox.hgrow="ALWAYS"/>
+            <Button text="📚 Gestion des Magazines ●" onAction="#showMagazines"
+                    style="-fx-background-color:#6e40c9;-fx-text-fill:white;-fx-font-weight:bold;-fx-padding:8 18;-fx-background-radius:6;-fx-cursor:hand;"/>
+            <Button text="📝 Rédaction d'Articles" onAction="#showArticles"
+                    style="-fx-background-color:#1e293b;-fx-text-fill:#94a3b8;-fx-padding:8 18;-fx-background-radius:6;-fx-cursor:hand;-fx-border-color:#30363d;-fx-border-radius:6;"/>
+        </HBox>
+
+        <!-- ═══ CONTENU PRINCIPAL ═══ -->
+        <VBox VBox.vgrow="ALWAYS" spacing="16" style="-fx-padding:24;">
+
+            <!-- Titre + bouton ajouter -->
+            <HBox alignment="CENTER_LEFT" spacing="12">
+                <Label text="les magazines" HBox.hgrow="ALWAYS"
+                       style="-fx-font-size:20px;-fx-font-weight:bold;-fx-text-fill:#f1f5f9;"/>
+                <Button text="+ Ajouter un Magazine" onAction="#ouvrirFormulaireAjout"
+                        style="-fx-background-color:#238636;-fx-text-fill:white;-fx-font-weight:bold;-fx-padding:9 20;-fx-background-radius:6;-fx-cursor:hand;-fx-font-size:13px;"/>
+            </HBox>
+
+            <!-- TableView -->
+            <TableView fx:id="tableMagazines" VBox.vgrow="ALWAYS"
+                       style="-fx-background-color:#161b22;-fx-border-color:#30363d;-fx-border-radius:8;-fx-table-cell-border-color:#21262d;">
+                <columns>
+                    <TableColumn fx:id="colId"          text="ID"          prefWidth="55"  style="-fx-text-fill:#94a3b8;"/>
+                    <TableColumn fx:id="colTitre"       text="Title"       prefWidth="200"/>
+                    <TableColumn fx:id="colDescription" text="Description" prefWidth="320"/>
+                    <TableColumn fx:id="colStatut"      text="Status"      prefWidth="100"/>
+                    <TableColumn fx:id="colDate"        text="Date"        prefWidth="130"/>
+                    <TableColumn fx:id="colActions"     text="Actions"     prefWidth="120"/>
+                </columns>
+                <placeholder>
+                    <Label text="Aucun magazine — cliquez sur « + Ajouter un Magazine »"
+                           style="-fx-text-fill:#64748b;-fx-font-size:13px;"/>
+                </placeholder>
+            </TableView>
+
+        </VBox>
+    </VBox>
+</AnchorPane>

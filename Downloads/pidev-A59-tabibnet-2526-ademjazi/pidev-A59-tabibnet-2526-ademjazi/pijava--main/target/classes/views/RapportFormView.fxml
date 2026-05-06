@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+
+<ScrollPane fitToWidth="true" hbarPolicy="NEVER" maxHeight="-Infinity" prefHeight="540.0" style="-fx-background-color: #fafaf9;" vbarPolicy="AS_NEEDED" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.pidev.controllers.RapportFormController">
+    <content>
+        <AnchorPane prefHeight="1300.0" prefWidth="800.0" style="-fx-background-color: #fafaf9; -fx-padding: 32 24;">
+
+            <children>
+                <!-- Carte principale -->
+                <AnchorPane layoutX="50.0" layoutY="33.0" prefWidth="700.0" style="-fx-background-color: white; -fx-background-radius: 24;">
+                    <effect>
+                        <DropShadow color="#0000001a" height="40.0" radius="20.0" width="40.0" />
+                    </effect>
+
+                    <children>
+                        <!-- Header -->
+                        <AnchorPane prefHeight="160.0" prefWidth="700.0" style="-fx-background-color: linear-gradient(to bottom right, #0f766e, #0d9488, #064e3b); -fx-background-radius: 24 24 0 0;">
+                            <children>
+                                <HBox layoutX="30.0" layoutY="25.0" spacing="8.0" style="-fx-background-color: rgba(255,255,255,0.15); -fx-background-radius: 100; -fx-padding: 8 16; -fx-alignment: center;">
+                                    <children>
+                                        <Label text="📝" />
+                                        <Label text="NOUVEAU RAPPORT" textFill="rgba(255,255,255,0.9)">
+                                            <font>
+                                                <Font name="System Bold" size="12.0" />
+                                            </font>
+                                        </Label>
+                                    </children>
+                                </HBox>
+
+                                <Label layoutX="30.0" layoutY="60.0" text="Nouveau rapport médical" textFill="white">
+                                    <font>
+                                        <Font name="System Bold" size="28.0" />
+                                    </font>
+                                </Label>
+
+                                <Label layoutX="30.0" layoutY="95.0" text="Création du compte-rendu" textFill="rgba(255,255,255,0.8)">
+                                    <font>
+                                        <Font size="14.0" />
+                                    </font>
+                                </Label>
+                            </children>
+                        </AnchorPane>
+
+                        <!-- Form Content -->
+                        <VBox layoutY="160.0" spacing="30.0" style="-fx-padding: 32;">
+                            <children>
+                                
+                                <!-- Section Rendez-vous -->
+                                <AnchorPane prefHeight="160.0" style="-fx-background-color: linear-gradient(to bottom right, #f0fdf4, white); -fx-background-radius: 16; -fx-border-color: #a7f3d0; -fx-border-width: 2; -fx-border-radius: 16; -fx-padding: 20;">
+                                    <children>
+                                        <HBox alignment="CENTER_LEFT" layoutX="15.0" layoutY="15.0" spacing="12.0">
+                                            <children>
+                                                <AnchorPane prefHeight="36.0" prefWidth="36.0" style="-fx-background-color: linear-gradient(to bottom right, #14b8a6, #0f766e); -fx-background-radius: 10;">
+                                                    <children><Label layoutX="6.0" layoutY="6.0" text="📅" /></children>
+                                                </AnchorPane>
+                                                <VBox spacing="4.0">
+                                                    <children>
+                                                        <Label text="Rendez-vous associé" textFill="#1c1917">
+                                                            <font><Font name="System Bold" size="16.0" /></font>
+                                                        </Label>
+                                                    </children>
+                                                </VBox>
+                                            </children>
+                                        </HBox>
+                                        <ComboBox fx:id="rendezVousCB" layoutX="15.0" layoutY="70.0" prefHeight="44.0" prefWidth="600.0" promptText="-- Sélectionnez un rendez-vous --" style="-fx-background-color: white; -fx-border-color: #e7e5e4; -fx-border-width: 2; -fx-border-radius: 10; -fx-background-radius: 10;" />
+                                    </children>
+                                </AnchorPane>
+
+                                <!-- Section Général -->
+                                <VBox spacing="15.0">
+                                    <children>
+                                        <Label text="Motif de consultation" textFill="#1c1917">
+                                            <font><Font name="System Bold" size="14.0" /></font>
+                                        </Label>
+                                        <TextField fx:id="consultationReasonTF" prefHeight="44.0" promptText="Ex: Douleurs thoraciques..." style="-fx-border-color: #e7e5e4; -fx-border-width: 2; -fx-border-radius: 10; -fx-background-radius: 10;" />
+                                    </children>
+                                </VBox>
+
+                                <!-- Section Diagnostic -->
+                                <VBox spacing="15.0">
+                                    <children>
+                                        <Label text="Diagnostic principal" textFill="#1c1917">
+                                            <font><Font name="System Bold" size="14.0" /></font>
+                                        </Label>
+                                        <TextField fx:id="diagnosisTF" prefHeight="44.0" promptText="Diagnostic établi..." style="-fx-border-color: #e7e5e4; -fx-border-width: 2; -fx-border-radius: 10; -fx-background-radius: 10;" />
+                                    </children>
+                                </VBox>
+
+                                <!-- Section Observations -->
+                                <VBox spacing="15.0">
+                                    <children>
+                                        <Label text="Observations cliniques" textFill="#1c1917">
+                                            <font><Font name="System Bold" size="14.0" /></font>
+                                        </Label>
+                                        <TextArea fx:id="observationsTA" prefHeight="120.0" promptText="Détaillez les symptômes..." style="-fx-border-color: #e7e5e4; -fx-border-width: 2; -fx-border-radius: 10; -fx-background-radius: 10;" />
+                                    </children>
+                                </VBox>
+
+                                <!-- Section Recommandations -->
+                                <VBox spacing="15.0">
+                                    <children>
+                                        <Label text="Recommandations" textFill="#1c1917">
+                                            <font><Font name="System Bold" size="14.0" /></font>
+                                        </Label>
+                                        <TextArea fx:id="recommendationsTA" prefHeight="100.0" promptText="Conseils..." style="-fx-border-color: #e7e5e4; -fx-border-width: 2; -fx-border-radius: 10; -fx-background-radius: 10;" />
+                                    </children>
+                                </VBox>
+
+                                <!-- Section Traitements -->
+                                <VBox spacing="15.0">
+                                    <children>
+                                        <Label text="Traitements prescrits" textFill="#1c1917">
+                                            <font><Font name="System Bold" size="14.0" /></font>
+                                        </Label>
+                                        <TextArea fx:id="treatmentsTA" prefHeight="100.0" promptText="Médicaments..." style="-fx-border-color: #e7e5e4; -fx-border-width: 2; -fx-border-radius: 10; -fx-background-radius: 10;" />
+                                    </children>
+                                </VBox>
+
+                                <!-- Actions -->
+                                <HBox alignment="CENTER_LEFT" spacing="16.0" style="-fx-padding: 30 0 0 0; -fx-border-color: #e7e5e4 transparent transparent transparent; -fx-border-width: 2 0 0 0;">
+                                    <children>
+                                        <Button mnemonicParsing="false" onAction="#handleSave" prefHeight="52.0" prefWidth="250.0" style="-fx-background-color: linear-gradient(to bottom right, #0f766e, #0d9488); -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 10; -fx-cursor: hand;" text="💾  Créer le rapport" />
+                                    </children>
+                                </HBox>
+
+                            </children>
+                        </VBox>
+                    </children>
+                </AnchorPane>
+            </children>
+        </AnchorPane>
+    </content>
+</ScrollPane>

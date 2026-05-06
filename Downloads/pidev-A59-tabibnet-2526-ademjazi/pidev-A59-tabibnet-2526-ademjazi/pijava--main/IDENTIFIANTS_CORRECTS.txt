@@ -1,0 +1,115 @@
+╔════════════════════════════════════════════════════════════════════════╗
+║                                                                        ║
+║              IDENTIFIANTS DE CONNEXION - TABIBNET                      ║
+║                      ✅ COMPTES CORRIGES                               ║
+║                                                                        ║
+╚════════════════════════════════════════════════════════════════════════╝
+
+
+═══════════════════════════════════════════════════════════════════════
+  👨‍⚕️ COMPTE MEDECIN (FONCTIONNE MAINTENANT!)
+═══════════════════════════════════════════════════════════════════════
+
+  📧 Email       : medecin@test.com
+  🔑 Mot de passe: medecin123
+
+  Nom         : Dr. Ahmed Ben Ali
+  Spécialité  : Cardiologie
+  Gouvernorat : Tunis
+  Téléphone   : +216 20 123 456
+
+
+═══════════════════════════════════════════════════════════════════════
+  🧑 COMPTE PATIENT
+═══════════════════════════════════════════════════════════════════════
+
+  📧 Email       : patient@test.com
+  🔑 Mot de passe: patient123
+
+  Nom         : Fatma Trabelsi
+  Téléphone   : +216 22 987 654
+
+
+═══════════════════════════════════════════════════════════════════════
+  👨‍💼 COMPTE ADMINISTRATEUR
+═══════════════════════════════════════════════════════════════════════
+
+  📧 Email       : admin@gmail.com
+  🔑 Mot de passe: 12345678
+
+  ⚠️  ATTENTION: Le mot de passe admin est "12345678" et NON "admin123"
+
+
+═══════════════════════════════════════════════════════════════════════
+  🚀 COMMENT SE CONNECTER
+═══════════════════════════════════════════════════════════════════════
+
+  1. L'application est en cours de démarrage...
+  
+  2. Attendez que la fenêtre de connexion s'affiche
+  
+  3. Pour vous connecter en tant que MEDECIN:
+     - Email: medecin@test.com
+     - Mot de passe: medecin123
+  
+  4. Cliquez sur "Se connecter"
+
+
+═══════════════════════════════════════════════════════════════════════
+  ✅ PROBLEME RESOLU
+═══════════════════════════════════════════════════════════════════════
+
+  Le problème était que les mots de passe n'étaient pas hashés 
+  correctement avec BCrypt.
+  
+  Les comptes ont été recréés avec les bons hash BCrypt.
+  
+  Vous pouvez maintenant vous connecter sans problème!
+
+
+═══════════════════════════════════════════════════════════════════════
+  📝 RECREER LES COMPTES SI NECESSAIRE
+═══════════════════════════════════════════════════════════════════════
+
+  Si vous avez besoin de recréer les comptes avec les bons hash:
+  
+  Médecin:
+    mvn compile
+    java -cp "target/classes;C:\Users\user\.m2\repository\com\mysql\mysql-connector-j\8.3.0\mysql-connector-j-8.3.0.jar" com.pidev.utils.CreateMedecinAccount
+  
+  Patient:
+    mvn compile
+    java -cp "target/classes;C:\Users\user\.m2\repository\com\mysql\mysql-connector-j\8.3.0\mysql-connector-j-8.3.0.jar" com.pidev.utils.CreatePatientAccount
+
+
+═══════════════════════════════════════════════════════════════════════
+  🎯 TESTER LES DIFFERENTS ROLES
+═══════════════════════════════════════════════════════════════════════
+
+  MEDECIN (medecin@test.com / medecin123)
+  ├─ Voir les rendez-vous
+  ├─ Répondre aux questions du forum
+  ├─ Gérer son profil
+  └─ Consulter les évaluations
+
+  PATIENT (patient@test.com / patient123)
+  ├─ Prendre des rendez-vous
+  ├─ Rechercher des médecins
+  ├─ Poser des questions au forum
+  └─ Lire le magazine médical
+
+  ADMIN (admin@gmail.com / 12345678)
+  ├─ Gestion des utilisateurs
+  ├─ Gestion du forum
+  ├─ Gestion des magazines
+  └─ Statistiques globales
+
+
+═══════════════════════════════════════════════════════════════════════
+
+  Date de correction : 2026-05-06
+  Statut : ✅ COMPTES FONCTIONNELS
+
+  Bon test ! 🎉
+
+═══════════════════════════════════════════════════════════════════════

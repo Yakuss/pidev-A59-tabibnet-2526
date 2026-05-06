@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.pidev.controllers.ArticleAdminController"
+      spacing="14" style="-fx-background-color:#0d1117; -fx-padding:24;">
+
+    <!-- Header -->
+    <HBox alignment="CENTER_LEFT" spacing="12">
+        <Label text="📝 Gestion des Articles" style="-fx-font-size:22px;-fx-font-weight:bold;-fx-text-fill:#f1f5f9;" HBox.hgrow="ALWAYS"/>
+        <Label fx:id="lblMagazineFiltre" text="" visible="false"
+               style="-fx-background-color:#6e40c9;-fx-text-fill:white;-fx-padding:4 12;-fx-background-radius:999;-fx-font-size:12px;"/>
+        <Button text="← Retourner à les magazines" onAction="#retournerMagazines"
+                style="-fx-background-color:#6e40c9;-fx-text-fill:white;-fx-border-color:#30363d;-fx-border-radius:6;-fx-padding:6 12;-fx-cursor:hand;"/>
+    </HBox>
+
+    <!-- Toolbar -->
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <TextField fx:id="tfSearch" promptText="🔍 Rechercher par titre..." prefWidth="220"
+                   style="-fx-background-color:#161b22;-fx-text-fill:white;-fx-border-color:#30363d;-fx-border-radius:6;-fx-background-radius:6;-fx-padding:8;"/>
+        <Button text="🔍 Rechercher" onAction="#onSearchChanged"
+                style="-fx-background-color:#1f6feb;-fx-text-fill:white;-fx-font-weight:bold;-fx-padding:8 16;-fx-background-radius:6;-fx-cursor:hand;"/>
+        <ComboBox fx:id="cbFiltrePublic" onAction="#onFiltreChanged" prefWidth="130"
+                  style="-fx-background-color:#161b22;-fx-text-fill:white;"/>
+        <ComboBox fx:id="cbTri" onAction="#onTriChanged" prefWidth="150"
+                  style="-fx-background-color:#161b22;-fx-text-fill:white;"/>
+        <Label fx:id="lblArticleCount" text="0 article(s)" style="-fx-text-fill:#64748b;-fx-font-size:12px;" HBox.hgrow="ALWAYS"/>
+        <Button text="➕ Nouvel Article" onAction="#ouvrirFormulaireAjout"
+                style="-fx-background-color:#238636;-fx-text-fill:white;-fx-font-weight:bold;-fx-padding:8 18;-fx-background-radius:6;-fx-cursor:hand;"/>
+    </HBox>
+
+    <!-- Table -->
+    <TableView fx:id="tableArticles" VBox.vgrow="ALWAYS"
+               style="-fx-background-color:#161b22;-fx-border-color:#30363d;-fx-border-radius:8;">
+        <columns>
+            <TableColumn fx:id="colId"      text="ID"       prefWidth="45"/>
+            <TableColumn fx:id="colTitre"   text="Titre"    prefWidth="200"/>
+            <TableColumn fx:id="colAuteur"  text="Auteur"   prefWidth="120"/>
+            <TableColumn fx:id="colMagazine" text="Magazine" prefWidth="130"/>
+            <TableColumn fx:id="colPublic"  text="Public"   prefWidth="90"/>
+            <TableColumn fx:id="colViews"   text="Vues"     prefWidth="60"/>
+            <TableColumn fx:id="colStatut"  text="Statut"   prefWidth="90"/>
+            <TableColumn fx:id="colDatePub" text="Date"     prefWidth="120"/>
+            <TableColumn fx:id="colActions" text="Actions"  prefWidth="160"/>
+        </columns>
+        <placeholder><Label text="Aucun article" style="-fx-text-fill:#64748b;"/></placeholder>
+    </TableView>
+
+    <!-- Pagination -->
+    <HBox alignment="CENTER" spacing="12">
+        <Button fx:id="btnPrev" text="◀ Précédent" onAction="#pagePrecedente"
+                style="-fx-background-color:#161b22;-fx-text-fill:#94a3b8;-fx-border-color:#30363d;-fx-border-radius:6;-fx-padding:6 14;-fx-cursor:hand;"/>
+        <Label fx:id="lblPage" text="Page 1 / 1" style="-fx-text-fill:#94a3b8;"/>
+        <Button fx:id="btnNext" text="Suivant ▶" onAction="#pageSuivante"
+                style="-fx-background-color:#161b22;-fx-text-fill:#94a3b8;-fx-border-color:#30363d;-fx-border-radius:6;-fx-padding:6 14;-fx-cursor:hand;"/>
+    </HBox>
+</VBox>

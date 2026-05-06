@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.pidev.controllers.ArticlePatientController"
+      spacing="0" style="-fx-background-color:#0f172a;">
+
+    <!-- HEADER -->
+    <HBox style="-fx-background-color:#0f172a;-fx-padding:16 24;-fx-border-color:#1e293b;-fx-border-width:0 0 1 0;"
+          alignment="CENTER_LEFT" spacing="16">
+        <Button text="← Magazines" onAction="#retourMagazines"
+                style="-fx-background-color:transparent;-fx-text-fill:#818cf8;-fx-font-weight:bold;
+                       -fx-cursor:hand;-fx-font-size:13px;-fx-padding:0;"/>
+        <Label text="📚 Bibliothèque d'Articles"
+               style="-fx-font-size:18px;-fx-font-weight:bold;-fx-text-fill:#f1f5f9;"
+               HBox.hgrow="ALWAYS"/>
+        <Label fx:id="lblMagazineFiltre" text="" visible="false"
+               style="-fx-background-color:#6e40c9;-fx-text-fill:white;-fx-padding:4 12;
+                      -fx-background-radius:999;-fx-font-size:12px;"/>
+        <TextField fx:id="tfSearch" promptText="🔍 Rechercher par titre..."
+                   onKeyReleased="#onSearchChanged" prefWidth="240"
+                   style="-fx-background-color:#1e293b;-fx-text-fill:white;-fx-border-color:#334155;
+                          -fx-border-radius:8;-fx-background-radius:8;-fx-padding:8 14;"/>
+    </HBox>
+
+    <!-- FILTRES -->
+    <HBox style="-fx-background-color:#1e293b;-fx-padding:12 24;-fx-border-color:#334155;-fx-border-width:0 0 1 0;"
+          alignment="CENTER_LEFT" spacing="10">
+        <Label text="Public cible :" style="-fx-text-fill:#94a3b8;-fx-font-size:13px;"/>
+        <ToggleButton fx:id="btnTous"    text="Tous"    onAction="#onFiltreChanged" selected="true"
+                      style="-fx-background-color:#6366f1;-fx-text-fill:white;-fx-background-radius:999;-fx-padding:5 14;-fx-cursor:hand;-fx-font-size:12px;"/>
+        <ToggleButton fx:id="btnEnfants" text="Enfants" onAction="#onFiltreChanged"
+                      style="-fx-background-color:#1e293b;-fx-text-fill:#94a3b8;-fx-border-color:#334155;-fx-background-radius:999;-fx-padding:5 14;-fx-cursor:hand;-fx-font-size:12px;"/>
+        <ToggleButton fx:id="btnJeunes"  text="Jeunes"  onAction="#onFiltreChanged"
+                      style="-fx-background-color:#1e293b;-fx-text-fill:#94a3b8;-fx-border-color:#334155;-fx-background-radius:999;-fx-padding:5 14;-fx-cursor:hand;-fx-font-size:12px;"/>
+        <ToggleButton fx:id="btnAdultes" text="Adultes" onAction="#onFiltreChanged"
+                      style="-fx-background-color:#1e293b;-fx-text-fill:#94a3b8;-fx-border-color:#334155;-fx-background-radius:999;-fx-padding:5 14;-fx-cursor:hand;-fx-font-size:12px;"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Label text="Trier par :" style="-fx-text-fill:#94a3b8;-fx-font-size:13px;"/>
+        <ComboBox fx:id="cbTri" onAction="#onTriChanged" prefWidth="160"
+                  style="-fx-background-color:#0f172a;-fx-text-fill:white;"/>
+    </HBox>
+
+    <!-- CONTENU : liste + détail -->
+    <HBox VBox.vgrow="ALWAYS" spacing="0">
+
+        <!-- LISTE GAUCHE (380px) -->
+        <VBox prefWidth="380" spacing="0"
+              style="-fx-background-color:#0f172a;-fx-border-color:#1e293b;-fx-border-width:0 1 0 0;">
+            <ListView fx:id="listArticles" VBox.vgrow="ALWAYS"
+                      style="-fx-background-color:#0f172a;-fx-border-color:transparent;"/>
+            <!-- PAGINATION -->
+            <HBox alignment="CENTER" spacing="12"
+                  style="-fx-padding:10 16;-fx-background-color:#0f172a;-fx-border-color:#1e293b;-fx-border-width:1 0 0 0;">
+                <Button fx:id="btnPrev" text="← Précédent" onAction="#pagePrecedente"
+                        style="-fx-background-color:#1e293b;-fx-text-fill:#94a3b8;-fx-border-color:#334155;
+                               -fx-border-radius:6;-fx-padding:6 12;-fx-cursor:hand;-fx-font-size:12px;"/>
+                <Label fx:id="lblPage" text="Page 1 / 1"
+                       style="-fx-text-fill:#64748b;-fx-font-size:12px;"/>
+                <Button fx:id="btnNext" text="Suivant →" onAction="#pageSuivante"
+                        style="-fx-background-color:#1e293b;-fx-text-fill:#94a3b8;-fx-border-color:#334155;
+                               -fx-border-radius:6;-fx-padding:6 12;-fx-cursor:hand;-fx-font-size:12px;"/>
+            </HBox>
+        </VBox>
+
+        <!-- DÉTAIL DROITE -->
+        <ScrollPane HBox.hgrow="ALWAYS" fitToWidth="true"
+                    style="-fx-background-color:#0f172a;-fx-border-color:transparent;">
+            <VBox fx:id="detailPane" spacing="16" style="-fx-padding:28;">
+
+                <!-- Titre -->
+                <Label fx:id="lblTitre" text="Sélectionnez un article"
+                       style="-fx-font-size:22px;-fx-font-weight:bold;-fx-text-fill:#f1f5f9;"
+                       wrapText="true"/>
+
+                <!-- Meta -->
+                <HBox spacing="16" alignment="CENTER_LEFT">
+                    <Label fx:id="lblAuteur"      text="" style="-fx-text-fill:#94a3b8;-fx-font-size:13px;"/>
+                    <Label fx:id="lblDatePub"     text="" style="-fx-text-fill:#64748b;-fx-font-size:13px;"/>
+                    <Label fx:id="lblViews"       text="" style="-fx-text-fill:#64748b;-fx-font-size:13px;"/>
+                    <Label fx:id="lblStatut"      text="" style="-fx-text-fill:#64748b;-fx-font-size:12px;"/>
+                    <Label fx:id="lblPublicCible" text="" style="-fx-text-fill:#64748b;-fx-font-size:12px;"/>
+                </HBox>
+
+                <!-- Traduction (cachée au départ) -->
+                <HBox fx:id="tradRow" spacing="10" alignment="CENTER_LEFT" visible="false" managed="false">
+                    <Label text="Traduire en :" style="-fx-text-fill:#94a3b8;-fx-font-size:13px;"/>
+                    <Button fx:id="btnTradAr" text="🌐 Arabe"    onAction="#traduireArabe"
+                            style="-fx-background-color:#1e293b;-fx-text-fill:#94a3b8;-fx-border-color:#334155;
+                                   -fx-border-radius:16;-fx-padding:5 14;-fx-cursor:hand;-fx-font-size:12px;"/>
+                    <Button fx:id="btnTradFr" text="🌐 Français" onAction="#traduireFrancais"
+                            style="-fx-background-color:#1e293b;-fx-text-fill:#94a3b8;-fx-border-color:#334155;
+                                   -fx-border-radius:16;-fx-padding:5 14;-fx-cursor:hand;-fx-font-size:12px;"/>
+                    <Button fx:id="btnTradEn" text="🌐 Anglais"  onAction="#traduireAnglais"
+                            style="-fx-background-color:#1e293b;-fx-text-fill:#94a3b8;-fx-border-color:#334155;
+                                   -fx-border-radius:16;-fx-padding:5 14;-fx-cursor:hand;-fx-font-size:12px;"/>
+                </HBox>
+
+                <!-- Contenu -->
+                <TextArea fx:id="taResume" editable="false" wrapText="true" prefRowCount="10"
+                          visible="false" managed="false"
+                          style="-fx-background-color:transparent;-fx-text-fill:#cbd5e1;
+                                 -fx-border-color:#1e293b;-fx-border-radius:8;-fx-background-radius:8;
+                                 -fx-font-size:14px;"/>
+
+                <!-- Bouton résumé -->
+                <Button fx:id="resumeButton" text="✨ Résumé automatique" onAction="#handleResume"
+                        visible="false" managed="false"
+                        style="-fx-background-color:#16a34a;-fx-text-fill:white;-fx-font-weight:bold;
+                               -fx-padding:10 20;-fx-background-radius:8;-fx-cursor:hand;-fx-font-size:13px;"/>
+
+                <!-- Zone résumé IA (fond vert) -->
+                <VBox fx:id="resumeBox" visible="false" managed="false" spacing="8"
+                      style="-fx-background-color:#f0fdf4;-fx-background-radius:8;
+                             -fx-border-color:#86efac;-fx-border-width:0 0 0 4;-fx-padding:16;">
+                    <Label text="Résumé généré par IA"
+                           style="-fx-font-weight:bold;-fx-text-fill:#166534;-fx-font-size:13px;"/>
+                    <TextArea fx:id="resumeArea" editable="false" wrapText="true" prefRowCount="4"
+                              style="-fx-background-color:transparent;-fx-text-fill:#166534;
+                                     -fx-border-color:transparent;-fx-font-size:13px;"/>
+                </VBox>
+
+                <!-- Boutons IA -->
+                <HBox spacing="12" alignment="CENTER_LEFT">
+                    <Button fx:id="btnRecommandLinks" text="🔗 Recommander des liens"
+                            onAction="#recommanderLiens" visible="false" managed="false"
+                            style="-fx-background-color:#0ea5e9;-fx-text-fill:white;-fx-font-weight:bold;
+                                   -fx-padding:10 20;-fx-background-radius:8;-fx-cursor:hand;-fx-font-size:13px;"/>
+                    <Button fx:id="btnOuvrirPdf" text="📄 Ouvrir le PDF joint"
+                            onAction="#ouvrirPdf" visible="false" managed="false"
+                            style="-fx-background-color:#1e293b;-fx-text-fill:#94a3b8;-fx-border-color:#334155;
+                                   -fx-padding:10 20;-fx-background-radius:8;-fx-cursor:hand;-fx-font-size:13px;"/>
+                </HBox>
+
+            </VBox>
+        </ScrollPane>
+    </HBox>
+</VBox>

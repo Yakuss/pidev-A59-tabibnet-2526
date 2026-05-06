@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.text.Font?>
+
+<ScrollPane fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED" 
+            prefHeight="650.0" prefWidth="800.0"
+            style="-fx-background-color: #f8fafc;" 
+            xmlns="http://javafx.com/javafx/19" 
+            xmlns:fx="http://javafx.com/fxml/1" 
+            fx:controller="com.pidev.controllers.AssistantAIController">
+    <content>
+        <VBox alignment="TOP_CENTER" spacing="0.0" style="-fx-background-color: #f8fafc;">
+            <children>
+                <AnchorPane prefHeight="180.0" prefWidth="800.0" 
+                            style="-fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #2563eb, #1e40af);">
+                    <children>
+                        <Circle fill="#ffffff14" layoutX="750.0" layoutY="-20.0" radius="150.0" stroke="transparent" AnchorPane.rightAnchor="-50.0" />
+                        
+                        <VBox alignment="CENTER_LEFT" layoutX="50.0" layoutY="25.0" spacing="10.0" maxWidth="700.0" AnchorPane.leftAnchor="50.0">
+                            <children>
+                                <HBox alignment="CENTER_LEFT" spacing="6.0" style="-fx-background-color: #ffffff26; -fx-background-radius: 100; -fx-padding: 4 12;">
+                                    <children>
+                                        <Label style="-fx-font-size: 11;" text="🤖" />
+                                        <Label text="ASSISTANT IA MÉDICAL" textFill="white">
+                                            <font>
+                                                <Font name="System Bold" size="11.0" />
+                                            </font>
+                                        </Label>
+                                    </children>
+                                </HBox>
+
+                                <Label text="Assistant IA Médical" textFill="white">
+                                    <font>
+                                        <Font name="System Bold" size="32.0" />
+                                    </font>
+                                </Label>
+
+                                <Label text="Analyse intelligente de dossiers et base de connaissances" textFill="#ffffffcc">
+                                    <font>
+                                        <Font size="14.0" />
+                                    </font>
+                                </Label>
+                            </children>
+                        </VBox>
+                    </children>
+                    <effect>
+                        <DropShadow color="#00000030" height="20.0" offsetY="5.0" radius="10.0" width="20.0" />
+                    </effect>
+                </AnchorPane>
+
+                <AnchorPane maxWidth="700.0" prefWidth="700.0" style="-fx-background-color: white; -fx-background-radius: 24;">
+                    <VBox.margin>
+                        <Insets top="40.0" />
+                    </VBox.margin>
+                    <effect>
+                        <DropShadow color="#0000001a" height="40.0" radius="20.0" width="40.0" />
+                    </effect>
+                    <children>
+                        <HBox alignment="CENTER_LEFT" prefHeight="60.0" spacing="10.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" style="-fx-background-color: linear-gradient(from 0% 0% to 100% 0%, white, #f8fafc); -fx-border-color: transparent transparent #e2e8f0 transparent; -fx-border-width: 0 0 1 0; -fx-background-radius: 24 24 0 0; -fx-padding: 0 24;">
+                            <children>
+                                <Label text="📄" />
+                                <Label text="Nouvelle analyse" textFill="#2f3337">
+                                    <font>
+                                        <Font name="System Bold" size="16.0" />
+                                    </font>
+                                </Label>
+                                <HBox alignment="CENTER_RIGHT" HBox.hgrow="ALWAYS">
+                                    <Label fx:id="modeBadge" style="-fx-background-color: #eff6ff; -fx-padding: 4 8; -fx-background-radius: 6; -fx-font-weight: bold; -fx-font-size: 10;" text="MODE : DOSSIER (BASE DE DONNÉES)" textFill="#2563eb" />
+                                </HBox>
+                            </children>
+                        </HBox>
+
+                        <VBox spacing="24.0" AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="90.0">
+                            <children>
+                                <VBox spacing="10.0">
+                                    <children>
+                                        <HBox spacing="6.0">
+                                            <children>
+                                                <Label text="Document médical" textFill="#2f3337">
+                                                    <font>
+                                                        <Font name="System Bold" size="14.0" />
+                                                    </font>
+                                                </Label>
+                                                <Label text="(PDF optionnel)" textFill="#94a3b8">
+                                                    <font>
+                                                        <Font size="13.0" />
+                                                    </font>
+                                                </Label>
+                                            </children>
+                                        </HBox>
+                                        <AnchorPane fx:id="uploadZone" 
+                                                    onMouseClicked="#handleUploadClick" 
+                                                    prefHeight="120.0" 
+                                                    style="-fx-background-color: #f8fafc; -fx-border-color: #cbd5e1; -fx-border-width: 2; -fx-border-style: dashed; -fx-border-radius: 12; -fx-background-radius: 12; -fx-cursor: hand;">
+                                            <children>
+                                                <VBox alignment="CENTER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                    <children>
+                                                        <Label style="-fx-font-size: 28;" text="⬆️" />
+                                                        <Label text="Cliquez ou déposez un PDF ici" textFill="#334155">
+                                                            <font>
+                                                                <Font name="System Bold" size="14.0" />
+                                                            </font>
+                                                        </Label>
+                                                        <Label text="Analyse intelligente de contenu" textFill="#94a3b8" />
+                                                        <Label fx:id="selectedFileLabel" textFill="#2563eb" visible="false">
+                                                            <font>
+                                                                <Font name="System Bold" size="12.0" />
+                                                            </font>
+                                                        </Label>
+                                                    </children>
+                                                </VBox>
+                                            </children>
+                                        </AnchorPane>
+                                    </children>
+                                </VBox>
+
+                                <VBox spacing="10.0">
+                                    <children>
+                                        <Label text="Votre question" textFill="#2f3337">
+                                            <font>
+                                                <Font name="System Bold" size="14.0" />
+                                            </font>
+                                        </Label>
+                                        <TextArea fx:id="questionTextArea" prefHeight="120.0" promptText="Posez votre question médicale ici..." wrapText="true" style="-fx-background-color: white; -fx-border-color: #e2e8f0; -fx-border-width: 2; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 10; -fx-text-fill: black;">
+                                            <font>
+                                                <Font size="14.0" />
+                                            </font>
+                                        </TextArea>
+                                    </children>
+                                </VBox>
+
+                                <HBox spacing="10.0">
+                                    <children>
+                                        <Button fx:id="sendButton" mnemonicParsing="false" onAction="#handleSendMessage" prefHeight="54.0" prefWidth="550.0" text="🔍  Envoyer la question" style="-fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #2563eb, #1d4ed8); -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 10; -fx-cursor: hand;">
+                                            <effect>
+                                                <DropShadow color="#2563eb40" height="15.0" offsetY="4.0" radius="7.5" width="15.0" />
+                                            </effect>
+                                        </Button>
+                                        <Button fx:id="micButton" mnemonicParsing="false" onAction="#handleMicClick" prefHeight="54.0" prefWidth="80.0" text="🎤" style="-fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #10b981, #059669); -fx-text-fill: white; -fx-font-size: 24; -fx-background-radius: 10; -fx-cursor: hand;">
+                                            <effect>
+                                                <DropShadow color="#10b98140" height="15.0" offsetY="4.0" radius="7.5" width="15.0" />
+                                            </effect>
+                                        </Button>
+                                    </children>
+                                </HBox>
+
+                                <VBox fx:id="responseBox" managed="false" spacing="12.0" visible="false">
+                                    <children>
+                                        <Label text="Réponse de l'IA" textFill="#2f3337">
+                                            <font>
+                                                <Font name="System Bold" size="14.0" />
+                                            </font>
+                                        </Label>
+                                        <TextArea fx:id="responseTextArea" editable="false" prefHeight="180.0" wrapText="true" style="-fx-background-color: #f1f5f9; -fx-border-color: #e2e8f0; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 10; -fx-text-fill: black;">
+                                            <font>
+                                                <Font size="14.0" />
+                                            </font>
+                                        </TextArea>
+                                        <HBox alignment="CENTER_LEFT" spacing="8.0">
+                                            <children>
+                                                <Circle fill="#10b981" radius="4.0" stroke="transparent" />
+                                                <Label text="Analyse effectuée avec succès" textFill="#64748b">
+                                                    <font>
+                                                        <Font size="12.0" />
+                                                    </font>
+                                                </Label>
+                                            </children>
+                                        </HBox>
+                                    </children>
+                                </VBox>
+                            </children>
+                        </VBox>
+                    </children>
+                </AnchorPane>
+
+                <HBox alignment="CENTER" prefHeight="80.0" spacing="8.0">
+                    <children>
+                        <Label text="Assistant IA Médical • Version 1.0" textFill="#94a3b8">
+                            <font>
+                                <Font size="12.0" />
+                            </font>
+                        </Label>
+                    </children>
+                </HBox>
+            </children>
+            <padding>
+                <Insets bottom="40.0" />
+            </padding>
+        </VBox>
+    </content>
+</ScrollPane>

@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.cell.PropertyValueFactory?>
+<?import java.lang.String?>
+
+<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="com.pidev.controllers.AppointmentController"
+      spacing="20" styleClass="content-area" stylesheets="@../styles/style.css">
+
+    <!-- Header -->
+    <HBox alignment="CENTER_LEFT" spacing="16">
+        <VBox HBox.hgrow="ALWAYS">
+            <Label text="📅 Gestion des Rendez-vous" styleClass="page-title"/>
+            <Label text="Planifier et gérer les rendez-vous" styleClass="page-subtitle"/>
+        </VBox>
+        <TextField fx:id="searchField" promptText="🔍 Rechercher..." styleClass="search-field" prefWidth="250"
+                   onKeyReleased="#onSearch"/>
+    </HBox>
+
+    <HBox spacing="20" VBox.vgrow="ALWAYS">
+        <!-- TABLE -->
+        <VBox HBox.hgrow="ALWAYS" styleClass="card" spacing="12">
+            <TableView fx:id="tableAppointments" VBox.vgrow="ALWAYS">
+                <columns>
+                    <TableColumn fx:id="colId" text="ID" prefWidth="50">
+                        <cellValueFactory><PropertyValueFactory property="id"/></cellValueFactory>
+                    </TableColumn>
+                    <TableColumn fx:id="colPatient" text="Patient" prefWidth="140">
+                        <cellValueFactory><PropertyValueFactory property="patientName"/></cellValueFactory>
+                    </TableColumn>
+                    <TableColumn fx:id="colDoctor" text="Médecin" prefWidth="140">
+                        <cellValueFactory><PropertyValueFactory property="doctorName"/></cellValueFactory>
+                    </TableColumn>
+                    <TableColumn fx:id="colDate" text="Date" prefWidth="130">
+                        <cellValueFactory><PropertyValueFactory property="date"/></cellValueFactory>
+                    </TableColumn>
+                    <TableColumn fx:id="colDuration" text="Durée (min)" prefWidth="100">
+                        <cellValueFactory><PropertyValueFactory property="duration"/></cellValueFactory>
+                    </TableColumn>
+                    <TableColumn fx:id="colStatus" text="Statut" prefWidth="90">
+                        <cellValueFactory><PropertyValueFactory property="status"/></cellValueFactory>
+                    </TableColumn>
+                    <TableColumn fx:id="colDepartment" text="Département" prefWidth="110">
+                        <cellValueFactory><PropertyValueFactory property="department"/></cellValueFactory>
+                    </TableColumn>
+                </columns>
+            </TableView>
+        </VBox>
+
+        <!-- FORM -->
+        <VBox styleClass="card" prefWidth="320" spacing="14">
+            <Label text="📝 Formulaire RDV" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #a78bfa;"/>
+            <Separator/>
+
+            <Label text="Patient" styleClass="form-label"/>
+            <ComboBox fx:id="cbPatient" promptText="Sélectionner un patient" maxWidth="Infinity"/>
+
+            <Label text="Médecin" styleClass="form-label"/>
+            <ComboBox fx:id="cbDoctor" promptText="Sélectionner un médecin" maxWidth="Infinity"/>
+
+            <Label text="Date du RDV" styleClass="form-label"/>
+            <DatePicker fx:id="dpDate" maxWidth="Infinity"/>
+
+            <Label text="Heure de début (HH:mm)" styleClass="form-label"/>
+            <TextField fx:id="tfStartTime" promptText="09:00"/>
+
+            <Label text="Durée (minutes)" styleClass="form-label"/>
+            <TextField fx:id="tfDuration" promptText="30"/>
+
+            <Label text="Département" styleClass="form-label"/>
+            <ComboBox fx:id="cbDepartment" promptText="Département" maxWidth="Infinity">
+                <items>
+                    <javafx.collections.FXCollections fx:factory="observableArrayList">
+                        <String fx:value="Cardiologie"/>
+                        <String fx:value="Dermatologie"/>
+                        <String fx:value="Neurologie"/>
+                        <String fx:value="Orthopédie"/>
+                        <String fx:value="Pédiatrie"/>
+                        <String fx:value="Générale"/>
+                    </javafx.collections.FXCollections>
+                </items>
+            </ComboBox>
+
+            <Label text="Statut" styleClass="form-label"/>
+            <ComboBox fx:id="cbStatus" promptText="Statut" maxWidth="Infinity">
+                <items>
+                    <javafx.collections.FXCollections fx:factory="observableArrayList">
+                        <String fx:value="pending"/>
+                        <String fx:value="confirmed"/>
+                        <String fx:value="cancelled"/>
+                        <String fx:value="completed"/>
+                    </javafx.collections.FXCollections>
+                </items>
+            </ComboBox>
+
+            <Label text="Message" styleClass="form-label"/>
+            <TextArea fx:id="taMessage" promptText="Message ou note..." prefRowCount="2"/>
+
+            <Separator/>
+
+            <HBox spacing="10" alignment="CENTER">
+                <Button text="➕ Ajouter" styleClass="btn-primary" onAction="#addAppointment"/>
+                <Button text="✏️ Modifier" styleClass="btn-warning" onAction="#updateAppointment"/>
+                <Button text="🗑️ Supprimer" styleClass="btn-danger" onAction="#deleteAppointment"/>
+            </HBox>
+            <Button text="🔄 Réinitialiser" styleClass="btn-secondary" onAction="#clearForm" maxWidth="Infinity"/>
+        </VBox>
+    </HBox>
+</VBox>

@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.pidev.controllers.MedecinProfileController"
+      stylesheets="@../styles/style.css"
+      spacing="24"
+      style="-fx-background-color: #080b14; -fx-padding: 24;">
+
+    <!-- HEADER WITH BACK BUTTON -->
+    <HBox alignment="CENTER_LEFT" spacing="16">
+        <Button fx:id="btnBack" text="← Retour à la liste" onAction="#handleBack"
+                style="-fx-background-color: #252d42;
+                       -fx-text-fill: #94a3b8;
+                       -fx-font-size: 13px;
+                       -fx-font-weight: 600;
+                       -fx-padding: 8 16;
+                       -fx-background-radius: 8;
+                       -fx-cursor: hand;
+                       -fx-border-width: 0;"/>
+        
+        <Region HBox.hgrow="ALWAYS"/>
+        
+        <Label text="👤 Profil du Médecin"
+               style="-fx-text-fill: #94a3b8; -fx-font-size: 14px; -fx-font-weight: 600;"/>
+    </HBox>
+
+    <!-- MAIN PROFILE CARD -->
+    <VBox spacing="0"
+          style="-fx-background-color: #0e1220;
+                 -fx-background-radius: 20;
+                 -fx-border-color: #252d42;
+                 -fx-border-width: 1;
+                 -fx-border-radius: 20;
+                 -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 16, 0, 0, 6);">
+
+        <!-- PROFILE HEADER -->
+        <VBox spacing="20" style="-fx-padding: 32 32 24 32;">
+            
+            <!-- Doctor Avatar and Basic Info -->
+            <HBox alignment="CENTER_LEFT" spacing="24">
+                
+                <!-- Large Avatar -->
+                <VBox alignment="CENTER">
+                    <Label fx:id="doctorAvatar"
+                           style="-fx-background-color: #22c55e;
+                                  -fx-text-fill: white;
+                                  -fx-font-size: 32px;
+                                  -fx-font-weight: bold;
+                                  -fx-min-width: 80px;
+                                  -fx-min-height: 80px;
+                                  -fx-max-width: 80px;
+                                  -fx-max-height: 80px;
+                                  -fx-background-radius: 40;
+                                  -fx-alignment: center;"/>
+                </VBox>
+
+                <!-- Name and Title -->
+                <VBox spacing="8" HBox.hgrow="ALWAYS">
+                    <Label fx:id="doctorName"
+                           style="-fx-text-fill: #f1f5f9; -fx-font-size: 28px; -fx-font-weight: bold;"/>
+                    
+                    <Label fx:id="doctorSpecialty"
+                           style="-fx-text-fill: #22c55e; -fx-font-size: 18px; -fx-font-weight: 600;"/>
+                    
+                    <HBox spacing="16" alignment="CENTER_LEFT">
+                        <Label fx:id="verificationStatus"
+                               style="-fx-font-size: 14px;"/>
+                        
+                        <Label fx:id="aiScore"
+                               style="-fx-background-color: rgba(139,92,246,0.2);
+                                      -fx-text-fill: #8b5cf6;
+                                      -fx-font-size: 13px;
+                                      -fx-font-weight: 600;
+                                      -fx-padding: 4 12;
+                                      -fx-background-radius: 12;"/>
+                    </HBox>
+                </VBox>
+
+                <!-- Action Buttons -->
+                <VBox spacing="12" alignment="TOP_RIGHT">
+                    <Button fx:id="btnContact" text="📞 Contacter" onAction="#handleContact"
+                            style="-fx-background-color: #22c55e;
+                                   -fx-text-fill: white;
+                                   -fx-font-size: 14px;
+                                   -fx-font-weight: 600;
+                                   -fx-padding: 12 20;
+                                   -fx-background-radius: 10;
+                                   -fx-cursor: hand;
+                                   -fx-border-width: 0;
+                                   -fx-min-width: 140px;"/>
+                    
+                    <Button fx:id="btnAppointment" text="📅 Prendre RDV" onAction="#handleAppointment"
+                            style="-fx-background-color: transparent;
+                                   -fx-text-fill: #22c55e;
+                                   -fx-font-size: 14px;
+                                   -fx-font-weight: 600;
+                                   -fx-padding: 12 20;
+                                   -fx-background-radius: 10;
+                                   -fx-cursor: hand;
+                                   -fx-border-color: #22c55e;
+                                   -fx-border-width: 1;
+                                   -fx-border-radius: 10;
+                                   -fx-min-width: 140px;"/>
+                </VBox>
+            </HBox>
+        </VBox>
+
+        <!-- SEPARATOR -->
+        <Separator style="-fx-background-color: #252d42; -fx-padding: 0;"/>
+
+        <!-- DETAILED INFORMATION -->
+        <VBox spacing="24" style="-fx-padding: 24 32 32 32;">
+
+            <!-- CONTACT INFORMATION -->
+            <VBox spacing="16">
+                <Label text="📞 Informations de Contact"
+                       style="-fx-text-fill: #f1f5f9; -fx-font-size: 18px; -fx-font-weight: 600;"/>
+                
+                <GridPane hgap="32" vgap="16">
+                    <columnConstraints>
+                        <ColumnConstraints percentWidth="50"/>
+                        <ColumnConstraints percentWidth="50"/>
+                    </columnConstraints>
+                    
+                    <!-- Phone -->
+                    <VBox spacing="4" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                        <Label text="Téléphone"
+                               style="-fx-text-fill: #94a3b8; -fx-font-size: 13px; -fx-font-weight: 600;"/>
+                        <Label fx:id="phoneNumber"
+                               style="-fx-text-fill: #cbd5e1; -fx-font-size: 15px;"/>
+                    </VBox>
+                    
+                    <!-- Email -->
+                    <VBox spacing="4" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                        <Label text="Email"
+                               style="-fx-text-fill: #94a3b8; -fx-font-size: 13px; -fx-font-weight: 600;"/>
+                        <Label fx:id="emailAddress"
+                               style="-fx-text-fill: #cbd5e1; -fx-font-size: 15px;"/>
+                    </VBox>
+                    
+                    <!-- Governorate -->
+                    <VBox spacing="4" GridPane.columnIndex="0" GridPane.rowIndex="1">
+                        <Label text="Gouvernorat"
+                               style="-fx-text-fill: #94a3b8; -fx-font-size: 13px; -fx-font-weight: 600;"/>
+                        <Label fx:id="governorate"
+                               style="-fx-text-fill: #cbd5e1; -fx-font-size: 15px;"/>
+                    </VBox>
+                    
+                    <!-- Address -->
+                    <VBox spacing="4" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                        <Label text="Adresse"
+                               style="-fx-text-fill: #94a3b8; -fx-font-size: 13px; -fx-font-weight: 600;"/>
+                        <Label fx:id="address"
+                               style="-fx-text-fill: #cbd5e1; -fx-font-size: 15px;" wrapText="true"/>
+                    </VBox>
+                </GridPane>
+            </VBox>
+
+            <!-- PERSONAL INFORMATION -->
+            <VBox spacing="16">
+                <Label text="👤 Informations Personnelles"
+                       style="-fx-text-fill: #f1f5f9; -fx-font-size: 18px; -fx-font-weight: 600;"/>
+                
+                <GridPane hgap="32" vgap="16">
+                    <columnConstraints>
+                        <ColumnConstraints percentWidth="33"/>
+                        <ColumnConstraints percentWidth="33"/>
+                        <ColumnConstraints percentWidth="34"/>
+                    </columnConstraints>
+                    
+                    <!-- Age -->
+                    <VBox spacing="4" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                        <Label text="Âge"
+                               style="-fx-text-fill: #94a3b8; -fx-font-size: 13px; -fx-font-weight: 600;"/>
+                        <Label fx:id="age"
+                               style="-fx-text-fill: #cbd5e1; -fx-font-size: 15px;"/>
+                    </VBox>
+                    
+                    <!-- Gender -->
+                    <VBox spacing="4" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                        <Label text="Genre"
+                               style="-fx-text-fill: #94a3b8; -fx-font-size: 13px; -fx-font-weight: 600;"/>
+                        <Label fx:id="gender"
+                               style="-fx-text-fill: #cbd5e1; -fx-font-size: 15px;"/>
+                    </VBox>
+                    
+                    <!-- CIN -->
+                    <VBox spacing="4" GridPane.columnIndex="2" GridPane.rowIndex="0">
+                        <Label text="CIN"
+                               style="-fx-text-fill: #94a3b8; -fx-font-size: 13px; -fx-font-weight: 600;"/>
+                        <Label fx:id="cin"
+                               style="-fx-text-fill: #cbd5e1; -fx-font-size: 15px;"/>
+                    </VBox>
+                </GridPane>
+            </VBox>
+
+            <!-- PROFESSIONAL INFORMATION -->
+            <VBox spacing="16">
+                <Label text="🎓 Informations Professionnelles"
+                       style="-fx-text-fill: #f1f5f9; -fx-font-size: 18px; -fx-font-weight: 600;"/>
+                
+                <VBox spacing="16">
+                    <!-- Education -->
+                    <VBox spacing="4">
+                        <Label text="Formation et Diplômes"
+                               style="-fx-text-fill: #94a3b8; -fx-font-size: 13px; -fx-font-weight: 600;"/>
+                        <Label fx:id="education"
+                               style="-fx-text-fill: #cbd5e1; -fx-font-size: 15px;" wrapText="true"/>
+                    </VBox>
+                    
+                    <!-- Experience -->
+                    <VBox spacing="4">
+                        <Label text="Expérience Professionnelle"
+                               style="-fx-text-fill: #94a3b8; -fx-font-size: 13px; -fx-font-weight: 600;"/>
+                        <Label fx:id="experience"
+                               style="-fx-text-fill: #cbd5e1; -fx-font-size: 15px;" wrapText="true"/>
+                    </VBox>
+                </VBox>
+            </VBox>
+
+        </VBox>
+    </VBox>
+
+</VBox>

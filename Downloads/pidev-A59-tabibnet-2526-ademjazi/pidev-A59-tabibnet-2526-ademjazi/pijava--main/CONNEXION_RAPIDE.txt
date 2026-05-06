@@ -1,0 +1,80 @@
+╔════════════════════════════════════════════════════════════════════════╗
+║                                                                        ║
+║                  GUIDE DE CONNEXION RAPIDE - TABIBNET                  ║
+║                                                                        ║
+╚════════════════════════════════════════════════════════════════════════╝
+
+
+✅ L'APPLICATION EST LANCEE ET PRETE !
+
+
+═══════════════════════════════════════════════════════════════════════
+  POUR SE CONNECTER EN TANT QUE MEDECIN
+═══════════════════════════════════════════════════════════════════════
+
+  📧 Email       : medecin@test.com
+  🔑 Mot de passe: medecin123
+
+  👨‍⚕️ Profil      : Dr. Ahmed Ben Ali
+  🏥 Spécialité  : Cardiologie
+  📍 Gouvernorat : Tunis
+
+
+═══════════════════════════════════════════════════════════════════════
+  AUTRES COMPTES DISPONIBLES
+═══════════════════════════════════════════════════════════════════════
+
+  👨‍💼 ADMINISTRATEUR
+     Email       : admin@gmail.com
+     Mot de passe: admin123
+
+  🧑 PATIENT
+     Email       : patient@test.com
+     Mot de passe: patient123
+
+
+═══════════════════════════════════════════════════════════════════════
+  ETAPES DE CONNEXION
+═══════════════════════════════════════════════════════════════════════
+
+  1. L'application est déjà ouverte (fenêtre de connexion)
+  
+  2. Entrez l'email : medecin@test.com
+  
+  3. Entrez le mot de passe : medecin123
+  
+  4. Cliquez sur "Se connecter"
+  
+  5. Vous accéderez au tableau de bord médecin
+
+
+═══════════════════════════════════════════════════════════════════════
+  FONCTIONNALITES MEDECIN
+═══════════════════════════════════════════════════════════════════════
+
+  ✅ Voir et gérer les rendez-vous
+  ✅ Répondre aux questions du forum
+  ✅ Gérer votre profil médical
+  ✅ Consulter les évaluations des patients
+  ✅ Accéder à l'annuaire des médecins
+
+
+═══════════════════════════════════════════════════════════════════════
+  RELANCER L'APPLICATION
+═══════════════════════════════════════════════════════════════════════
+
+  Double-cliquez sur : run.bat
+
+
+═══════════════════════════════════════════════════════════════════════
+  VOIR TOUS LES COMPTES
+═══════════════════════════════════════════════════════════════════════
+
+  Ouvrez le fichier : COMPTES_DE_TEST.txt
+
+
+═══════════════════════════════════════════════════════════════════════
+
+  ✨ PROFITEZ DE L'APPLICATION ! ✨
+
+═══════════════════════════════════════════════════════════════════════
