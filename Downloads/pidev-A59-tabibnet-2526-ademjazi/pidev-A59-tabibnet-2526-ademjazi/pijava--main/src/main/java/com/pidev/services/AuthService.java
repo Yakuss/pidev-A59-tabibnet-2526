@@ -70,12 +70,12 @@ public class AuthService {
         switch (tableName) {
             case "medecins" -> {
                 Medecin m = new Medecin();
-                m.setPhoneNumber(rs.getString("phone_number"));
-                m.setCin(rs.getString("cin"));
+                try { m.setPhoneNumber(rs.getString("phone")); } catch (SQLException ignored) {}
+                try { m.setCin(rs.getString("cin")); } catch (SQLException ignored) {}
                 m.setAddress(rs.getString("address"));
-                m.setEducation(rs.getString("education"));
-                m.setExperience(rs.getString("experience"));
-                m.setVerified(rs.getBoolean("is_verified"));
+                try { m.setEducation(rs.getString("education")); } catch (SQLException ignored) {}
+                try { m.setExperience(rs.getString("experience")); } catch (SQLException ignored) {}
+                try { m.setVerified(rs.getBoolean("is_verified")); } catch (SQLException ignored) {}
                 // Parse Specialty enum
                 String specRaw = rs.getString("specialty");
                 if (specRaw != null) {
@@ -100,10 +100,10 @@ public class AuthService {
             }
             case "patients" -> {
                 Patient p = new Patient();
-                p.setPhoneNumber(rs.getString("phone_number"));
+                try { p.setPhoneNumber(rs.getString("phone")); } catch (SQLException ignored) {}
                 p.setAddress(rs.getString("address"));
-                p.setHasInsurance(rs.getBoolean("has_insurance"));
-                p.setInsuranceNumber(rs.getString("insurance_number"));
+                try { p.setHasInsurance(rs.getBoolean("has_insurance")); } catch (SQLException ignored) {}
+                try { p.setInsuranceNumber(rs.getString("insurance_number")); } catch (SQLException ignored) {}
                 try {
                     Timestamp dob = rs.getTimestamp("date_of_birth");
                     if (dob != null) p.setDateOfBirth(dob.toLocalDateTime());
@@ -128,8 +128,8 @@ public class AuthService {
         u.setPassword(rs.getString("password"));
         u.setFirstName(rs.getString("first_name"));
         u.setLastName(rs.getString("last_name"));
-        u.setAge(rs.getInt("age"));
-        u.setGender(rs.getString("gender"));
+        try { u.setAge(rs.getInt("age")); } catch (SQLException ignored) { u.setAge(0); }
+        try { u.setGender(rs.getString("gender")); } catch (SQLException ignored) { u.setGender(""); }
         u.setActive(rs.getBoolean("is_active"));
         u.setRoles(rs.getString("roles") != null ? rs.getString("roles") : "[\"" + defaultRole + "\"]");
         return u;

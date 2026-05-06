@@ -199,4 +199,8 @@ public class RendezVousService {
         }
         return list;
     }
+
+    public ObservableList<RendezVous> getByPatient(int patientId) {
+        return getByPatientId(patientId);
+    }
 }

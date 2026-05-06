@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox spacing="15" style="-fx-padding: 20;"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="controller.MedecinController">
+
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <Label text="Je me connecte en tant que :" style="-fx-font-weight: bold;"/>
+        <ComboBox fx:id="proMedecinSelect" prefWidth="300" promptText="-- Choisissez votre profil --"/>
+    </HBox>
+    
+    <Separator/>
+    <Label text="Votre Agenda de Consultations" style="-fx-font-size: 18; -fx-text-fill: #002D54;"/>
+
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <TextField fx:id="searchPatientField" promptText="🔍 Chercher un patient..." prefWidth="200"/>
+        <ComboBox fx:id="filterStatutCombo" promptText="Filtrer statut"/>
+        <ComboBox fx:id="sortDateCombo" promptText="Trier par Date"/>
+    </HBox>
+
+    <TableView fx:id="proTableView" prefHeight="350">
+        <columns>
+            <TableColumn fx:id="colId" text="ID" prefWidth="50"/>
+            <TableColumn fx:id="colPatient" text="Patient" prefWidth="150"/>
+            <TableColumn fx:id="colDate" text="Date" prefWidth="100"/>
+            <TableColumn fx:id="colHeure" text="Heure" prefWidth="80"/>
+            <TableColumn fx:id="colStatut" text="Statut" prefWidth="100"/>
+        </columns>
+    </TableView>
+
+    <HBox spacing="10" alignment="CENTER_LEFT" fx:id="actionBox" visible="false">
+        <Label text="Action Rapide (Changer le Statut) :" />
+        <ComboBox fx:id="actionStatutCombo" prefWidth="200" />
+        <Button text="Mettre à jour Statut" onAction="#handleUpdateStatut" style="-fx-background-color: #4CAF50; -fx-text-fill: white;" />
+    </HBox>
+
+</VBox>

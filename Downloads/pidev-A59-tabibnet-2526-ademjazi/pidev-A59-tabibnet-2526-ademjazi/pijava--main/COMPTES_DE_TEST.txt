@@ -1,0 +1,128 @@
+╔════════════════════════════════════════════════════════════════════════╗
+║                                                                        ║
+║                    COMPTES DE TEST - TABIBNET                          ║
+║                                                                        ║
+╚════════════════════════════════════════════════════════════════════════╝
+
+
+═══════════════════════════════════════════════════════════════════════
+  TOUS LES COMPTES ONT ETE CREES AVEC SUCCES !
+═══════════════════════════════════════════════════════════════════════
+
+
+┌────────────────────────────────────────────────────────────────────┐
+│  👨‍💼 COMPTE ADMINISTRATEUR                                            │
+└────────────────────────────────────────────────────────────────────┘
+
+  Email       : admin@gmail.com
+  Mot de passe: admin123
+  
+  Rôle        : Administrateur système
+  Accès       : Gestion complète de l'application
+
+
+┌────────────────────────────────────────────────────────────────────┐
+│  👨‍⚕️ COMPTE MEDECIN                                                  │
+└────────────────────────────────────────────────────────────────────┘
+
+  Email       : medecin@test.com
+  Mot de passe: medecin123
+  
+  Nom         : Dr. Ahmed Ben Ali
+  Spécialité  : Cardiologie
+  Gouvernorat : Tunis
+  Téléphone   : +216 20 123 456
+  
+  Accès       : 
+    • Gestion des rendez-vous
+    • Réponses aux questions du forum
+    • Profil médecin
+    • Consultation des patients
+
+
+┌────────────────────────────────────────────────────────────────────┐
+│  🧑 COMPTE PATIENT                                                  │
+└────────────────────────────────────────────────────────────────────┘
+
+  Email       : patient@test.com
+  Mot de passe: patient123
+  
+  Nom         : Fatma Trabelsi
+  Téléphone   : +216 22 987 654
+  
+  Accès       : 
+    • Prise de rendez-vous
+    • Recherche de médecins
+    • Forum médical (questions)
+    • Magazine médical
+    • Évaluation des médecins
+
+
+═══════════════════════════════════════════════════════════════════════
+  COMMENT UTILISER CES COMPTES
+═══════════════════════════════════════════════════════════════════════
+
+  1. Lancez l'application avec run.bat
+  
+  2. Sur l'écran de connexion, entrez :
+     - L'email du compte que vous voulez tester
+     - Le mot de passe correspondant
+  
+  3. Cliquez sur "Se connecter"
+  
+  4. Vous serez redirigé vers l'interface correspondant à votre rôle
+
+
+═══════════════════════════════════════════════════════════════════════
+  RECREER LES COMPTES
+═══════════════════════════════════════════════════════════════════════
+
+  Si vous avez besoin de recréer les comptes :
+  
+  • Tous les comptes    : create_test_accounts.bat
+  • Médecin uniquement  : create_medecin.bat
+  • Patient uniquement  : create_patient.bat
+
+
+═══════════════════════════════════════════════════════════════════════
+  NOTES IMPORTANTES
+═══════════════════════════════════════════════════════════════════════
+
+  ⚠️  Ces comptes sont pour les TESTS uniquement
+  
+  ⚠️  Les mots de passe sont hashés avec BCrypt dans la base de données
+  
+  ⚠️  Pour la production, changez tous les mots de passe
+  
+  ✅  Le compte admin est créé automatiquement au démarrage de l'app
+
+
+═══════════════════════════════════════════════════════════════════════
+  TESTER LES DIFFERENTS ROLES
+═══════════════════════════════════════════════════════════════════════
+
+  ADMINISTRATEUR (admin@gmail.com)
+  ├─ Gestion des utilisateurs
+  ├─ Gestion du forum
+  ├─ Gestion des magazines
+  └─ Statistiques globales
+
+  MEDECIN (medecin@test.com)
+  ├─ Voir les rendez-vous
+  ├─ Répondre aux questions du forum
+  ├─ Gérer son profil
+  └─ Consulter les évaluations
+
+  PATIENT (patient@test.com)
+  ├─ Prendre des rendez-vous
+  ├─ Rechercher des médecins
+  ├─ Poser des questions au forum
+  └─ Lire le magazine médical
+
+
+═══════════════════════════════════════════════════════════════════════
+
+  Date de création : 2026-05-06
+  Statut : ✅ COMPTES ACTIFS
+
+═══════════════════════════════════════════════════════════════════════

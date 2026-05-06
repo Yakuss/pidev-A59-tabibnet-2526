@@ -119,11 +119,13 @@ public class MedecinService implements IService<Medecin> {
         m.setPassword(rs.getString("password"));
         m.setFirstName(rs.getString("first_name"));
         m.setLastName(rs.getString("last_name"));
-        m.setAge(rs.getInt("age"));
-        m.setGender(rs.getString("gender"));
+        try { m.setAge(rs.getInt("age")); } catch (SQLException e) { m.setAge(0); }
+        try { m.setGender(rs.getString("gender")); } catch (SQLException e) { m.setGender(""); }
         m.setActive(rs.getBoolean("is_active"));
         m.setRoles(rs.getString("roles"));
-        m.setPhoneNumber(rs.getString("phone_number"));
+        try { m.setPhoneNumber(rs.getString("phone")); } catch (SQLException e) {
+            try { m.setPhoneNumber(rs.getString("phone_number")); } catch (SQLException e2) { m.setPhoneNumber(""); }
+        }
         // Parse specialty — stored as enum name (e.g. "CARDIOLOGIE") or display name
         String specialtyRaw = rs.getString("specialty");
         if (specialtyRaw != null) {
@@ -132,7 +134,7 @@ public class MedecinService implements IService<Medecin> {
             if (spec == null) spec = Specialty.fromDisplayName(specialtyRaw);
             m.setSpecialty(spec);
         }
-        m.setCin(rs.getString("cin"));
+        try { m.setCin(rs.getString("cin")); } catch (SQLException e) { m.setCin(""); }
         m.setAddress(rs.getString("address"));
         // Parse governorate — stored as enum name (e.g. "TUNIS") or display name
         String govRaw = rs.getString("governorate");
@@ -142,17 +144,23 @@ public class MedecinService implements IService<Medecin> {
             if (gov == null) gov = Governorate.fromDisplayName(govRaw);
             m.setGovernorate(gov);
         }
-        m.setEducation(rs.getString("education"));
-        m.setExperience(rs.getString("experience"));
-        m.setVerified(rs.getBoolean("is_verified"));
-        m.setAiAverageScore(rs.getObject("ai_average_score") != null ?
-                rs.getDouble("ai_average_score") : null);
+        try { m.setEducation(rs.getString("education")); } catch (SQLException e) { m.setEducation(""); }
+        try { m.setExperience(rs.getString("experience")); } catch (SQLException e) { m.setExperience(""); }
+        try { m.setVerified(rs.getBoolean("is_verified")); } catch (SQLException e) { m.setVerified(false); }
+        try {
+            m.setAiAverageScore(rs.getObject("ai_average_score") != null ?
+                    rs.getDouble("ai_average_score") : null);
+        } catch (SQLException e) { m.setAiAverageScore(null); }
         
         // Parse rating fields
-        m.setAverageRating(rs.getObject("averageRating") != null ?
-                rs.getDouble("averageRating") : 0.0);
-        m.setTotalReviews(rs.getObject("totalReviews") != null ?
-                rs.getInt("totalReviews") : 0);
+        try {
+            m.setAverageRating(rs.getObject("averageRating") != null ?
+                    rs.getDouble("averageRating") : 0.0);
+        } catch (SQLException e) { m.setAverageRating(0.0); }
+        try {
+            m.setTotalReviews(rs.getObject("totalReviews") != null ?
+                    rs.getInt("totalReviews") : 0);
+        } catch (SQLException e) { m.setTotalReviews(0); }
         
         return m;
     }

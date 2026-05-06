@@ -11,7 +11,11 @@ module com.pidev {
     requires vosk;
     requires java.desktop;
     requires jdk.jsobject;
-    requires javafx.web;  // For Gemini AI HTTP client
+    requires javafx.web;  
+    requires com.github.librepdf.openpdf;
+    requires org.apache.pdfbox;
+    requires okhttp3;
+    requires com.google.gson;
 
     // Standard controller access
     opens com.pidev.controllers to javafx.fxml;

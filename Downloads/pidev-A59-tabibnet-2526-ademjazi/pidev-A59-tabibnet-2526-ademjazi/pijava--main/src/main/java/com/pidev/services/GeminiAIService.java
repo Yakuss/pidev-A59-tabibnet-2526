@@ -19,10 +19,10 @@ import java.util.Base64;
  */
 public class GeminiAIService {
     
-    // ⚠️ OpenRouter API Key — remplace par ta vraie clé sur https://openrouter.ai/keys
-    private static final String OPENROUTER_API_KEY = "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";
+    // ⚠️ OpenRouter API Key
+    private static final String OPENROUTER_API_KEY = "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";
     private static final String OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions";
-
+    
     // Model to use - using a more reliable model
     private static final String MODEL = "openai/gpt-4o-mini"; // Reliable and cheap
     // Alternative models you can try:

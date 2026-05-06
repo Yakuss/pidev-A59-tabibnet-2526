@@ -6,6 +6,7 @@ import com.pidev.models.Patient;
 import com.pidev.services.AppointmentService;
 import com.pidev.services.MedecinService;
 import com.pidev.services.PatientService;
+import com.pidev.utils.AppointmentSessionManager;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -48,14 +49,42 @@ public class AppointmentController {
     @FXML
     public void initialize() {
         setupTableColumns();
+        setupRowFactory();
         loadAppointments();
         loadPatientCombo();
         loadDoctorCombo();
 
+        // Add row selection listener with red highlight
         tableAppointments.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
             if (newVal != null) {
                 selectedAppointment = newVal;
+                // Store in global session manager
+                AppointmentSessionManager.getInstance().setSelectedAppointment(newVal);
                 fillForm(newVal);
+                // Refresh the table to apply row styling
+                tableAppointments.refresh();
+            } else {
+                selectedAppointment = null;
+            }
+        });
+    }
+
+    private void setupRowFactory() {
+        tableAppointments.setRowFactory(tv -> new TableRow<Appointment>() {
+            @Override
+            protected void updateItem(Appointment item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setStyle("");
+                    setText(null);
+                } else {
+                    // Check if this row is selected
+                    if (isSelected()) {
+                        setStyle("-fx-background-color: #ff0000; -fx-text-fill: white; -fx-font-weight: bold;");
+                    } else {
+                        setStyle("");
+                    }
+                }
             }
         });
     }

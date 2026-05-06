@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.pidev.controllers.MagazinePatientController"
+      spacing="0" style="-fx-background-color:#0f172a;">
+
+    <!-- HEADER -->
+    <VBox style="-fx-background-color:#1e293b;-fx-padding:24 32 20 32;-fx-border-color:#334155;-fx-border-width:0 0 1 0;"
+          spacing="14">
+        <Label text="Bibliothèque Médicale"
+               style="-fx-font-size:24px;-fx-font-weight:bold;-fx-text-fill:#f1f5f9;"/>
+        <TextField fx:id="tfSearch" promptText="🔍 Rechercher un magazine..."
+                   onKeyReleased="#rechercherMagazine"
+                   style="-fx-background-color:#0f172a;-fx-text-fill:white;-fx-border-color:#475569;
+                          -fx-border-radius:8;-fx-background-radius:8;-fx-padding:10 16;
+                          -fx-font-size:14px;" maxWidth="480"/>
+    </VBox>
+
+    <!-- CARTES MAGAZINES -->
+    <ScrollPane VBox.vgrow="ALWAYS" fitToWidth="true"
+                style="-fx-background-color:#0f172a;-fx-border-color:transparent;">
+        <FlowPane fx:id="flowMagazines" hgap="20" vgap="20"
+                  style="-fx-background-color:#0f172a;-fx-padding:28 32;">
+            <!-- Les cartes sont générées dynamiquement par le contrôleur -->
+        </FlowPane>
+    </ScrollPane>
+</VBox>

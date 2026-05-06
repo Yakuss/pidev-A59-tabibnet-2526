@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.text.Font?>
+
+<ScrollPane fitToWidth="true" hbarPolicy="NEVER" maxHeight="-Infinity" prefHeight="540.0" style="-fx-background-color: #f0fdf4;" vbarPolicy="AS_NEEDED" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.pidev.controllers.OrdonnanceDetailsController">
+    <content>
+        <AnchorPane prefHeight="1100.0" prefWidth="800.0" style="-fx-background-color: #f0fdf4; -fx-padding: 30;">
+            <children>
+                <AnchorPane layoutX="50.0" layoutY="50.0" prefWidth="700.0" style="-fx-background-color: white; -fx-background-radius: 24;">
+                    <effect>
+                        <DropShadow color="#00000020" height="30.0" offsetY="10.0" radius="15.0" width="30.0" />
+                    </effect>
+                    <children>
+                        <AnchorPane prefHeight="180.0" prefWidth="700.0" style="-fx-background-color: linear-gradient(to bottom right, #059669, #047857, #064e3b); -fx-background-radius: 24 24 0 0;">
+                            <children>
+                                <Circle fill="rgba(255,255,255,0.08)" layoutX="600.0" layoutY="-20.0" radius="150.0" />
+                                <HBox alignment="CENTER_LEFT" layoutX="40.0" layoutY="25.0" spacing="6.0" style="-fx-background-color: rgba(255,255,255,0.15); -fx-background-radius: 100; -fx-padding: 6 14;">
+                                    <children>
+                                        <Label style="-fx-font-size: 12;" text="📄" />
+                                        <Label text="DÉTAILS ORDONNANCE" textFill="rgba(255,255,255,0.9)">
+                                            <font><Font name="System Bold" size="11.0" /></font>
+                                        </Label>
+                                    </children>
+                                </HBox>
+                                <Label layoutX="40.0" layoutY="60.0" text="Consultation Ordonnance" textFill="white">
+                                    <font><Font name="System Bold" size="32.0" /></font>
+                                </Label>
+                                <Label fx:id="lblSubHeader" layoutX="40.0" layoutY="100.0" text="Informations détaillées de la prescription" textFill="#ffffffcc">
+                                    <font><Font size="14.0" /></font>
+                                </Label>
+                            </children>
+                        </AnchorPane>
+
+                        <AnchorPane layoutY="180.0" prefHeight="850.0" prefWidth="700.0" style="-fx-background-color: white; -fx-background-radius: 0 0 24 24;">
+                            <padding><Insets bottom="30.0" left="40.0" right="40.0" top="30.0" /></padding>
+                            <children>
+                                <VBox layoutX="40.0" layoutY="30.0" prefWidth="620.0" spacing="24.0">
+                                    <children>
+                                        <HBox spacing="20.0">
+                                            <children>
+                                                <VBox prefWidth="290.0" spacing="8.0">
+                                                    <children>
+                                                        <Label text="Date" textFill="#1c1917"><font><Font name="System Bold" size="14.0" /></font></Label>
+                                                        <TextField fx:id="dateField" editable="false" prefHeight="48.0" style="-fx-background-color: #f8fafc; -fx-background-radius: 12; -fx-border-radius: 12; -fx-border-color: #e7e5e4; -fx-border-width: 1;" />
+                                                    </children>
+                                                </VBox>
+                                                <VBox prefWidth="290.0" spacing="8.0">
+                                                    <children>
+                                                        <Label text="Diagnostic" textFill="#1c1917"><font><Font name="System Bold" size="14.0" /></font></Label>
+                                                        <TextField fx:id="diagnosisField" editable="false" prefHeight="48.0" style="-fx-background-color: #f8fafc; -fx-background-radius: 12; -fx-border-radius: 12; -fx-border-color: #e7e5e4; -fx-border-width: 1;" />
+                                                    </children>
+                                                </VBox>
+                                            </children>
+                                        </HBox>
+
+                                        <VBox spacing="8.0">
+                                            <children>
+                                                <Label text="Médicaments prescrits" textFill="#1c1917"><font><Font name="System Bold" size="14.0" /></font></Label>
+                                                <TextArea fx:id="medicamentsArea" editable="false" prefHeight="100.0" style="-fx-background-color: #f8fafc; -fx-background-radius: 12; -fx-border-radius: 12; -fx-border-color: #e7e5e4; -fx-border-width: 1;" wrapText="true" />
+                                            </children>
+                                        </VBox>
+
+                                        <VBox spacing="8.0">
+                                            <children>
+                                                <Label text="Posologie" textFill="#1c1917"><font><Font name="System Bold" size="14.0" /></font></Label>
+                                                <TextArea fx:id="posologieArea" editable="false" prefHeight="80.0" style="-fx-background-color: #f8fafc; -fx-background-radius: 12; -fx-border-radius: 12; -fx-border-color: #e7e5e4; -fx-border-width: 1;" wrapText="true" />
+                                            </children>
+                                        </VBox>
+
+                                        <VBox spacing="8.0">
+                                            <children>
+                                                <Label text="Notes" textFill="#1c1917"><font><Font name="System Bold" size="14.0" /></font></Label>
+                                                <TextArea fx:id="notesArea" editable="false" prefHeight="80.0" style="-fx-background-color: #f8fafc; -fx-background-radius: 12; -fx-border-radius: 12; -fx-border-color: #e7e5e4; -fx-border-width: 1;" wrapText="true" />
+                                            </children>
+                                        </VBox>
+                                    </children>
+                                </VBox>
+
+                                <HBox alignment="CENTER_RIGHT" layoutX="41.0" layoutY="750.0" prefHeight="84.0" prefWidth="605.0" spacing="16.0" style="-fx-border-color: #e7e5e4 transparent transparent transparent; -fx-border-width: 2 0 0 0; -fx-padding: 20 0 0 0;">
+                                    <children>
+                                        <Button mnemonicParsing="false" onAction="#handleClose" prefHeight="52.0" prefWidth="200.0" style="-fx-background-color: #059669; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 12; -fx-cursor: hand;" text="Fermer" />
+                                    </children>
+                                </HBox>
+                            </children>
+                        </AnchorPane>
+                    </children>
+                </AnchorPane>
+            </children>
+        </AnchorPane>
+    </content>
+</ScrollPane>

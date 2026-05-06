@@ -19,6 +19,7 @@ public class LoginController {
     @FXML private TextField emailField;
     @FXML private PasswordField passwordField;
     @FXML private Label errorMessage;
+    @FXML private Button loginButton;
 
     private final AuthService authService = new AuthService();
 
@@ -30,19 +31,41 @@ public class LoginController {
             errorMessage.setManaged(false);
         }
         
+        // Ensure button is clickable
+        if (loginButton != null) {
+            loginButton.setDisable(false);
+            loginButton.setMouseTransparent(false);
+            loginButton.setFocusTraversable(true);
+            System.out.println("✅ Login button initialized and enabled");
+            
+            // Add mouse event handler for debugging
+            loginButton.setOnMouseClicked(event -> {
+                System.out.println("🖱️ Mouse clicked on login button!");
+                handleLogin();
+            });
+        }
+        
         // Clear error message when user starts typing
         if (emailField != null) {
             emailField.textProperty().addListener((obs, oldVal, newVal) -> hideError());
         }
         if (passwordField != null) {
             passwordField.textProperty().addListener((obs, oldVal, newVal) -> hideError());
+            
+            // Allow Enter key to submit
+            passwordField.setOnAction(event -> handleLogin());
         }
     }
 
     @FXML
     public void handleLogin() {
+        System.out.println("🔐 handleLogin() called!");
+        
         String email = emailField.getText().trim();
         String password = passwordField.getText();
+
+        System.out.println("📧 Email: " + email);
+        System.out.println("🔑 Password length: " + password.length());
 
         if (email.isEmpty() || password.isEmpty()) {
             showError("Veuillez remplir tous les champs.");

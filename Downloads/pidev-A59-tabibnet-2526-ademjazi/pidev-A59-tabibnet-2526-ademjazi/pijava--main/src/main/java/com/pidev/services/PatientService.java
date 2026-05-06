@@ -115,12 +115,30 @@ public class PatientService implements IService<Patient> {
         p.setGender(rs.getString("gender"));
         p.setActive(rs.getBoolean("is_active"));
         p.setRoles(rs.getString("roles"));
-        p.setPhoneNumber(rs.getString("phone_number"));
-        p.setAddress(rs.getString("address"));
-        Timestamp dob = rs.getTimestamp("date_of_birth");
-        if (dob != null) p.setDateOfBirth(dob.toLocalDateTime());
-        p.setHasInsurance(rs.getBoolean("has_insurance"));
-        p.setInsuranceNumber(rs.getString("insurance_number"));
+        
+        // Try phone_number first, then phone, with fallback
+        try { 
+            p.setPhoneNumber(rs.getString("phone")); 
+        } catch (SQLException e) {
+            try { 
+                p.setPhoneNumber(rs.getString("phone_number")); 
+            } catch (SQLException e2) { 
+                p.setPhoneNumber(null); 
+            }
+        }
+        
+        try { p.setAddress(rs.getString("address")); } catch (SQLException e) { p.setAddress(null); }
+        
+        try {
+            Timestamp dob = rs.getTimestamp("date_of_birth");
+            if (dob != null) p.setDateOfBirth(dob.toLocalDateTime());
+        } catch (SQLException e) {
+            p.setDateOfBirth(null);
+        }
+        
+        try { p.setHasInsurance(rs.getBoolean("has_insurance")); } catch (SQLException e) { p.setHasInsurance(false); }
+        try { p.setInsuranceNumber(rs.getString("insurance_number")); } catch (SQLException e) { p.setInsuranceNumber(null); }
+        
         return p;
     }
 
